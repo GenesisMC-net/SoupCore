@@ -1,0 +1,9 @@
+name: SoupCore
+version: '1.0-SNAPSHOT'
+main: me.smeo.soupcore.SoupCore
+api-version: 1.20
+commands:
+  ping:
+    description: ping
+  kits:
+    description: kits
