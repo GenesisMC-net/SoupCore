@@ -1,10 +1,12 @@
 me/smeo/soupcore/Database/Database.class
 me/smeo/soupcore/listeners/soupDropListener.class
+me/smeo/soupcore/commands/enterPVPRegion.class
+me/smeo/soupcore/SpigotExpansion.class
 me/smeo/soupcore/listeners/soupUseListener.class
 me/smeo/soupcore/listeners/soupSignRefillListener.class
-me/smeo/soupcore/commands/enterPVPRegion.class
 me/smeo/soupcore/commands/kitsCommand.class
 me/smeo/soupcore/listeners/kitsListeners.class
 me/smeo/soupcore/commands/ping.class
 me/smeo/soupcore/SoupCore.class
+me/smeo/soupcore/commands/placeholderTestCommand.class
 me/smeo/soupcore/listeners/PlayerKillListener.class
