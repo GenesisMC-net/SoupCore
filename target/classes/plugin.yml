@@ -9,5 +9,9 @@ commands:
     description: kits
   placeholderTestCommand:
     description: Tests PlaceHolderAPI
+  refill:
+    description: Refill your inventory with soup for 200 credits
+  repair:
+    description: Repair your armour and tools for 50 credits
 
 depend: [PlaceholderAPI]
