@@ -1,5 +1,6 @@
 package me.smeo.soupcore.commands;
 
+import me.smeo.soupcore.Credits;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -15,17 +16,19 @@ public class refill implements CommandExecutor {
 
         if(sender instanceof Player)
         {
-            // TODO: Costs 200 credits
-
             Player p = ((Player) sender).getPlayer();
-            for (ItemStack item : p.getInventory().getContents())
+            if(Credits.checkCreditBalance(p, 200)) // Costs 200
             {
-                if ((item == null) || item.getType() == Material.AIR)
+                for (ItemStack item : p.getInventory().getContents())
                 {
-                    p.getInventory().addItem(new ItemStack(Material.MUSHROOM_SOUP, 1));
+                    if ((item == null) || item.getType() == Material.AIR)
+                    {
+                        p.getInventory().addItem(new ItemStack(Material.MUSHROOM_SOUP, 1));
+                    }
                 }
+                Credits.chargeCredits(p, 200);
+                p.sendMessage(ChatColor.GOLD + "Refilled soup for " + ChatColor.RED + "200 credits");
             }
-            p.sendMessage(ChatColor.GREEN + "Refilled soup");
         }
         return false;
     }

@@ -1,5 +1,6 @@
 package me.smeo.soupcore.commands;
 
+import me.smeo.soupcore.Credits;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -15,24 +16,28 @@ public class repair implements CommandExecutor {
 
         if(sender instanceof Player)
         {
-            // TODO: Costs 50 credits
-
             Player p = ((Player) sender).getPlayer();
-            for (ItemStack item : p.getInventory().getContents())
+            if(Credits.checkCreditBalance(p, 50))
             {
-                if ((item != null) && (item.getType() != Material.AIR))
+                for (ItemStack item : p.getInventory().getContents())
                 {
-                    item.setDurability((short) 0);
+                    if ((item != null) && (item.getType() != Material.AIR))
+                    {
+                        item.setDurability((short) 0);
+                    }
                 }
-            }
-            for (ItemStack item : p.getInventory().getArmorContents())
-            {
-                if ((item != null) && (item.getType() != Material.AIR))
+                for (ItemStack item : p.getInventory().getArmorContents())
                 {
-                    item.setDurability((short) 0);
+                    if ((item != null) && (item.getType() != Material.AIR))
+                    {
+                        item.setDurability((short) 0);
+                    }
                 }
+                Credits.chargeCredits(p, 50);
+                p.sendMessage(ChatColor.GREEN + "Repaired armour");
             }
-            p.sendMessage(ChatColor.GREEN + "Repaired armour");
+
+
         }
         return false;
     }
