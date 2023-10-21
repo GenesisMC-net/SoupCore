@@ -9,7 +9,8 @@ public class Credits
 
     public static void giveCredits(Player player, int amount)
     {
-        Database.SetPlayerData(player, "credits", amount);
+        int newBalance = Database.getPlayerData(player, "credits") + amount;
+        Database.SetPlayerData(player, "credits", newBalance);
     }
 
 
