@@ -57,6 +57,10 @@ public class SpigotExpansion extends PlaceholderExpansion {
             Integer kdr = Database.getPlayerData(player, "kills") - Database.getPlayerData(player, "deaths");
             return kdr.toString();
         }
+        if(params.equals("credits"))
+        {
+            return Database.getPlayerData(player, "credits").toString();
+        }
 
         return null;
     }
