@@ -70,7 +70,7 @@ public class Database
         Connection connection = getConnection();
         PreparedStatement queryStatement;
         try{
-            queryStatement = connection.prepareStatement("SELECT * FROM soupData WHERE uuid = '" + p.getUniqueId().toString() + "'");
+            queryStatement = connection.prepareStatement("SELECT " + column + " FROM soupData WHERE uuid = '" + p.getUniqueId().toString() + "'");
             ResultSet rows = queryStatement.executeQuery();
             while(rows.next())
             {

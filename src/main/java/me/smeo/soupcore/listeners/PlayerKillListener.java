@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -19,8 +20,8 @@ public class PlayerKillListener implements Listener
         if(p.getKiller() != null)
         {
             Player killer = p.getKiller();
-            Integer kills = Database.getPlayerData(killer, "kit");
-            Database.SetPlayerData(killer, "kills", kills+1);
+            Integer kills = Database.getPlayerData(killer, "kills") + 1;
+            Database.SetPlayerData(killer, "kills", kills);
         }
 
     }
