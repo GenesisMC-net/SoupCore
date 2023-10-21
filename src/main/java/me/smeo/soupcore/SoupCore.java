@@ -66,6 +66,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerKillListener(), this);
         getServer().getPluginManager().registerEvents(new soupSignRefillListener(), this);
         getServer().getPluginManager().registerEvents(new spongeLaunchListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());
         getCommand("placeholderTestCommand").setExecutor(new placeholderTestCommand());
