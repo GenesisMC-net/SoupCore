@@ -7,4 +7,5 @@ me/smeo/soupcore/commands/kitsCommand.class
 me/smeo/soupcore/listeners/kitsListeners.class
 me/smeo/soupcore/commands/ping.class
 me/smeo/soupcore/SoupCore.class
+me/smeo/soupcore/SpigotExpansion.class
 me/smeo/soupcore/listeners/PlayerKillListener.class

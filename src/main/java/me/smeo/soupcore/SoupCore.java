@@ -68,6 +68,11 @@ public final class SoupCore extends JavaPlugin {
         getCommand("kits").setExecutor(new kitsCommand());
         createInventory();
 
+        if(Bukkit.getPluginManager().getPlugin("PlaceHolderAPI") != null)
+        {
+            new SpigotExpansion().register();
+        }
+
         connectionURL = "jdbc:h2:" + getDataFolder().getAbsolutePath() + "/data/database";
         System.out.println(connectionURL);
         Database.initialiseDatabase();

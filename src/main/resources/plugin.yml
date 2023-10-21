@@ -7,3 +7,5 @@ commands:
     description: ping
   kits:
     description: kits
+
+depend: [PlaceholderAPI]
