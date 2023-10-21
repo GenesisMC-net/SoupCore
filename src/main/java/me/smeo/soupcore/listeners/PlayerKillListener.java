@@ -29,7 +29,7 @@ public class PlayerKillListener implements Listener
             Random rand = new Random();
             int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.
             Credits.giveCredits(killer, credits);
-            killer.sendMessage(ChatColor.GOLD + "You have killed " + ChatColor.GREEN + p.getName() + ChatColor.GOLD + " and earned " + ChatColor.GREEN + credits + " credits.");
+            killer.sendMessage(ChatColor.GRAY + "You have killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " and earned " + ChatColor.GREEN + credits + " credits.");
 
         }
 

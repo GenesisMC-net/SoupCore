@@ -34,7 +34,7 @@ public class repair implements CommandExecutor {
                     }
                 }
                 Credits.chargeCredits(p, 50);
-                p.sendMessage(ChatColor.GREEN + "Repaired armour");
+                p.sendMessage(ChatColor.GREEN + "Repaired Kit " + ChatColor.GRAY + "[" + ChatColor.RED + "-50" + ChatColor.GRAY + "]");
             }
 
 
