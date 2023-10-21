@@ -70,6 +70,9 @@ public final class SoupCore extends JavaPlugin {
         getCommand("placeholderTestCommand").setExecutor(new placeholderTestCommand());
         getCommand("refill").setExecutor(new refill());
         getCommand("repair").setExecutor(new repair());
+        // VVV ADMIN COMMANDS VVV
+        getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
+
         createInventory();
 
         if(Bukkit.getPluginManager().getPlugin("PlaceHolderAPI") != null)
