@@ -3,6 +3,7 @@ package me.smeo.soupcore;
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.kitsCommand;
 import me.smeo.soupcore.commands.ping;
+import me.smeo.soupcore.commands.placeholderTestCommand;
 import me.smeo.soupcore.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -66,6 +67,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new soupSignRefillListener(), this);
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());
+        getCommand("placeholderTestCommand").setExecutor(new placeholderTestCommand());
         createInventory();
 
         if(Bukkit.getPluginManager().getPlugin("PlaceHolderAPI") != null)
