@@ -23,12 +23,12 @@ public class Database
         return connection;
     }
 
-    public static void initialiseDatabase() // Columns: uuid, kit, kills, killStreak
+    public static void initialiseDatabase() // Columns: uuid, kit, kills, killStreak, deaths
     {
         Connection connection = getConnection();
         PreparedStatement preparedStatement;
         try{
-            preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupData(uuid varchar(36) NOT NULL PRIMARY KEY, kit int, kills int, killStreak int)");
+            preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupData(uuid varchar(36) NOT NULL PRIMARY KEY, kit int, kills int, killStreak int, deaths int)");
             preparedStatement.execute();
             connection.close();
         }catch(SQLException e){
@@ -107,7 +107,7 @@ public class Database
         Connection connection = getConnection();
         PreparedStatement statement;
         try{
-            statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, killstreak) VALUES('" + p.getUniqueId().toString() + "', NULL, 0, 0)");
+            statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, killstreak) VALUES('" + p.getUniqueId().toString() + "', NULL, 0, 0, 0)");
             statement.execute();
             connection.close();
         }catch(SQLException ex)
