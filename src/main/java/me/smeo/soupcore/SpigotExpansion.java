@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.xml.crypto.Data;
+
 public class SpigotExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
@@ -45,6 +47,15 @@ public class SpigotExpansion extends PlaceholderExpansion {
         if(params.equals("killStreak"))
         {
             return Database.getPlayerData(player, "killStreak").toString();
+        }
+        if(params.equals("deaths"))
+        {
+            return Database.getPlayerData(player, "deaths").toString();
+        }
+        if(params.equals("kdr"))
+        {
+            Integer kdr = Database.getPlayerData(player, "kills") - Database.getPlayerData(player, "deaths");
+            return kdr.toString();
         }
 
         return null;
