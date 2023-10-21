@@ -107,7 +107,7 @@ public class Database
         Connection connection = getConnection();
         PreparedStatement statement;
         try{
-            statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, killstreak) VALUES('" + p.getUniqueId().toString() + "', NULL, 0, 0, 0)");
+            statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, killstreak, deaths) VALUES('" + p.getUniqueId().toString() + "', NULL, 0, 0, 0)");
             statement.execute();
             connection.close();
         }catch(SQLException ex)

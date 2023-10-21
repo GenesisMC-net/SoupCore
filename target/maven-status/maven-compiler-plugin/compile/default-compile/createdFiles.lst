@@ -3,6 +3,7 @@ me/smeo/soupcore/listeners/soupDropListener.class
 me/smeo/soupcore/commands/enterPVPRegion.class
 me/smeo/soupcore/SpigotExpansion.class
 me/smeo/soupcore/listeners/spongeLaunchListener.class
+me/smeo/soupcore/listeners/PlayerDeathListener.class
 me/smeo/soupcore/listeners/soupUseListener.class
 me/smeo/soupcore/listeners/soupSignRefillListener.class
 me/smeo/soupcore/commands/kitsCommand.class
