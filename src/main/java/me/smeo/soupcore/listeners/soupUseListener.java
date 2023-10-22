@@ -15,12 +15,12 @@ public class soupUseListener implements Listener
         Player p = e.getPlayer();
         if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && p.getItemInHand().getType() == Material.MUSHROOM_SOUP)
         {
-            if (p.getHealth() <= 14)
+            if (p.getHealth() <= 12)
             {
-               p.setHealth((p.getHealth())+6);
+               p.setHealth((p.getHealth())+8);
                p.getItemInHand().setType(Material.BOWL);
             }
-            else if(14 < p.getHealth() && p.getHealth() < 20)
+            else if(12 < p.getHealth() && p.getHealth() < 20)
             {
                 p.setHealth(p.getMaxHealth());
                 p.getItemInHand().setType(Material.BOWL);
