@@ -15,5 +15,7 @@ commands:
     description: Repair your armour and tools for 50 credits
   adminGiveCredits:
     description: ADMIN COMMAND
+  giveAbilityItem:
+    description: ADMIN COMMAND
 
 depend: [PlaceholderAPI]

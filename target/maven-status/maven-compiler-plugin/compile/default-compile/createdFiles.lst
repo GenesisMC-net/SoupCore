@@ -6,6 +6,7 @@ me\smeo\soupcore\Database\Database.class
 me\smeo\soupcore\Credits.class
 me\smeo\soupcore\listeners\soupUseListener.class
 me\smeo\soupcore\commands\repair.class
+me\smeo\soupcore\listeners\abilities\AbilityPoisonSword.class
 me\smeo\soupcore\listeners\PlayerKillListener.class
 me\smeo\soupcore\commands\ping.class
 me\smeo\soupcore\listeners\soupDropListener.class
@@ -15,6 +16,7 @@ me\smeo\soupcore\commands\refill.class
 me\smeo\soupcore\listeners\kitsListeners.class
 me\smeo\soupcore\listeners\PlayerDeathListener.class
 me\smeo\soupcore\commands\placeholderTestCommand.class
+me\smeo\soupcore\commands\giveAbilityItem.class
 me\smeo\soupcore\listeners\spongeLaunchListener.class
 me\smeo\soupcore\listeners\combatLogListeners$1.class
 me\smeo\soupcore\commands\enterPVPRegion.class

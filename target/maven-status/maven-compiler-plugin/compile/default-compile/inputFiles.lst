@@ -7,6 +7,7 @@ C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\listeners\soupD
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\listeners\PlayerDeathListener.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\listeners\PlayerKillListener.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\SpigotExpansion.java
+C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\commands\giveAbilityItem.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\commands\refill.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\listeners\soupUseListener.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\SoupCore.java
@@ -14,6 +15,7 @@ C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\commands\kitsCo
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\listeners\spongeLaunchListener.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\commands\adminGiveCredits.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\Database\Database.java
+C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\listeners\abilities\AbilityPoisonSword.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\Credits.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\listeners\combatLogListeners.java
 C:\Users\PC\IdeaProjects\SoupCore\src\main\java\me\smeo\soupcore\commands\placeholderTestCommand.java

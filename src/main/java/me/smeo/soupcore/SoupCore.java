@@ -3,6 +3,7 @@ package me.smeo.soupcore;
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
 import me.smeo.soupcore.listeners.*;
+import me.smeo.soupcore.listeners.abilities.AbilityPoisonSword;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -72,6 +73,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new spongeLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
         getServer().getPluginManager().registerEvents(new combatLogListeners(), this);
+        getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());
         getCommand("placeholderTestCommand").setExecutor(new placeholderTestCommand());
@@ -79,6 +81,7 @@ public final class SoupCore extends JavaPlugin {
         getCommand("repair").setExecutor(new repair());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
+        getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());
 
         createInventory();
 
