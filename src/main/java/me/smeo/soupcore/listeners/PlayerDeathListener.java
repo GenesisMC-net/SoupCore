@@ -14,6 +14,8 @@ public class PlayerDeathListener implements Listener
     {
         Player p = e.getEntity();
         Database.SetPlayerData(p, "deaths", (Database.getPlayerData(p, "deaths") + 1));
+        Database.SetPlayerData(p, "killStreak", 0);
+        e.getEntity().spigot().respawn();
     }
 
 }

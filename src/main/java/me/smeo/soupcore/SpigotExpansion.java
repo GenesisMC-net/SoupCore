@@ -9,6 +9,11 @@ import org.jetbrains.annotations.Nullable;
 import javax.xml.crypto.Data;
 
 public class SpigotExpansion extends PlaceholderExpansion {
+
+    String roundOffTo2DecPlaces(float val)
+    {
+        return String.format("%.2f", val);
+    }
     @Override
     public @NotNull String getIdentifier() {
         return "soupCore";
@@ -54,8 +59,12 @@ public class SpigotExpansion extends PlaceholderExpansion {
         }
         if(params.equals("kdr"))
         {
-            Integer kdr = Database.getPlayerData(player, "kills") - Database.getPlayerData(player, "deaths");
-            return kdr.toString();
+            float kdr = Database.getPlayerData(player, "kills") / Database.getPlayerData(player, "deaths");
+            return roundOffTo2DecPlaces(kdr);
+        }
+        if(params.equals("credits"))
+        {
+            return Database.getPlayerData(player, "credits").toString();
         }
 
         return null;
