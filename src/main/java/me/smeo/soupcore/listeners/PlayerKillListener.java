@@ -48,7 +48,7 @@ public class PlayerKillListener implements Listener
                 Integer bounty = Database.getPlayerData(p, "bounty");
                 Credits.giveCredits(killer, bounty);
                 Database.SetPlayerData(p, "bounty", 0);
-                Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " has claimed the " + ChatColor.GREEN + bounty + " credit " + ChatColor.GRAY + "bounty");
+                Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " and has claimed the " + ChatColor.GREEN + bounty + " credit " + ChatColor.GRAY + "bounty");
             }
 
         }

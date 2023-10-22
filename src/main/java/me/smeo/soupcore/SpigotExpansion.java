@@ -64,6 +64,17 @@ public class SpigotExpansion extends PlaceholderExpansion {
         {
             return Database.getPlayerData(player, "credits").toString();
         }
+        if(params.equals("bounty"))
+        {
+            Integer bounty = Database.getPlayerData(player, "bounty");
+            if(bounty > 0)
+            {
+                return bounty.toString();
+            }else
+            {
+                return "";
+            }
+        }
 
         return null;
     }

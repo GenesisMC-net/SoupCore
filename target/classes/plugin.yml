@@ -15,5 +15,7 @@ commands:
     description: Repair your armour and tools for 50 credits
   adminGiveCredits:
     description: ADMIN COMMAND
+  bounty:
+    description: Set a bounty on a player
 
 depend: [PlaceholderAPI]
