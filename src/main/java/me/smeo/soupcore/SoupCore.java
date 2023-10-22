@@ -2,6 +2,7 @@ package me.smeo.soupcore;
 
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
+import me.smeo.soupcore.commands.bounty_system.bountyCommand;
 import me.smeo.soupcore.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -76,6 +77,7 @@ public final class SoupCore extends JavaPlugin {
         getCommand("placeholderTestCommand").setExecutor(new placeholderTestCommand());
         getCommand("refill").setExecutor(new refill());
         getCommand("repair").setExecutor(new repair());
+        getCommand("bounty").setExecutor(new bountyCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
 

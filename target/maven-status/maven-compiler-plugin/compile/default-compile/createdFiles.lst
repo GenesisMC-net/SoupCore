@@ -14,5 +14,6 @@ me/smeo/soupcore/commands/ping.class
 me/smeo/soupcore/Credits.class
 me/smeo/soupcore/commands/repair.class
 me/smeo/soupcore/SoupCore.class
+me/smeo/soupcore/commands/bounty_system/bountyCommand.class
 me/smeo/soupcore/commands/placeholderTestCommand.class
 me/smeo/soupcore/listeners/PlayerKillListener.class

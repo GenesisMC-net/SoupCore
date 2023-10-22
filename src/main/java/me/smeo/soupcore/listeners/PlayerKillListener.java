@@ -43,6 +43,13 @@ public class PlayerKillListener implements Listener
             {
                 Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has reached a killstreak of " + ChatColor.AQUA + killStreak);
             }
+            if(Database.getPlayerData(p, "bounty") > 0)
+            {
+                Integer bounty = Database.getPlayerData(p, "bounty");
+                Credits.giveCredits(killer, bounty);
+                Database.SetPlayerData(p, "bounty", 0);
+                Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " has claimed the " + ChatColor.GREEN + bounty + " credit " + ChatColor.GRAY + "bounty");
+            }
 
         }
 
