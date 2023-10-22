@@ -38,6 +38,7 @@ public class PlayerKillListener implements Listener
             int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.
             Credits.giveCredits(killer, credits);
             killer.sendMessage(ChatColor.GRAY + "You have killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " and earned " + ChatColor.GREEN + credits + " credits");
+            p.sendMessage(ChatColor.GRAY + "You have been killed by " + ChatColor.GREEN + killer.getName());
             if(SoupCore.killStreakMilestones.contains(killStreak))
             {
                 Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has reached a killstreak of " + ChatColor.AQUA + killStreak);
