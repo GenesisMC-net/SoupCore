@@ -21,8 +21,9 @@ public final class SoupCore extends JavaPlugin {
 
     public static SoupCore plugin;
     public static Inventory kits;
-
     private static String connectionURL;
+    public static List<Integer> killStreakMilestones = new ArrayList<Integer>();
+
 
 
 
@@ -58,6 +59,11 @@ public final class SoupCore extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        killStreakMilestones.add(10);
+        killStreakMilestones.add(25);
+        killStreakMilestones.add(30);
+        killStreakMilestones.add(50);
+        killStreakMilestones.add(60);
         getServer().getPluginManager().registerEvents(new soupDropListener(), this);
         getServer().getPluginManager().registerEvents(new soupUseListener(), this);
         getServer().getPluginManager().registerEvents(new kitsListeners(), this);

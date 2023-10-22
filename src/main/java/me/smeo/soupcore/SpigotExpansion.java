@@ -7,13 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.crypto.Data;
+import java.text.DecimalFormat;
 
 public class SpigotExpansion extends PlaceholderExpansion {
 
-    String roundOffTo2DecPlaces(float val)
-    {
-        return String.format("%.2f", val);
-    }
     @Override
     public @NotNull String getIdentifier() {
         return "soupCore";
@@ -59,8 +56,9 @@ public class SpigotExpansion extends PlaceholderExpansion {
         }
         if(params.equals("kdr"))
         {
-            float kdr = Database.getPlayerData(player, "kills") / Database.getPlayerData(player, "deaths");
-            return roundOffTo2DecPlaces(kdr);
+            float kdr = (float) Database.getPlayerData(player, "kills") / (float) Database.getPlayerData(player, "deaths");
+            final DecimalFormat df = new DecimalFormat("0.00");
+            return df.format(kdr);
         }
         if(params.equals("credits"))
         {
