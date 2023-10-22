@@ -23,10 +23,10 @@ public class bountyCommand implements CommandExecutor {
                 {
                     if(Credits.checkCreditBalance(player, newBounty))
                     {
-                        Integer previousBounty = Database.getPlayerData(player, "bounty");
+                        Integer previousBounty = Database.getPlayerData(bountyPlayer, "bounty");
                         Credits.chargeCredits(player, newBounty);
                         Database.SetPlayerData(bountyPlayer, "bounty", newBounty+previousBounty);
-                        Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty for a total of " + ChatColor.GREEN + (newBounty+previousBounty) + " credits");
+                        Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty for " + ChatColor.GREEN + (newBounty) + " credits" + ChatColor.GRAY + ". Total: " + (newBounty+previousBounty));
                     }else
                     {
                         player.sendMessage(ChatColor.RED + "You do not have enough credits to complete this action!");

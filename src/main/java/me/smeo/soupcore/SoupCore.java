@@ -2,6 +2,7 @@ package me.smeo.soupcore;
 
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
+import me.smeo.soupcore.commands.bounty_system.bountiesCommand;
 import me.smeo.soupcore.commands.bounty_system.bountyCommand;
 import me.smeo.soupcore.listeners.*;
 import org.bukkit.Bukkit;
