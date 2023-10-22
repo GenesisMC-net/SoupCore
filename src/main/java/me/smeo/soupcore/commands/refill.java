@@ -28,6 +28,8 @@ public class refill implements CommandExecutor {
                 }
                 Credits.chargeCredits(p, 200);
                 p.sendMessage(ChatColor.GREEN + "Refilled Soup " + ChatColor.GRAY + "[" + ChatColor.RED + "-200" + ChatColor.GRAY + "]");
+            } else {
+                p.sendMessage(ChatColor.RED + "You require 200 credits to complete this action!");
             }
         }
         return false;

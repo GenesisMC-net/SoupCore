@@ -35,8 +35,9 @@ public class repair implements CommandExecutor {
                 }
                 Credits.chargeCredits(p, 50);
                 p.sendMessage(ChatColor.GREEN + "Repaired Kit " + ChatColor.GRAY + "[" + ChatColor.RED + "-50" + ChatColor.GRAY + "]");
+            } else {
+                p.sendMessage(ChatColor.RED + "You require 50 credits to complete this action!");
             }
-
 
         }
         return false;
