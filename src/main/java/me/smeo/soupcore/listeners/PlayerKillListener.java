@@ -25,6 +25,8 @@ public class PlayerKillListener implements Listener
             Player killer = p.getKiller();
             Integer kills = Database.getPlayerData(killer, "kills") + 1;
             Database.SetPlayerData(killer, "kills", kills);
+            Integer killStreak = Database.getPlayerData(killer, "killStreak") + 1;
+            Database.SetPlayerData(killer, "killStreak", killStreak);
 
             Random rand = new Random();
             int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.
