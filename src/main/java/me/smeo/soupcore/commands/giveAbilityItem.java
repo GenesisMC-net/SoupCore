@@ -45,12 +45,12 @@ public class giveAbilityItem implements CommandExecutor {
                 ArrayList<String> waterAttackLore = new ArrayList<>();
                 waterAttackLore.add("");
                 waterAttackLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Water Attack");
-                waterAttackLore.add(ChatColor.GRAY + "Launch a water attack that creates");
-                waterAttackLore.add(ChatColor.GRAY + "a block of water to slow players down");
+                waterAttackLore.add(ChatColor.GRAY + "Launch a water attack that slows");
+                waterAttackLore.add(ChatColor.GRAY + "players down when they are hit");
                 waterAttackLore.add("");
                 waterAttackLore.add(ChatColor.WHITE + "Shift-Right Click: " + ChatColor.RED + "Fire Jump");
                 waterAttackLore.add(ChatColor.GRAY + "Boost yourself into the sky towards");
-                waterAttackLore.add(ChatColor.GRAY + "the direction you are looking");
+                waterAttackLore.add(ChatColor.GRAY + "the direction you are facing");
                 waterAttackMeta.setLore(waterAttackLore);
 
                 waterAttackMeta.setDisplayName(ChatColor.BLUE + "Mage Abilities");
