@@ -17,5 +17,7 @@ commands:
     description: ADMIN COMMAND
   bounty:
     description: Set a bounty on a player
+  bounties:
+    description: Get list of current bounties
 
 depend: [PlaceholderAPI]

@@ -1,6 +1,7 @@
 package me.smeo.soupcore.commands.bounty_system;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,21 +29,23 @@ public class bountiesCommand implements CommandExecutor {
         Connection connection = getConnection();
         PreparedStatement queryStatement;
         try{
-            queryStatement = connection.prepareStatement("SELECT * FROM soupData WHERE uuid = '" + p.getUniqueId().toString() + "' ORDER BY bounty DESC");
+            queryStatement = connection.prepareStatement("SELECT * FROM soupData WHERE bounty > 0 ORDER BY bounty DESC");
             ResultSet rows = queryStatement.executeQuery();
             int counter = 0;
-            String message = "&nPage" + page;
+            String message;
             while(rows.next() && counter <= 9)
             {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(rows.getString("uuid"));
+                Integer number = ((counter+1) + 10*(page-1));
                 System.out.println(rows.getString("uuid"));
                 System.out.println(rows.getInt("bounty"));
-                System.out.println(player);
+                System.out.println(rows.getString("name"));
                 System.out.println(((counter+1) + 10*(page-1)) );
-                message = ((counter+1) + 10*(page-1)) + ". " + player.getName() + " | " + rows.getInt("bounty");
+                message = ChatColor.AQUA + String.valueOf(number) + ". " + ChatColor.RESET + rows.getString("name") + ChatColor.GRAY + " | " + ChatColor.GOLD + rows.getInt("bounty");
+                p.sendMessage(message);
                 counter++;
             }
-            p.sendMessage(message);
+
             connection.close();
         }catch(SQLException e){
             System.out.println("Error accessing data");
