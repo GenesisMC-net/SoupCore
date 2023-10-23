@@ -36,27 +36,48 @@ public class giveAbilityItem implements CommandExecutor {
 
                 venomSword.setItemMeta(venomSwordMeta);
                 player.getInventory().addItem(venomSword);
-            case "Water":
-                ItemStack waterAttack = new ItemStack(Material.INK_SACK, 1);
-                waterAttack.setDurability((short) 12);
+                break;
+            case "Mage":
+                ItemStack mageItem = new ItemStack(Material.INK_SACK, 1);
+                mageItem.setDurability((short) 12);
 
-                ItemMeta waterAttackMeta = waterAttack.getItemMeta();
+                ItemMeta mageItemMeta = mageItem.getItemMeta();
 
-                ArrayList<String> waterAttackLore = new ArrayList<>();
-                waterAttackLore.add("");
-                waterAttackLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Water Attack");
-                waterAttackLore.add(ChatColor.GRAY + "Launch a water attack that slows");
-                waterAttackLore.add(ChatColor.GRAY + "players down when they are hit");
-                waterAttackLore.add("");
-                waterAttackLore.add(ChatColor.WHITE + "Shift-Right Click: " + ChatColor.RED + "Fire Jump");
-                waterAttackLore.add(ChatColor.GRAY + "Launch yourself forwards into the");
-                waterAttackLore.add(ChatColor.GRAY + "the direction you are facing");
-                waterAttackMeta.setLore(waterAttackLore);
+                ArrayList<String> mageItemLore = new ArrayList<>();
+                mageItemLore.add("");
+                mageItemLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Water Attack");
+                mageItemLore.add(ChatColor.GRAY + "Launch a water attack that slows");
+                mageItemLore.add(ChatColor.GRAY + "players down when they are hit");
+                mageItemLore.add("");
+                mageItemLore.add(ChatColor.WHITE + "Shift-Right Click: " + ChatColor.RED + "Fire Jump");
+                mageItemLore.add(ChatColor.GRAY + "Launch yourself forwards into the");
+                mageItemLore.add(ChatColor.GRAY + "the direction you are facing");
+                mageItemMeta.setLore(mageItemLore);
 
-                waterAttackMeta.setDisplayName(ChatColor.BLUE + "Mage Abilities");
+                mageItemMeta.setDisplayName(ChatColor.BLUE + "Mage Abilities");
 
-                waterAttack.setItemMeta(waterAttackMeta);
-                player.getInventory().addItem(waterAttack);
+                mageItem.setItemMeta(mageItemMeta);
+                player.getInventory().addItem(mageItem);
+                break;
+            case "Ninja":
+                ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, 4);
+
+                ItemMeta ninjaStarMeta = ninjaStar.getItemMeta();
+
+                ArrayList<String> ninjaStarLore = new ArrayList<>();
+                ninjaStarLore.add("");
+                ninjaStarLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Star Throw");
+                ninjaStarLore.add(ChatColor.GRAY + "Throw a ninja star that deals blindness");
+                ninjaStarLore.add(ChatColor.GRAY + "for 5 seconds to any player it hits!");
+                ninjaStarLore.add("");
+                ninjaStarLore.add(ChatColor.WHITE + "Every kill with the Ninja Kit:" + ChatColor.GREEN + " +1 Ninja Star");
+                ninjaStarMeta.setLore(ninjaStarLore);
+
+                ninjaStarMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Ninja Star");
+
+                ninjaStar.setItemMeta(ninjaStarMeta);
+                player.getInventory().addItem(ninjaStar);
+                break;
         }
 
 

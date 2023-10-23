@@ -4,6 +4,7 @@ import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
 import me.smeo.soupcore.listeners.*;
 import me.smeo.soupcore.listeners.abilities.AbilityMage;
+import me.smeo.soupcore.listeners.abilities.AbilityNinjaStars;
 import me.smeo.soupcore.listeners.abilities.AbilityPoisonSword;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -77,6 +78,7 @@ public final class SoupCore extends JavaPlugin {
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
         getServer().getPluginManager().registerEvents(new AbilityMage(), this);
+        getServer().getPluginManager().registerEvents(new AbilityNinjaStars(), this);
         //
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());
