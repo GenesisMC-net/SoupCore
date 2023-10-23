@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class AbilityPoisonSword implements Listener {
     @EventHandler
-    public void onRightClick(EntityDamageByEntityEvent e)
+    public void onDamagePlayer(EntityDamageByEntityEvent e)
     {
         if ((e.getDamager() instanceof Player) && (e.getEntity() instanceof Player)) {
             Player target = (Player) e.getEntity();
