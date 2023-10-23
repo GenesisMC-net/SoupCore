@@ -21,13 +21,15 @@ public class refill implements CommandExecutor {
             {
                 for (ItemStack item : p.getInventory().getContents())
                 {
-                    if ((item == null) || item.getType() == Material.AIR || item.getType() == Material.BOWL)
+                    if ((item == null) || item.getType() == Material.AIR)
                     {
                         p.getInventory().addItem(new ItemStack(Material.MUSHROOM_SOUP, 1));
                     }
                 }
                 Credits.chargeCredits(p, 200);
                 p.sendMessage(ChatColor.GREEN + "Refilled Soup " + ChatColor.GRAY + "[" + ChatColor.RED + "-200" + ChatColor.GRAY + "]");
+            } else {
+                p.sendMessage(ChatColor.RED + "You require 200 credits to complete this action!");
             }
         }
         return false;
