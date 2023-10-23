@@ -9,12 +9,12 @@
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/listeners/soupSignRefillListener.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/listeners/PlayerKillListener.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/Database/Database.java
+/Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/listeners/PlayerJoinListener.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/commands/ping.java
-/Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/commands/bounty_system/bountyCommand.java
+/Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/commands/bountyCommand.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/commands/refill.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/commands/repair.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/Credits.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/commands/adminGiveCredits.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/listeners/spongeLaunchListener.java
-/Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/commands/bounty_system/bountiesCommand.java
 /Users/samtyler/Documents/Coding Projects/SoupCore/src/main/java/me/smeo/soupcore/listeners/soupUseListener.java

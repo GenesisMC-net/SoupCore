@@ -1,6 +1,7 @@
 package me.smeo.soupcore.Database;
 
 import me.smeo.soupcore.SoupCore;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
@@ -61,6 +62,31 @@ public class Database
         return false;
     }
 
+    public static Boolean isPlayerInDatabaseByName(String name)
+    {
+        Connection connection = getConnection();
+        PreparedStatement preparedStatement;
+        try{
+            preparedStatement = connection.prepareStatement("SELECT * FROM soupData");
+            ResultSet rows = preparedStatement.executeQuery();
+            boolean isFound = false;
+            while(rows.next())
+            {
+                if(rows.getString("name").equalsIgnoreCase(name))
+                {
+                    isFound = true;
+                    break;
+                }
+            }
+            connection.close();
+            return isFound;
+        }catch(SQLException e){
+            System.out.println("Error creating table");
+            System.out.println(e);
+        }
+        return false;
+    }
+
     public static Integer getPlayerData(Player p, String column)
     {
         if(isPlayerInDatabase(p) == false)
@@ -101,6 +127,7 @@ public class Database
             System.out.println(e);
         }
     }
+
 
     public static void addPlayerToDataBase(Player p)
     {

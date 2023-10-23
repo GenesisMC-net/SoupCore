@@ -2,8 +2,7 @@ package me.smeo.soupcore;
 
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
-import me.smeo.soupcore.commands.bounty_system.bountiesCommand;
-import me.smeo.soupcore.commands.bounty_system.bountyCommand;
+import me.smeo.soupcore.commands.bountyCommand;
 import me.smeo.soupcore.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,7 +12,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,13 +71,13 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new soupSignRefillListener(), this);
         getServer().getPluginManager().registerEvents(new spongeLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());
         getCommand("placeholderTestCommand").setExecutor(new placeholderTestCommand());
         getCommand("refill").setExecutor(new refill());
         getCommand("repair").setExecutor(new repair());
         getCommand("bounty").setExecutor(new bountyCommand());
-        getCommand("bounties").setExecutor(new bountiesCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
 
