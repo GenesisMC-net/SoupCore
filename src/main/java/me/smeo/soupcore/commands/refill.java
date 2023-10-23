@@ -21,8 +21,12 @@ public class refill implements CommandExecutor {
             {
                 for (ItemStack item : p.getInventory().getContents())
                 {
-                    if ((item == null) || item.getType() == Material.AIR || item.getType() == Material.BOWL)
+                    if ((item == null) || item.getType() == Material.AIR)
                     {
+                        p.getInventory().addItem(new ItemStack(Material.MUSHROOM_SOUP, 1));
+                    } else if (item.getType() == Material.BOWL)
+                    {
+                        p.getInventory().removeItem(item);
                         p.getInventory().addItem(new ItemStack(Material.MUSHROOM_SOUP, 1));
                     }
                 }
