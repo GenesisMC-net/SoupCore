@@ -9,7 +9,7 @@ import javax.xml.crypto.Data;
 public class Credits
 {
 
-    public static boolean checkCreditBalance(Player player, int amount) // Checks if user has enough credits
+    public static boolean checkCreditBalance(Player player, Integer amount) // Checks if user has enough credits
     {
         if(Database.getPlayerData(player, "credits") >= amount)
         {

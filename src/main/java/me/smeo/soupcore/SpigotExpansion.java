@@ -2,6 +2,7 @@ package me.smeo.soupcore;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.smeo.soupcore.Database.Database;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +65,22 @@ public class SpigotExpansion extends PlaceholderExpansion {
         {
             return Database.getPlayerData(player, "credits").toString();
         }
+        if(params.equals("bounty"))
+        {
+            Integer bounty = Database.getPlayerData(player, "bounty");
+            if(bounty > 0)
+            {
+                //String string = ChatColor.GRAY + " | " + ChatColor.GOLD + bounty.toString();
+                return bounty.toString();
+
+            }else
+            {
+               return null;
+            }
+        }
 
         return null;
     }
+
+
 }
