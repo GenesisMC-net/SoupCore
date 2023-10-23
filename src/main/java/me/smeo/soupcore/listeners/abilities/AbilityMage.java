@@ -1,9 +1,7 @@
 package me.smeo.soupcore.listeners.abilities;
 
 import me.smeo.soupcore.SoupCore;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,6 +47,26 @@ public class AbilityMage implements Listener {
         }
     }
 
+    private void deleteWaterGrid(Location targetLocation, World world)
+    {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                System.out.println("It ran after 3 seconds");
+                for (int j = -1; j < 2; j++) {
+                    for (int k = -1; k < 2; k++) {
+                        Location waterGridCell = targetLocation.getBlock().getLocation().clone().add(j, 0, k);
+
+                        if (waterGridCell.getBlock().getType().equals(Material.WATER) || waterGridCell.getBlock().getType().equals(Material.STATIONARY_WATER)) {
+                            waterGridCell.getBlock().setType(Material.AIR);
+                        }
+                    }
+                }
+            }
+        }.runTaskLater(SoupCore.plugin, 20L * 3L);
+    }
+
+
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)
     {
@@ -88,30 +106,18 @@ public class AbilityMage implements Listener {
                                 i[0] = i[0] + 1;
                                 Location newLocation = playerLocation.clone().add(waterDirection[0]);
                                 if (p.getWorld().getBlockAt(newLocation).getType() != Material.AIR) {
+                                    Location targetLocation = newLocation.clone();
                                     for (int j = -1; j < 2; j++) {
                                         for (int k = -1; k < 2; k++) {
-                                            Location waterGridCell = newLocation.clone().getBlock().getLocation().add(j, 1, k);
+                                            Location waterGridCell = targetLocation.clone().getBlock().getLocation().add(j, 0, k);
+                                            System.out.println(waterGridCell.toString());
                                             if (waterGridCell.getBlock().getType().equals(Material.AIR)) {
                                                 waterGridCell.getBlock().setType(Material.WATER);
-                                                waterGridCell.getBlock().setData((byte) 10);
-                                                waterGridCell.getBlock().getState().update();
                                             }
                                         }
                                     }
 
-                                    new BukkitRunnable() {
-                                        @Override
-                                        public void run() {
-                                            for (int j = -1; j < 2; j++) {
-                                                for (int k = -1; k < 2; k++) {
-                                                    Location waterGridCell = newLocation.clone().getBlock().getLocation().add(j, 1, k);
-                                                    if (waterGridCell.getBlock().getType().equals(Material.WATER)) {
-                                                        waterGridCell.getBlock().setType(Material.AIR);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }.runTaskLater(SoupCore.plugin, 20L * 3L);
+                                    deleteWaterGrid(targetLocation, p.getWorld());
                                     i[0] = 10;
                                     this.cancel();
                                     return;
@@ -120,30 +126,17 @@ public class AbilityMage implements Listener {
                                         if (player.getUniqueId() != p.getUniqueId()) {
                                             Location targetPlayerLoc = player.getLocation().clone();
                                             if (targetPlayerLoc.getBlock().getLocation().equals(newLocation.getBlock().getLocation()) || targetPlayerLoc.getBlock().getLocation().equals(newLocation.clone().subtract(new Vector(0, 1, 0)).getBlock().getLocation())) {
+                                                Location targetPlayerLocation = targetPlayerLoc.clone().add(0, 1, 0);
                                                 for (int j = -1; j < 2; j++) {
                                                     for (int k = -1; k < 2; k++) {
-                                                        Location waterGridCell = targetPlayerLoc.clone().add(j, 1, k);
+                                                        Location waterGridCell = targetPlayerLocation.clone().add(j, 0, k);
                                                         if (waterGridCell.getBlock().getType().equals(Material.AIR)) {
                                                             waterGridCell.getBlock().setType(Material.WATER);
-                                                            waterGridCell.getBlock().setData((byte) 10);
-                                                            waterGridCell.getBlock().getState().update();
                                                         }
                                                     }
                                                 }
 
-                                                new BukkitRunnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        for (int j = -1; j < 2; j++) {
-                                                            for (int k = -1; k < 2; k++) {
-                                                                Location waterGridCell = targetPlayerLoc.clone().add(j, 1, k);
-                                                                if (waterGridCell.getBlock().getType().equals(Material.WATER)) {
-                                                                    waterGridCell.getBlock().setType(Material.AIR);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }.runTaskLater(SoupCore.plugin, 20L * 3L);
+                                                deleteWaterGrid(targetPlayerLocation, p.getWorld());
                                                 i[0] = 10;
                                                 this.cancel();
                                                 return;
@@ -193,7 +186,7 @@ public class AbilityMage implements Listener {
                             p.sendMessage(ChatColor.RED + "You must be on the ground to use this ability!");
                             return;
                         }
-                        p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 10, (double) 1.5, p.getEyeLocation().getDirection().getZ() * 10));
+                        p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, (double) 1, p.getEyeLocation().getDirection().getZ() * 15));
                         fireLaunchCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
                         cancelFallDamage.add(p.getUniqueId());

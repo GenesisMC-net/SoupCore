@@ -49,7 +49,7 @@ public class giveAbilityItem implements CommandExecutor {
                 waterAttackLore.add(ChatColor.GRAY + "players down when they are hit");
                 waterAttackLore.add("");
                 waterAttackLore.add(ChatColor.WHITE + "Shift-Right Click: " + ChatColor.RED + "Fire Jump");
-                waterAttackLore.add(ChatColor.GRAY + "Boost yourself into the sky towards");
+                waterAttackLore.add(ChatColor.GRAY + "Launch yourself forwards into the");
                 waterAttackLore.add(ChatColor.GRAY + "the direction you are facing");
                 waterAttackMeta.setLore(waterAttackLore);
 
