@@ -136,6 +136,7 @@ public class AbilityMage implements Listener {
                                                     }
                                                 }
 
+                                                player.damage(0.1, p);
                                                 deleteWaterGrid(targetPlayerLocation, p.getWorld());
                                                 i[0] = 10;
                                                 this.cancel();
