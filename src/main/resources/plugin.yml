@@ -19,5 +19,8 @@ commands:
     description: Bounty System
   giveAbilityItem:
     description: ADMIN COMMAND
+  stats:
+    description: Stats Command
+    usage: /stats
 
 depend: [PlaceholderAPI]
