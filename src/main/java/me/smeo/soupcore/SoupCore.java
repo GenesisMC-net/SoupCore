@@ -75,7 +75,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new spongeLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
 
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinLeaveMessages(), this);
 
         getServer().getPluginManager().registerEvents(new combatLogListeners(), this);
         // VVV Abilities VVV
