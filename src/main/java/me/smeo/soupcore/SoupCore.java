@@ -75,7 +75,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new spongeLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
 
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinLeaveMessages(), this);
 
         getServer().getPluginManager().registerEvents(new combatLogListeners(), this);
         // VVV Abilities VVV
@@ -89,6 +89,7 @@ public final class SoupCore extends JavaPlugin {
         getCommand("refill").setExecutor(new refill());
         getCommand("repair").setExecutor(new repair());
         getCommand("bounty").setExecutor(new bountyCommand());
+        getCommand("stats").setExecutor(new stats());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());
