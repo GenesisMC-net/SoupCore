@@ -20,4 +20,4 @@ commands:
   giveAbilityItem:
     description: ADMIN COMMAND
 
-depend: [PlaceholderAPI]
+depend: [PlaceholderAPI, WorldGuard]

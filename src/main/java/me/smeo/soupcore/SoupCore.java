@@ -1,5 +1,6 @@
 package me.smeo.soupcore;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
 import me.smeo.soupcore.commands.bountyCommand;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +25,10 @@ import java.util.List;
 public final class SoupCore extends JavaPlugin {
 
     public static SoupCore plugin;
+    public static WorldGuardPlugin getWorldGuard;
     public static Inventory kits;
     private static String connectionURL;
     public static List<Integer> killStreakMilestones = new ArrayList<Integer>();
-
-
-
-
 
     private void createInventory()
     {
@@ -78,6 +77,8 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
         getServer().getPluginManager().registerEvents(new combatLogListeners(), this);
+
+        getServer().getPluginManager().registerEvents(new PVPRegionListeners(), this);
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
         getServer().getPluginManager().registerEvents(new AbilityMage(), this);
@@ -99,6 +100,8 @@ public final class SoupCore extends JavaPlugin {
         {
             new SpigotExpansion().register();
         }
+
+        getWorldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 
         connectionURL = "jdbc:h2:" + getDataFolder().getAbsolutePath() + "/data/database";
         System.out.println(connectionURL);
