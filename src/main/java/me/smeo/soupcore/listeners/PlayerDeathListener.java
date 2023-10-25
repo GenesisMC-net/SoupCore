@@ -25,11 +25,10 @@ public class PlayerDeathListener implements Listener
     {
         Player p = e.getEntity();
         Location lastLoc = p.getLocation();
-        int killStreak = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak"));
+        Database.SetPlayerData(p, "deaths", (Database.getPlayerData(p, "deaths") + 1));
+        Database.SetPlayerData(p, "killStreak", 0);
 
-        Database.SetPlayerData(p, "soupData", "deaths", (Integer.valueOf((String) Database.getPlayerData(p, "soupData", "deaths") + 1)));
-        Database.SetPlayerData(p, "soupData", "killStreak", 0);
-
+        int killStreak = Database.getPlayerData(p, "killStreak");
         if(killStreak >= 20)
         {
             e.setDeathMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
