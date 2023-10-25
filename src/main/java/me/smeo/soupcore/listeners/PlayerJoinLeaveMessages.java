@@ -14,9 +14,9 @@ public class PlayerJoinLeaveMessages implements Listener
     public void onPlayerJoin(PlayerJoinEvent e)
     {
         Player player = e.getPlayer();
-        if(Database.isPlayerInDatabase(player) == false)
+        if(Database.isPlayerInDatabase(player, "Users") == false)
         {
-            Database.addPlayerToDataBase(player);
+            Database.addPlayerToDataBase(player, "Users");
         }
         e.setJoinMessage(ChatColor.GRAY + "[" + ChatColor.GREEN + "+" + ChatColor.GRAY + "] " + ChatColor.WHITE + player.getName());
     }

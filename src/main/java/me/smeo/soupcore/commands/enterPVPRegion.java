@@ -14,7 +14,7 @@ public class enterPVPRegion implements CommandExecutor
         if(!(sender instanceof Player))
         {
             Player player = Bukkit.getPlayer(args[0]);
-            Integer kit = Database.getPlayerData(player, "kit");
+            String kit = (String) Database.getPlayerData(player, "soupData", "kit");
             if(kit != null)
             {
                 // Assign kits here

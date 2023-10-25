@@ -19,10 +19,10 @@ public class stats implements CommandExecutor {
 
             sender.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + "Your Stats");
             sender.sendMessage("");
-            sender.sendMessage(ChatColor.GOLD + "Kills: " + ChatColor.AQUA + Database.getPlayerData(player, "kills").toString());
-            sender.sendMessage(ChatColor.GOLD + "Kill Streak: " + ChatColor.AQUA + Database.getPlayerData(player, "killStreak").toString());
-            sender.sendMessage(ChatColor.GOLD + "Deaths: " + ChatColor.AQUA + Database.getPlayerData(player, "deaths").toString());
-            float kdr = (float) Database.getPlayerData(player, "kills") / (float) Database.getPlayerData(player, "deaths");
+            sender.sendMessage(ChatColor.GOLD + "Kills: " + ChatColor.AQUA + Integer.valueOf((String) Database.getPlayerData(player, "soupData", "kills")));
+            sender.sendMessage(ChatColor.GOLD + "Kill Streak: " + ChatColor.AQUA + Integer.valueOf((String) Database.getPlayerData(player, "soupData", "killStreak")));
+            sender.sendMessage(ChatColor.GOLD + "Deaths: " + ChatColor.AQUA + Integer.valueOf((String) Database.getPlayerData(player, "soupData", "deaths")));
+            float kdr = Float.valueOf((String) Database.getPlayerData(player, "soupData", "kills")) / Float.valueOf((String) Database.getPlayerData(player, "soupData", "deaths"));
             final DecimalFormat df = new DecimalFormat("0.00");
             sender.sendMessage(ChatColor.GOLD + "KDR: " + ChatColor.AQUA + df.format(kdr));
             return true;
