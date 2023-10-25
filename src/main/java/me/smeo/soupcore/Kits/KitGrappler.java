@@ -85,7 +85,7 @@ public class KitGrappler {
         lore.add(ChatColor.RED + "Fishing rod" + ChatColor.WHITE + " that launches you forwards");
         lore.add("");
 
-        if (highlightedKit == 3) {
+        if (highlightedKit == 5) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

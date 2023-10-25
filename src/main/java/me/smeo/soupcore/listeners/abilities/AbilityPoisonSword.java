@@ -10,10 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import java.util.UUID;
 
 public class AbilityPoisonSword implements Listener {
     @EventHandler

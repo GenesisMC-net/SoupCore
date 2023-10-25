@@ -78,7 +78,7 @@ public class KitFisherman {
         lore.add(ChatColor.WHITE + "Fishing rod allows you to " + ChatColor.RED + "Teleport Players" + ChatColor.WHITE + "to your location");
         lore.add("");
 
-        if (highlightedKit == 3) {
+        if (highlightedKit == 6) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

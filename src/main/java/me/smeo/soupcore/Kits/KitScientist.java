@@ -77,7 +77,7 @@ public class KitScientist {
         lore.add(ChatColor.WHITE + "and" + ChatColor.RED + " 1 Poison " + ChatColor.WHITE + "potion");
         lore.add("");
 
-        if (highlightedKit == 1) {
+        if (highlightedKit == 7) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

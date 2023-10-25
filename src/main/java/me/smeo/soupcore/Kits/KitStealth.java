@@ -83,7 +83,7 @@ public class KitStealth {
         lore.add(ChatColor.WHITE + "Ninja Stars that deal" + ChatColor.RED + " 3 Hearts" + ChatColor.WHITE + " and " + ChatColor.RED + "Blindness for 5s");
         lore.add("");
 
-        if (highlightedKit == 2) {
+        if (highlightedKit == 4) {
             lore.add(ChatColor.GREEN + "Kit Selected");
         } else {
             lore.add(ChatColor.YELLOW + "Click to activate the kit!");
