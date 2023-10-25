@@ -1,5 +1,6 @@
 package me.smeo.soupcore;
 
+import com.sk89q.bukkit.util.FallbackRegistrationListener;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
@@ -62,6 +63,9 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityNinjaStars(), this);
         getServer().getPluginManager().registerEvents(new AbilitySpiderwebs(), this);
         getServer().getPluginManager().registerEvents(new AbilityBlitz(), this);
+        getServer().getPluginManager().registerEvents(new AbilityGrappler(), this);
+        getServer().getPluginManager().registerEvents(new AbilityFisherman(), this);
+        getServer().getPluginManager().registerEvents(new AbilityScientist(), this);
         
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());

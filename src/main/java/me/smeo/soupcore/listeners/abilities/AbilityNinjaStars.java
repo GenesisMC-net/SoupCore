@@ -81,6 +81,14 @@ public class AbilityNinjaStars implements Listener {
                     if (!cooldownActive) {
                         ninjaStarCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                ninjaStarCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.LIGHT_PURPLE + "Ninja Star");
+                            }
+                        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
+
 
                         ItemStack oneNinjaStar = itemInHand.clone();
 
