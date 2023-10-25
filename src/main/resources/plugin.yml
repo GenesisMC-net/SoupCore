@@ -19,5 +19,30 @@ commands:
     description: Bounty System
   giveAbilityItem:
     description: ADMIN COMMAND
+permissions:
+  SoupCore.kit.pvp:
+    default: true
+  SoupCore.kit.fisherman:
+    default: false
+  SoupCore.kit.tank:
+    default: false
+  SoupCore.kit.venom:
+    default: false
+  SoupCore.kit.stealth:
+    default: false
+  SoupCore.kit.mage:
+    default: false
+  SoupCore.kit.hulk:
+    default: false
+  SoupCore.kit.solider:
+    default: false
+  SoupCore.kit.blitz:
+    default: false
+  SoupCore.kit.spiderman:
+    default: false
+  SoupCore.kit.scientist:
+    default: false
+  SoupCore.kit.grappler:
+    default: false
 
-depend: [PlaceholderAPI, WorldGuard]
+depend: [PlaceholderAPI, WorldGuard, LuckPerms]
