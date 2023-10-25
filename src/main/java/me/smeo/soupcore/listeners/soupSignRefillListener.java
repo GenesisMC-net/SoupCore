@@ -35,17 +35,12 @@ public class soupSignRefillListener implements Listener
         System.out.println(e.getClickedBlock());
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
-            System.out.println("Right clicked");
             if(e.getClickedBlock().getType() == Material.WALL_SIGN)
             {
-                System.out.println("Player right clicked a sign");
-                Integer kills = Database.getPlayerData(p, "kills");
-                p.sendMessage("You have " + kills.toString() + " kills.");
 
                 Sign sign = (Sign) e.getClickedBlock().getState();
                 if(sign.getLine(1).equals("Soup Refill"))
                 {
-                    System.out.println("Player clicked on soup refill station");
                     p.openInventory(createSoupInventory());
                 }
             }

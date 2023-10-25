@@ -29,10 +29,10 @@ public class PlayerKillListener implements Listener
         if(p.getKiller() != null)
         {
             Player killer = p.getKiller();
-            Integer kills = Database.getPlayerData(killer, "kills") + 1;
-            Database.SetPlayerData(killer, "kills", kills);
-            Integer killStreak = Database.getPlayerData(killer, "killStreak") + 1;
-            Database.SetPlayerData(killer, "killStreak", killStreak);
+            Integer kills = Integer.valueOf((String) Database.getPlayerData(killer, "soupData", "kills")) + 1;
+            Database.SetPlayerData(killer, "soupData", "kills", kills);
+            Integer killStreak = Integer.valueOf((String) Database.getPlayerData(killer, "soupData", "killStreak")) + 1;
+            Database.SetPlayerData(killer, "soupData", "killStreak", killStreak);
 
             Random rand = new Random();
             int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.
@@ -43,11 +43,11 @@ public class PlayerKillListener implements Listener
             {
                 Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has reached a killstreak of " + ChatColor.AQUA + killStreak);
             }
-            if(Database.getPlayerData(p, "bounty") > 0)
+            if( Integer.valueOf((String) Database.getPlayerData(p, "soupData", "bounty")) > 0)
             {
-                Integer bounty = Database.getPlayerData(p, "bounty");
+                Integer bounty = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "bounty"));
                 Credits.giveCredits(killer, bounty);
-                Database.SetPlayerData(p, "bounty", 0);
+                Database.SetPlayerData(p, "soupData", "bounty", 0);
                 Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " and has claimed the " + ChatColor.GREEN + bounty + " credit " + ChatColor.GRAY + "bounty");
             }
 

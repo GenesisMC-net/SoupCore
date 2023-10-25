@@ -45,29 +45,29 @@ public class SpigotExpansion extends PlaceholderExpansion {
         }
         if(params.equals("kills"))
         {
-            return Database.getPlayerData(player, "kills").toString();
+            return (String) Database.getPlayerData(player, "soupData", "kills");
         }
         if(params.equals("killStreak"))
         {
-            return Database.getPlayerData(player, "killStreak").toString();
+            return (String) Database.getPlayerData(player, "soupData", "killStreak");
         }
         if(params.equals("deaths"))
         {
-            return Database.getPlayerData(player, "deaths").toString();
+            return (String) Database.getPlayerData(player, "soupData", "deaths");
         }
         if(params.equals("kdr"))
         {
-            float kdr = (float) Database.getPlayerData(player, "kills") / (float) Database.getPlayerData(player, "deaths");
+            float kdr = Float.valueOf((String) Database.getPlayerData(player, "soupData", "kills")) / Float.valueOf((String) Database.getPlayerData(player, "soupData", "deaths"));
             final DecimalFormat df = new DecimalFormat("0.00");
             return df.format(kdr);
         }
         if(params.equals("credits"))
         {
-            return Database.getPlayerData(player, "credits").toString();
+            return (String) Database.getPlayerData(player, "soupData", "credits");
         }
         if(params.equals("bounty"))
         {
-            Integer bounty = Database.getPlayerData(player, "bounty");
+            Integer bounty = Integer.valueOf((String) Database.getPlayerData(player, "soupData", "bounty"));
             if(bounty > 0)
             {
                 //String string = ChatColor.GRAY + " | " + ChatColor.GOLD + bounty.toString();
