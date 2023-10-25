@@ -19,6 +19,9 @@ commands:
     description: Bounty System
   giveAbilityItem:
     description: ADMIN COMMAND
+  stats:
+    description: Stats Command
+    usage: /stats
 permissions:
   SoupCore.kit.pvp:
     default: true
