@@ -29,7 +29,7 @@ public class soupDropListener implements Listener
             BukkitScheduler scheduler = Bukkit.getScheduler();
             scheduler.runTaskLater(plugin, () -> {
                 e.getItemDrop().remove();
-            }, 20L * 5L);
+            }, 20L * 7L);
         }
     }
 }
