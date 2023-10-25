@@ -39,8 +39,6 @@ public class kitsListeners implements Listener
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.YELLOW + " Blitz " + ChatColor.GRAY + "kit");
                 break;
             case 1 + (9*3):
-
-
                 Methods_Kits.selectKit(player, 4);
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.DARK_GRAY + " Stealth " + ChatColor.GRAY + "kit");
                 break;

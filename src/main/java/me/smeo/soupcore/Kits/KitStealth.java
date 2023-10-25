@@ -22,17 +22,17 @@ public class KitStealth {
 
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         helmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        helmet.addEnchantment(Enchantment.DURABILITY, 20);
+        helmet.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
         inv.setHelmet(helmet);
 
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
         chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        chestplate.addEnchantment(Enchantment.DURABILITY, 20);
+        chestplate.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
         inv.setChestplate(chestplate);
 
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
         leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        leggings.addEnchantment(Enchantment.DURABILITY, 20);
+        leggings.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
         inv.setLeggings(leggings);
 
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
@@ -73,7 +73,7 @@ public class KitStealth {
 
         ItemStack item = new ItemStack((Material.NETHER_STAR));
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Stealth");
+        meta.setDisplayName(ChatColor.DARK_GRAY + "Stealth");
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "Speed around like a ninja");
         lore.add("");
