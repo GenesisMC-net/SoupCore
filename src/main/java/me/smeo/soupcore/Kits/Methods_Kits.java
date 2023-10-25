@@ -1,6 +1,5 @@
 package me.smeo.soupcore.Kits;
 
-import me.smeo.soupcore.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -119,7 +118,7 @@ public class Methods_Kits {
 
     public static int getActiveKit(Player player)
     {
-        Integer activeKit = Database.getPlayerData(player, "kit");
+        Integer activeKit = Integer.valueOf((String) Database.getPlayerData(player, "soupData", "kit"));
         if (activeKit == null)
         {
             activeKit = 0;
@@ -202,6 +201,6 @@ public class Methods_Kits {
             return;
         }
 
-        Database.SetPlayerData(player, "kit", kit);
+        Database.SetPlayerData(player, "soupData", "kit", kit);
     }
 }

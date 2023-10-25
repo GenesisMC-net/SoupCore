@@ -1,10 +1,8 @@
 package me.smeo.soupcore.commands;
 
 import me.smeo.soupcore.Credits;
-import me.smeo.soupcore.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

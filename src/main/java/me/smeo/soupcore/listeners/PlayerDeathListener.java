@@ -1,9 +1,7 @@
 package me.smeo.soupcore.listeners;
 
-import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -27,10 +25,11 @@ public class PlayerDeathListener implements Listener
     {
         Player p = e.getEntity();
         Location lastLoc = p.getLocation();
-        Database.SetPlayerData(p, "deaths", (Database.getPlayerData(p, "deaths") + 1));
-        Database.SetPlayerData(p, "killStreak", 0);
+        int killStreak = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak"));
 
-        int killStreak = Database.getPlayerData(p, "killStreak");
+        Database.SetPlayerData(p, "soupData", "deaths", (Integer.valueOf((String) Database.getPlayerData(p, "soupData", "deaths") + 1)));
+        Database.SetPlayerData(p, "soupData", "killStreak", 0);
+
         if(killStreak >= 20)
         {
             e.setDeathMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);

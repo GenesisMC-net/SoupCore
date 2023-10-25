@@ -1,7 +1,6 @@
 package me.smeo.soupcore.listeners;
 
 import me.smeo.soupcore.Credits;
-import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,15 +45,15 @@ public class combatLogListeners implements Listener {
             while (antiLog.contains(p.getUniqueId())) {
                 antiLog.remove(p.getUniqueId());
             }
-            Database.SetPlayerData(p, "deaths", (Database.getPlayerData(p, "deaths") + 1));
-            Database.SetPlayerData(p, "killStreak", 0);
+            int killStreak = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak"));
+            Database.SetPlayerData(p, "soupData", "deaths", Integer.valueOf((String) Database.getPlayerData(p, "soupData", "deaths") + 1));
+            Database.SetPlayerData(p, "soupData", "killStreak", 0);
 
             for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
                 if (Objects.equals(timer.getValue()[0], p.getUniqueId()) || Objects.equals(timer.getValue()[1], p.getUniqueId())) {
                     Bukkit.getScheduler().cancelTask(timer.getKey().getTaskId());
 
                     // Player dies
-                    int killStreak = Database.getPlayerData(p, "killStreak");
                     if(killStreak >= 20)
                     {
                         Bukkit.broadcastMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
@@ -66,10 +65,10 @@ public class combatLogListeners implements Listener {
                         System.out.println("The logger was being attacked");
                         Player killer = Bukkit.getPlayer(timer.getValue()[0]);
                         antiLog.remove(killer.getUniqueId());
-                        Integer kills = Database.getPlayerData(killer, "kills") + 1;
-                        Database.SetPlayerData(killer, "kills", kills);
-                        Integer attackerKillStreak = Database.getPlayerData(killer, "killStreak") + 1;
-                        Database.SetPlayerData(killer, "killStreak", attackerKillStreak);
+                        Integer kills = Integer.valueOf((String) Database.getPlayerData(killer, "soupData", "deaths")) + 1;
+                        Database.SetPlayerData(killer, "soupData", "kills", kills);
+                        Integer attackerKillStreak = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak")) + 1;
+                        Database.SetPlayerData(killer, "soupData", "killStreak", attackerKillStreak);
 
                         Random rand = new Random();
                         int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.

@@ -1,20 +1,14 @@
 package me.smeo.soupcore.listeners.abilities;
 
-import me.smeo.soupcore.Database.Database;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.Objects;
-import java.util.Random;
 
 public class AbilityScientist implements Listener {
     @EventHandler
@@ -24,7 +18,7 @@ public class AbilityScientist implements Listener {
         if(p.getKiller() != null)
         {
             Player killer = p.getKiller();
-            if (Objects.equals(Database.getPlayerData(killer, "kit"), 7))
+            if (Objects.equals(Integer.valueOf((String) Database.getPlayerData(killer, "soupData", "kit"), 7))
             {
                 PlayerInventory inv = killer.getInventory();
                 ItemStack poisonPot = new ItemStack(Material.POTION, 1, (short)16388);

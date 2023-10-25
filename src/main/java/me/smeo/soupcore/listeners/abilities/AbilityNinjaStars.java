@@ -1,6 +1,5 @@
 package me.smeo.soupcore.listeners.abilities;
 
-import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +29,7 @@ public class AbilityNinjaStars implements Listener {
     {
         ninjaStarCooldown.remove(e.getEntity().getPlayer().getUniqueId());
 
-        if (Objects.equals(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "kit"), 4)) // Kit ID for stealth is 4
+        if (Objects.equals(Integer.valueOf((String) Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit"), 4)) // Kit ID for stealth is 4
         {
             ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, 4);
 
