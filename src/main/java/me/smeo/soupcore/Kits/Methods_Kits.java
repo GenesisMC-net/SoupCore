@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Methods_Kits {
 
@@ -119,12 +120,7 @@ public class Methods_Kits {
 
     public static int getActiveKit(Player player)
     {
-        Integer activeKit = Integer.valueOf((String) Database.getPlayerData(player, "soupData", "kit"));
-        if (activeKit == null)
-        {
-            activeKit = 0;
-        }
-        return activeKit;
+        return Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "kit")));
     }
 
     public static boolean checkKitPermission(Player player, int kit)

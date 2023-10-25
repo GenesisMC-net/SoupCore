@@ -219,7 +219,7 @@ public class Database
                 statement = connection.prepareStatement("INSERT INTO Users(uuid, name) VALUES('" + p.getUniqueId().toString() + "', '" + p.getName() + ")");
             }else if (table.equals("soupData"))
             {
-                statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', NULL, 0, 0, 0, 0, 0)");
+                statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', 0, 0, 0, 0, 0, 0)");
             }else if(table.equals("soupKitsData"))
             {
                 statement = connection.prepareStatement("INSERT INTO soupKitsData(uuid) VALUES('" + p.getUniqueId().toString() + "')");
