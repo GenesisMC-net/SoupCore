@@ -1,5 +1,6 @@
 package me.smeo.soupcore.listeners.abilities;
 
+import me.smeo.soupcore.Database.Database;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,7 @@ public class AbilityScientist implements Listener {
         if(p.getKiller() != null)
         {
             Player killer = p.getKiller();
-            if (Objects.equals(Integer.valueOf((String) Database.getPlayerData(killer, "soupData", "kit"), 7))
+            if (Objects.equals(Integer.valueOf((String) Database.getPlayerData(killer, "soupData", "kit")), 7))
             {
                 PlayerInventory inv = killer.getInventory();
                 ItemStack poisonPot = new ItemStack(Material.POTION, 1, (short)16388);

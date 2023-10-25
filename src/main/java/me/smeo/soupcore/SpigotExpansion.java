@@ -1,6 +1,7 @@
 package me.smeo.soupcore;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.smeo.soupcore.Database.Database;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

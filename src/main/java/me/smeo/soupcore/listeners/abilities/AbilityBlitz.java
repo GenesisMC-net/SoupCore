@@ -1,6 +1,7 @@
 package me.smeo.soupcore.listeners.abilities;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -51,8 +52,8 @@ public class AbilityBlitz implements Listener {
             return;
         }
         System.out.println("Killer: " + killer.getName());
-        System.out.println(Integer.valueOf((String) Database.getPlayerData(player, "soupData", "kit")));
-        if (!Objects.equals(Integer.valueOf((String) Database.getPlayerData(player, "soupData", "kit")), 3)) // Index for blitz kit
+        System.out.println(Integer.valueOf((String) Database.getPlayerData(p, "soupData", "kit")));
+        if (!Objects.equals(Integer.valueOf((String) Database.getPlayerData(p, "soupData", "kit")), 3)) // Index for blitz kit
         {
             return;
         }

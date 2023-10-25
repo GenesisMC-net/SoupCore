@@ -1,5 +1,6 @@
 package me.smeo.soupcore;
 
+import me.smeo.soupcore.Database.Database;
 import org.bukkit.entity.Player;
 
 public class Credits

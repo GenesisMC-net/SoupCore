@@ -1,6 +1,7 @@
 package me.smeo.soupcore;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
 import me.smeo.soupcore.commands.bountyCommand;
 import me.smeo.soupcore.listeners.*;

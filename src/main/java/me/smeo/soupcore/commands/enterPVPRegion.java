@@ -1,5 +1,6 @@
 package me.smeo.soupcore.commands;
 
+import me.smeo.soupcore.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
