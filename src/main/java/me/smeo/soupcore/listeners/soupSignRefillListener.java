@@ -18,7 +18,7 @@ public class soupSignRefillListener implements Listener
 
     private Inventory createSoupInventory()
     {
-        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GOLD + "Soup Refill");
+        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Soup Refill");
         ItemStack soup = new ItemStack(Material.MUSHROOM_SOUP);
         for(int i=0; i<54; i++)
         {

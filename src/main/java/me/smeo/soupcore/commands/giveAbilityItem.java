@@ -79,9 +79,6 @@ public class giveAbilityItem implements CommandExecutor {
                 player.getInventory().addItem(ninjaStar);
                 break;
         }
-
-
-
         return false;
     }
 }

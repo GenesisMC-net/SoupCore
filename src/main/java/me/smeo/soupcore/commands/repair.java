@@ -21,7 +21,7 @@ public class repair implements CommandExecutor {
             {
                 for (ItemStack item : p.getInventory().getContents())
                 {
-                    if ((item != null) && (item.getType() != Material.AIR))
+                    if ((item != null) && (item.getType() != Material.AIR) && item.getType() != Material.INK_SACK)
                     {
                         item.setDurability((short) 0);
                     }

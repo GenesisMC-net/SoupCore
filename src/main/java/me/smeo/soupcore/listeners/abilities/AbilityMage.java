@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,7 +48,14 @@ public class AbilityMage implements Listener {
         }
     }
 
-    private void deleteWaterGrid(Location targetLocation, World world)
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e)
+    {
+        waterAbilityCooldown.remove(e.getEntity().getPlayer().getUniqueId());
+        fireLaunchCooldown.remove(e.getEntity().getPlayer().getUniqueId());
+    }
+
+    private void deleteWaterGrid(Location targetLocation)
     {
         new BukkitRunnable() {
             @Override
@@ -117,7 +125,7 @@ public class AbilityMage implements Listener {
                                         }
                                     }
 
-                                    deleteWaterGrid(targetLocation, p.getWorld());
+                                    deleteWaterGrid(targetLocation);
                                     i[0] = 10;
                                     this.cancel();
                                     return;
@@ -137,7 +145,7 @@ public class AbilityMage implements Listener {
                                                 }
 
                                                 player.damage(0.1, p);
-                                                deleteWaterGrid(targetPlayerLocation, p.getWorld());
+                                                deleteWaterGrid(targetPlayerLocation);
                                                 i[0] = 10;
                                                 this.cancel();
                                                 return;
