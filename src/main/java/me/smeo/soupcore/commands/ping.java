@@ -1,5 +1,6 @@
 package me.smeo.soupcore.commands;
 
+import me.smeo.soupcore.Database.Database;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,6 +15,9 @@ public class ping implements CommandExecutor
         {
             Player p = (Player) sender;
             p.sendMessage(ChatColor.LIGHT_PURPLE + "Pong!");
+            Integer bounty = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "credits"));
+            p.sendMessage(bounty.toString());
+            //p.sendMessage(Integer.getInteger((String) Database.getPlayerData(p, "soupData", "bounty")).toString());
         }
         return false;
     }

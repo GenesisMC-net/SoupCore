@@ -1,13 +1,18 @@
 package me.smeo.soupcore.Database;
 
 import me.smeo.soupcore.SoupCore;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Database
 {
+    public static List<String> stringColumns = new ArrayList<String>();
+    public static List<String> integerColumns = new ArrayList<String>();
+    public static List<String> booleanColumns = new ArrayList<String>();
 
     public static Connection getConnection()
     {
@@ -24,25 +29,34 @@ public class Database
         return connection;
     }
 
-    public static void initialiseDatabase() // Columns: uuid, name, kit, kills, killStreak, deaths, credits, bounty
+    public static void initialiseDatabase()
     {
+        Collections.addAll(stringColumns, "uuid", "name", "kit");
+        Collections.addAll(integerColumns, "kills", "killStreak", "deaths", "credits", "bounty");
+        Collections.addAll(booleanColumns, "kit1"); // Add in ur kits for permissions
+
         Connection connection = getConnection();
-        PreparedStatement preparedStatement;
         try{
-            preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupData(uuid varchar(36) NOT NULL PRIMARY KEY, name varchar(48) NOT NULL, kit int, kills int, killStreak int, deaths int, credits int, bounty int)");
-            preparedStatement.execute();
+            PreparedStatement UsersStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Users(uuid varchar(36) NOT NULL PRIMARY KEY, name varchar(40))");
+            UsersStatement.execute(); // uuid, name
+            PreparedStatement soupDataStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupData(uuid varchar(36) NOT NULL PRIMARY KEY, kit varchar(20), kills int, killStreak int, deaths int, credits int, bounty int)");
+            soupDataStatement.execute(); // uuid, kit, kills, killStreak, deaths, credits, bounty
+            PreparedStatement soupKitsStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupKitsData(uuid varchar(36) NOT NULL PRIMARY KEY)");
+            soupKitsStatement.execute(); //uuid, kit1, kit2, kit3 etc >>>>> ALL ARE BOOLEANS
+
+
             connection.close();
         }catch(SQLException e){
-            System.out.println("Error creating table");
+            System.out.println("Error creating tables");
         }
     }
 
-    public static Boolean isPlayerInDatabase(Player p)
+    public static Boolean isPlayerInDatabase(Player p, String table)
     {
         Connection connection = getConnection();
         PreparedStatement preparedStatement;
         try{
-            preparedStatement = connection.prepareStatement("SELECT * FROM soupData");
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + table);
             ResultSet rows = preparedStatement.executeQuery();
             boolean isFound = false;
             while(rows.next())
@@ -56,23 +70,77 @@ public class Database
             connection.close();
             return isFound;
         }catch(SQLException e){
-            System.out.println("Error creating table");
+            System.out.println("Error accessing data (isPlayerInDatabase)");
             System.out.println(e);
         }
         return false;
     }
 
-    public static Boolean isPlayerInDatabaseByName(String name)
+    public static String getUUIDFromNameInDatabase(String name)
     {
         Connection connection = getConnection();
         PreparedStatement preparedStatement;
         try{
-            preparedStatement = connection.prepareStatement("SELECT * FROM soupData");
+
+                preparedStatement = connection.prepareStatement("SELECT * FROM Users");
+                ResultSet rows = preparedStatement.executeQuery();
+                while(rows.next())
+                {
+                    if(rows.getString("name").equalsIgnoreCase(name))
+                    {
+                        connection.close();
+                        return rows.getString("uuid");
+                    }
+                }
+
+            connection.close();
+                return null;
+        }catch(SQLException e){
+            System.out.println("Error getting UUID from Name");
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public static String getNameFromUUIDInDatabase(String uuid)
+    {
+        Connection connection = getConnection();
+        PreparedStatement preparedStatement;
+        try{
+
+            preparedStatement = connection.prepareStatement("SELECT * FROM Users");
             ResultSet rows = preparedStatement.executeQuery();
-            boolean isFound = false;
             while(rows.next())
             {
-                if(rows.getString("name").equalsIgnoreCase(name))
+                if(rows.getString("uuid").equalsIgnoreCase(uuid))
+                {
+                    connection.close();
+                    return rows.getString("name");
+                }
+            }
+
+            connection.close();
+            return null;
+        }catch(SQLException e){
+            System.out.println("Error getting UUID from Name");
+            System.out.println(e);
+        }
+        return null;
+    }
+    public static Boolean isPlayerInDatabaseByName(String table, String name)
+    {
+        String uuid = getUUIDFromNameInDatabase(name);
+        Connection connection = getConnection();
+        PreparedStatement preparedStatement;
+        boolean isFound;
+        try{
+
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + table);
+            ResultSet rows = preparedStatement.executeQuery();
+            isFound = false;
+            while(rows.next())
+            {
+                if(rows.getString("uuid").equalsIgnoreCase(uuid))
                 {
                     isFound = true;
                     break;
@@ -81,26 +149,26 @@ public class Database
             connection.close();
             return isFound;
         }catch(SQLException e){
-            System.out.println("Error creating table");
+            System.out.println("Error finding user (isPlayerInDatabaseByName");
             System.out.println(e);
         }
         return false;
     }
 
-    public static Integer getPlayerData(Player p, String column)
+    public static Object getPlayerData(Player p, String table, String column)
     {
-        if(isPlayerInDatabase(p) == false)
+        if(isPlayerInDatabase(p, table) == false)
         {
-            addPlayerToDataBase(p);
+            addPlayerToDataBase(p, table);
         }
         Connection connection = getConnection();
         PreparedStatement queryStatement;
         try{
-            queryStatement = connection.prepareStatement("SELECT " + column + " FROM soupData WHERE uuid = '" + p.getUniqueId().toString() + "'");
+            queryStatement = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
             ResultSet rows = queryStatement.executeQuery();
             while(rows.next())
             {
-                return rows.getInt(column);
+                return rows.getString(column);
             }
             connection.close();
         }catch(SQLException e){
@@ -110,16 +178,28 @@ public class Database
         return null;
     }
 
-    public static void SetPlayerData(Player p, String column, Integer data)
+
+    public static void SetPlayerData(Player p, String table, String column, Integer data)
     {
-        if(isPlayerInDatabase(p) == false)
+        if(isPlayerInDatabase(p, table) == false)
         {
-            addPlayerToDataBase(p);
+            addPlayerToDataBase(p, table);
         }
         Connection connection = getConnection();
         PreparedStatement statement;
         try{
-            statement = connection.prepareStatement("UPDATE soupData SET " + column + " = " + data.toString() + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
+            if(stringColumns.contains(column))
+            {
+                statement = connection.prepareStatement("UPDATE " + table + " SET " + column + " = '" + data.toString() + "' WHERE uuid = '" + p.getUniqueId().toString() + "'");
+            }
+            else if(integerColumns.contains(column) || booleanColumns.contains(column))
+            {
+                statement = connection.prepareStatement("UPDATE " + table + " SET " + column + " = " + data.toString() + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
+            }
+            else{
+                return;
+            }
+
             statement.execute();
             connection.close();
         }catch(SQLException e){
@@ -129,12 +209,22 @@ public class Database
     }
 
 
-    public static void addPlayerToDataBase(Player p)
+    public static void addPlayerToDataBase(Player p, String table)
     {
         Connection connection = getConnection();
-        PreparedStatement statement;
+        PreparedStatement statement = null;
         try{
-            statement = connection.prepareStatement("INSERT INTO soupData(uuid, name, kit, kills, killstreak, deaths, credits, bounty) VALUES('" + p.getUniqueId().toString() + "', '" + p.getName() + "', NULL, 0, 0, 0, 0, 0)");
+            if(table.equals("Users"))
+            {
+                statement = connection.prepareStatement("INSERT INTO Users(uuid, name) VALUES('" + p.getUniqueId().toString() + "', '" + p.getName() + ")");
+            }else if (table.equals("soupData"))
+            {
+                statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', NULL, 0, 0, 0, 0, 0)");
+            }else if(table.equals("soupKitsData"))
+            {
+                statement = connection.prepareStatement("INSERT INTO soupKitsData(uuid) VALUES('" + p.getUniqueId().toString() + "')");
+            }
+
             statement.execute();
             connection.close();
         }catch(SQLException ex)
@@ -143,5 +233,7 @@ public class Database
             System.out.println(ex);
         }
     }
+
+
 
 }
