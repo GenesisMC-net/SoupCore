@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
@@ -22,6 +25,9 @@ public class combatLogListeners implements Listener {
 
     public ArrayList<UUID> antiLog = new ArrayList<>();
     public HashMap<BukkitTask, UUID[]> combatTimers = new HashMap<>();
+    // Lists below prevent ConcurrentModification errors
+    public List<BukkitTask> combatTimersToRemove = new ArrayList<>();
+    public HashMap<BukkitTask, UUID[]> combatTimersToAdd = new HashMap<>();
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e)
@@ -79,11 +85,27 @@ public class combatLogListeners implements Listener {
                         antiLog.remove(timer.getValue()[1]);
                     }
 
-                    combatTimers.remove(timer.getKey());
+                    combatTimersToRemove.add(timer.getKey());
                 }
             }
+            for (BukkitTask key: combatTimersToRemove) {
+                combatTimers.remove(key);
+            }
+            combatTimersToRemove = new ArrayList<>();
 
-            p.getWorld().dropItemNaturally(lastLoc, new ItemStack(Material.MUSHROOM_SOUP, soupDrop));
+            for (int i = 0; i < soupDrop; i++) {
+                Item droppedSoup = p.getWorld().dropItemNaturally(lastLoc, new ItemStack(Material.MUSHROOM_SOUP));
+                new BukkitRunnable()
+                {
+                    @Override
+                    public void run() {
+                        if (Objects.equals(droppedSoup.getType(), EntityType.DROPPED_ITEM))
+                        {
+                            droppedSoup.remove();
+                        }
+                    }
+                }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
+            }
         }
     }
 
@@ -93,9 +115,14 @@ public class combatLogListeners implements Listener {
         for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
             if (Objects.equals(timer.getValue()[0], playerUUID) || Objects.equals(timer.getValue()[1], playerUUID)) {
                 Bukkit.getScheduler().cancelTask(timer.getKey().getTaskId());
-                combatTimers.remove(timer.getKey());
+                combatTimersToRemove.add(timer.getKey());
             }
         }
+        for (BukkitTask key: combatTimersToRemove) {
+            combatTimers.remove(key);
+        }
+        combatTimersToRemove = new ArrayList<>();
+
         if (antiLog.contains(playerUUID)) {
             while (antiLog.contains(playerUUID)) {
                 antiLog.remove(playerUUID);
@@ -138,10 +165,12 @@ public class combatLogListeners implements Listener {
                                 }
                             }
                         }, 20L * 15L);
-                        combatTimers.put(newCombatTagTimer, new UUID[]{attackerUUID, targetUUID});
+                        combatTimersToAdd.put(newCombatTagTimer, new UUID[]{attackerUUID, targetUUID});
                         System.out.println("Timer has been recreated");
                     }
                 }
+                combatTimers.putAll(combatTimersToAdd);
+                combatTimersToAdd = new HashMap<>();
             }
 
             if (!antiLog.contains(attackerUUID) && !antiLog.contains(targetUUID))
