@@ -1,15 +1,10 @@
 package me.smeo.soupcore.commands;
 
-import me.smeo.soupcore.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class enterPVPRegion implements CommandExecutor
 {

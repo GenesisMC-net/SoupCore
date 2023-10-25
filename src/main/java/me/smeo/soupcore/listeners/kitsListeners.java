@@ -53,30 +53,26 @@ public class kitsListeners implements Listener
             case 7 + (9*3):
 
                 Methods_Kits.selectKit(player, 7);
-                player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.WHITE + " Scientist " + ChatColor.GRAY + "kit");
+                player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.DARK_PURPLE + " Scientist " + ChatColor.GRAY + "kit");
                 break;
 
             // TODO Colour codes for messages below
             case 1 + (9*5):
                 Methods_Kits.selectKit(player, 8);
-                player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.BLUE + " Mage " + ChatColor.GRAY + "kit");
-                break;
-            case 3 + (9*5):
-
-                Methods_Kits.selectKit(player, 9);
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.RED + " Soldier " + ChatColor.GRAY + "kit");
                 break;
+            case 3 + (9*5):
+                Methods_Kits.selectKit(player, 9);
+                player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.BLUE + " Mage " + ChatColor.GRAY + "kit");
+                break;
             case 5 + (9*5):
-
                 Methods_Kits.selectKit(player, 10);
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.DARK_GREEN + " Hulk " + ChatColor.GRAY + "kit");
                 break;
             case 7 + (9*5):
-
                 Methods_Kits.selectKit(player, 11);
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.DARK_RED + " Tank " + ChatColor.GRAY + "kit");
                 break;
         }
-        player.closeInventory();
     }
 }

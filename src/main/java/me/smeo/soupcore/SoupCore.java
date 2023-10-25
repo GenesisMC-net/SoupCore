@@ -1,21 +1,13 @@
 package me.smeo.soupcore;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
 import me.smeo.soupcore.commands.bountyCommand;
 import me.smeo.soupcore.listeners.*;
 import me.smeo.soupcore.listeners.abilities.*;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
@@ -62,6 +54,9 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityNinjaStars(), this);
         getServer().getPluginManager().registerEvents(new AbilitySpiderwebs(), this);
         getServer().getPluginManager().registerEvents(new AbilityBlitz(), this);
+        getServer().getPluginManager().registerEvents(new AbilityGrappler(), this);
+        getServer().getPluginManager().registerEvents(new AbilityFisherman(), this);
+        getServer().getPluginManager().registerEvents(new AbilityScientist(), this);
         
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());

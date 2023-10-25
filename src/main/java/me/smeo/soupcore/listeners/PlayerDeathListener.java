@@ -1,9 +1,7 @@
 package me.smeo.soupcore.listeners;
 
-import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;

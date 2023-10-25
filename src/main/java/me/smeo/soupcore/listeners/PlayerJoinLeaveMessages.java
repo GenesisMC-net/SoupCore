@@ -1,6 +1,5 @@
 package me.smeo.soupcore.listeners;
 
-import me.smeo.soupcore.Database.Database;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

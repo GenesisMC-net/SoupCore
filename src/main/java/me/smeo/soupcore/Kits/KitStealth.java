@@ -73,7 +73,7 @@ public class KitStealth {
 
         ItemStack item = new ItemStack((Material.NETHER_STAR));
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.DARK_GRAY + "Stealth");
+        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Stealth");
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "Speed around like a ninja");
         lore.add("");
@@ -85,8 +85,6 @@ public class KitStealth {
 
         if (highlightedKit == 2) {
             lore.add(ChatColor.GREEN + "Kit Selected");
-            meta.addEnchant(Enchantment.LUCK, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         } else {
             lore.add(ChatColor.YELLOW + "Click to activate the kit!");
         }

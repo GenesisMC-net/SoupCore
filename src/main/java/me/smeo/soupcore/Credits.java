@@ -1,10 +1,6 @@
 package me.smeo.soupcore;
 
-import me.smeo.soupcore.Database.Database;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import javax.xml.crypto.Data;
 
 public class Credits
 {

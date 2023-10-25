@@ -1,6 +1,5 @@
 package me.smeo.soupcore.Kits;
 
-import me.smeo.soupcore.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -101,12 +100,14 @@ public class Methods_Kits {
         inv.setItem(5 + 9, KitSpiderman.guiAppearance(player, inv));
         inv.setItem(7 + 9, KitBlitz.guiAppearance(player, inv));
         inv.setItem(1 + (9 * 3), KitStealth.guiAppearance(player, inv));
-        inv.setItem(3 + (9 * 3), KitMage.guiAppearance(player, inv));
+        inv.setItem(3 + (9 * 3), KitGrappler.guiAppearance(player, inv));
+        inv.setItem(5 + (9 * 3), KitFisherman.guiAppearance(player, inv));
+        inv.setItem(7 + (9 * 3), KitScientist.guiAppearance(player, inv));
 
         for (int i = 0; i < 54; i++) {
             if ((inv.getContents()[i] == null) || (inv.getContents()[i].getType() == Material.AIR))
             {
-                inv.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
+                inv.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
             }
         }
 
@@ -117,7 +118,7 @@ public class Methods_Kits {
 
     public static int getActiveKit(Player player)
     {
-        Integer activeKit = Database.getPlayerData(player, "kit");
+        Integer activeKit = Integer.valueOf((String) Database.getPlayerData(player, "soupData", "kit"));
         if (activeKit == null)
         {
             activeKit = 0;
@@ -153,15 +154,15 @@ public class Methods_Kits {
             case 4:
                 KitStealth.giveItems(player);
                 break;
-//            case 5:
-//                Kit.giveItems(player);
-//                break;
-//            case 6:
-//                Kit.giveItems(player);
-//                break;
-//            case 7:
-//                Kit.giveItems(player);
-//                break;
+            case 5:
+                KitGrappler.giveItems(player);
+                break;
+            case 6:
+                KitFisherman.giveItems(player);
+                break;
+            case 7:
+                KitScientist.giveItems(player);
+                break;
 //            case 8:
 //                Kit.giveItems(player);
 //                break;
@@ -200,6 +201,6 @@ public class Methods_Kits {
             return;
         }
 
-        Database.SetPlayerData(player, "kit", kit);
+        Database.SetPlayerData(player, "soupData", "kit", kit);
     }
 }

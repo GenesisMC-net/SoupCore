@@ -1,6 +1,5 @@
 package me.smeo.soupcore.listeners;
 
-import me.smeo.soupcore.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,7 +17,7 @@ public class soupSignRefillListener implements Listener
 
     private Inventory createSoupInventory()
     {
-        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Soup Refill");
+        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Soup Refill");
         ItemStack soup = new ItemStack(Material.MUSHROOM_SOUP);
         for(int i=0; i<54; i++)
         {

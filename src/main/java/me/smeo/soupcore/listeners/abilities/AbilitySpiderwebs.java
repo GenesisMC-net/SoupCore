@@ -68,6 +68,14 @@ public class AbilitySpiderwebs implements Listener {
                     if (!cooldownActive) {
                         spiderWebCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                spiderWebCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Web Attack");
+                            }
+                        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 30L);
+
                         final Item[] web = {p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(Material.WEB))};
                         Vector webVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2.5, 1, 2.5));
                         web[0].setVelocity(webVelocity);

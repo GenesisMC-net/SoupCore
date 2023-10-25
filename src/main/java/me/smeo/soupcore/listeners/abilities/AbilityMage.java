@@ -100,6 +100,14 @@ public class AbilityMage implements Listener {
                     if (!cooldownActive) {
                         waterAbilityCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                waterAbilityCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.BLUE + "Water Attack");
+                            }
+                        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
+
                         Location playerLocation = p.getLocation();
                         playerLocation.setY(playerLocation.getY() + 1);
                         Vector playerDirection = playerLocation.clone().getDirection();
@@ -196,7 +204,15 @@ public class AbilityMage implements Listener {
                             return;
                         }
                         p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, (double) 1, p.getEyeLocation().getDirection().getZ() * 15));
+
                         fireLaunchCooldown.put(p.getUniqueId(), System.currentTimeMillis());
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                fireLaunchCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Fire Jump");
+                            }
+                        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 15L);
 
                         cancelFallDamage.add(p.getUniqueId());
 
