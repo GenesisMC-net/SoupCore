@@ -5,9 +5,8 @@ import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.commands.*;
 import me.smeo.soupcore.commands.bountyCommand;
 import me.smeo.soupcore.listeners.*;
-import me.smeo.soupcore.listeners.abilities.AbilityMage;
-import me.smeo.soupcore.listeners.abilities.AbilityNinjaStars;
-import me.smeo.soupcore.listeners.abilities.AbilityPoisonSword;
+import me.smeo.soupcore.listeners.abilities.*;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,6 +16,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,33 +26,10 @@ public final class SoupCore extends JavaPlugin {
 
     public static SoupCore plugin;
     public static WorldGuardPlugin getWorldGuard;
+    public static LuckPerms luckPerms;
     public static Inventory kits;
     private static String connectionURL;
     public static List<Integer> killStreakMilestones = new ArrayList<Integer>();
-
-    private void createInventory()
-    {
-        Inventory inv = Bukkit.createInventory(null, 9, ChatColor.DARK_PURPLE + "Kits");
-
-        ItemStack item = new ItemStack((Material.DIAMOND_SWORD));
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.DARK_RED + "PVP Kit");
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-        lore.add("Click to activate the kit!");
-        meta.addEnchant(Enchantment.LUCK, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
-        inv.setItem(3, item);
-
-        item.setType(Material.STICK);
-        meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA + "Next Kit");
-        item.setItemMeta(meta);
-        inv.setItem(5, item);
-
-        kits = inv;
-    }
 
     public static String getConnectionURL() {
         return connectionURL;
@@ -83,6 +60,8 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
         getServer().getPluginManager().registerEvents(new AbilityMage(), this);
         getServer().getPluginManager().registerEvents(new AbilityNinjaStars(), this);
+        getServer().getPluginManager().registerEvents(new AbilitySpiderwebs(), this);
+        getServer().getPluginManager().registerEvents(new AbilityBlitz(), this);
         
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());
@@ -94,14 +73,17 @@ public final class SoupCore extends JavaPlugin {
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());
 
-        createInventory();
-
         if(Bukkit.getPluginManager().getPlugin("PlaceHolderAPI") != null)
         {
             new SpigotExpansion().register();
         }
 
         getWorldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
+
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            luckPerms = provider.getProvider();
+        }
 
         connectionURL = "jdbc:h2:" + getDataFolder().getAbsolutePath() + "/data/database";
         System.out.println(connectionURL);

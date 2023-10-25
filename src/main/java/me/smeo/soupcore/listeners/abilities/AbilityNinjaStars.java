@@ -1,5 +1,6 @@
 package me.smeo.soupcore.listeners.abilities;
 
+import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,8 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -21,8 +25,41 @@ import java.util.*;
 
 public class AbilityNinjaStars implements Listener {
     HashMap<UUID, Long> ninjaStarCooldown = new HashMap<>();
+
     @EventHandler
-    public void onDamagePlayer(PlayerInteractEvent e)
+    public void onPlayerDeath(PlayerDeathEvent e)
+    {
+        ninjaStarCooldown.remove(e.getEntity().getPlayer().getUniqueId());
+
+        if (Objects.equals(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "kit"), 4)) // Kit ID for stealth is 4
+        {
+            ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, 4);
+
+            ItemMeta ninjaStarMeta = ninjaStar.getItemMeta();
+
+            ArrayList<String> ninjaStarLore = new ArrayList<>();
+            ninjaStarLore.add("");
+            ninjaStarLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Star Throw");
+            ninjaStarLore.add(ChatColor.GRAY + "Throw a ninja star that deals blindness");
+            ninjaStarLore.add(ChatColor.GRAY + "for 5 seconds to any player it hits!");
+            ninjaStarLore.add("");
+            ninjaStarLore.add(ChatColor.WHITE + "Every kill with the Ninja Kit:" + ChatColor.GREEN + " +1 Ninja Star");
+            ninjaStarMeta.setLore(ninjaStarLore);
+
+            ninjaStarMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Ninja Star");
+
+            ninjaStar.setItemMeta(ninjaStarMeta);
+            PlayerInventory inv = e.getEntity().getPlayer().getKiller().getInventory();
+            if (inv.contains(ninjaStar) || inv.contains((ItemStack) null)) {
+                inv.addItem(ninjaStar);
+            } else {
+                inv.setItem(1, ninjaStar);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onRightClick(PlayerInteractEvent e)
     {
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Player p = e.getPlayer();
@@ -33,9 +70,9 @@ public class AbilityNinjaStars implements Listener {
                 {
                     boolean cooldownActive = false;
                     if (ninjaStarCooldown.containsKey(p.getUniqueId())) {
-                        if (System.currentTimeMillis() - ninjaStarCooldown.get(p.getUniqueId()) < 15 * 1000) {
+                        if (System.currentTimeMillis() - ninjaStarCooldown.get(p.getUniqueId()) < 10 * 1000) {
                             cooldownActive = true;
-                            p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (15 - (System.currentTimeMillis() - ninjaStarCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
+                            p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (10 - (System.currentTimeMillis() - ninjaStarCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
                         } else {
                             ninjaStarCooldown.remove(p.getUniqueId());
                         }
@@ -54,6 +91,7 @@ public class AbilityNinjaStars implements Listener {
                         }
 
                         oneNinjaStar.setAmount(1);
+
                         final Item[] ninjaStar = {p.getWorld().dropItem(p.getEyeLocation(), oneNinjaStar)};
                         Vector starVelocity = p.getEyeLocation().clone().getDirection();
                         ninjaStar[0].setVelocity(starVelocity);
@@ -75,8 +113,8 @@ public class AbilityNinjaStars implements Listener {
                                     if (target.getLocation().getBlock().getLocation().equals(ninjaStar[0].getLocation().getBlock().getLocation().clone().subtract(0, 1, 0)) || target.getLocation().getBlock().getLocation().equals(ninjaStar[0].getLocation().getBlock().getLocation().clone().subtract(0, 0, 0))) {
                                         if (target.getUniqueId() != p.getUniqueId()) {
                                             System.out.println("I hit a player");
-                                            target.damage(4, p);
-                                            PotionEffect blindness = new PotionEffect(PotionEffectType.BLINDNESS, 20 * 5, 1);
+                                            target.damage(6, p);
+                                            PotionEffect blindness = new PotionEffect(PotionEffectType.BLINDNESS, 20 * 5, 0);
                                             target.addPotionEffect(blindness);
                                             ninjaStar[0].remove();
                                             this.cancel();

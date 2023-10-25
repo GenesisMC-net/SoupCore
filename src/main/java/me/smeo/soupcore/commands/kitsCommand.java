@@ -1,7 +1,6 @@
 package me.smeo.soupcore.commands;
 
-import me.smeo.soupcore.SoupCore;
-import org.bukkit.ChatColor;
+import me.smeo.soupcore.Kits.Methods_Kits;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,9 +14,7 @@ public class kitsCommand implements CommandExecutor {
 
         if(sender instanceof Player)
         {
-            Player player = (Player) sender;
-            player.openInventory(SoupCore.kits);
-
+            Methods_Kits.createKitInventory((Player) sender);
         }
         return false;
     }
