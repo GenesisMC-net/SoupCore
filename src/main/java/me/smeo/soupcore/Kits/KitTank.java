@@ -63,7 +63,7 @@ public class KitTank {
         lore.add(ChatColor.WHITE + "Summon a silver fish army that deal" + ChatColor.RED + " 1.5 Hearts " + ChatColor.WHITE + "each");
         lore.add("");
 
-        if (highlightedKit == 11) {
+        if (highlightedKit == 12) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

@@ -78,7 +78,7 @@ public class KitHulk {
         lore.add(ChatColor.WHITE + "Hulk smash deals " + ChatColor.RED + " Launches You " + ChatColor.WHITE + "and deals" + ChatColor.RED + " 5 Hearts");
         lore.add("");
 
-        if (highlightedKit == 10) {
+        if (highlightedKit == 11) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

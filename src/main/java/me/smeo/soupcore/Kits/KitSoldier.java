@@ -83,7 +83,7 @@ public class KitSoldier {
         lore.add(ChatColor.RED + "5x5 Ice Dome" + ChatColor.WHITE + " that grants temporary " + ChatColor.RED + "Strength I");
         lore.add("");
 
-        if (highlightedKit == 8) {
+        if (highlightedKit == 9) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

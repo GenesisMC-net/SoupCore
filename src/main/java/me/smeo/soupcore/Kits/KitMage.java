@@ -88,7 +88,7 @@ public class KitMage {
         lore.add(ChatColor.RED + "Leap forwards" + ChatColor.WHITE + " with no fall damage");
         lore.add("");
 
-        if (highlightedKit == 9) {
+        if (highlightedKit == 10) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
