@@ -31,7 +31,6 @@ public class soupSignRefillListener implements Listener
     public void onRightClick(PlayerInteractEvent e)
     {
         Player p = e.getPlayer();
-        System.out.println(e.getClickedBlock());
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
             if(e.getClickedBlock().getType() == Material.WALL_SIGN)

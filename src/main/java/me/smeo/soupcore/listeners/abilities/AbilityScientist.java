@@ -18,10 +18,8 @@ public class AbilityScientist implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerKill(PlayerDeathEvent e)
     {
-        System.out.println("Player died");
         Player p = e.getEntity();
         if(p.getKiller() != null) {
-            System.out.println("Killer exists (lol)");
 
             Player killer = p.getKiller();
 
@@ -29,16 +27,13 @@ public class AbilityScientist implements Listener {
             if (activeKit == null) {
                 return;
             }
-            System.out.println("Killer has a kit active");
 
             if (Objects.equals(activeKit, 7)) {
-                System.out.println("Killer is a scientist");
                 PlayerInventory inv = killer.getInventory();
                 ItemStack poisonPot = new ItemStack(Material.POTION, 1, (short) 16388);
 
                 boolean emptySlot;
                 if (!inv.contains(poisonPot)) {
-                    System.out.println("Killer has no poison");
                     emptySlot = false;
                     for (ItemStack item : p.getInventory().getContents()) {
                         if ((item == null) || item.getType() == Material.AIR) {

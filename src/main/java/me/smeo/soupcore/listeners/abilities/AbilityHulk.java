@@ -47,7 +47,7 @@ public class AbilityHulk implements Listener {
             // Fall Damage from Hulk (activate ability)
             if (e.getCause() == EntityDamageEvent.DamageCause.FALL && cancelFallDamage.contains(e.getEntity().getUniqueId()))
             {
-                System.out.println("A hulk took fall damage");
+
                 e.setCancelled(true);
                 cancelFallDamage.remove(e.getEntity().getUniqueId());
 

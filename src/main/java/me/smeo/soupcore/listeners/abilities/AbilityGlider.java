@@ -131,22 +131,18 @@ public class AbilityGlider implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerKill(PlayerDeathEvent e)
     {
-        System.out.println("PLAYER DIED (GLIDER EVENT LISTENER)");
+
         Player p = e.getEntity();
         Player killer = p.getKiller();
-        System.out.println(p.getName());
-        System.out.println(killer.getName());
+
         if (killer == null)
         {
             return;
         }
 
-        System.out.println(Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 8));
-        System.out.println(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))));
-
         if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 8)) // Index for glider kit
         {
-            System.out.println(killer.getName());
+
             PlayerInventory inv = killer.getInventory();
             if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
                 inv.addItem(getGliderPearl());

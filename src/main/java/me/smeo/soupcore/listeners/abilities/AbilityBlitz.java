@@ -56,7 +56,6 @@ public class AbilityBlitz implements Listener {
 
         if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 3))// Index for blitz kit
         {
-            System.out.println(killer.getName());
             PlayerInventory inv = killer.getInventory();
             if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
                 inv.addItem(getBlitzPearl());
@@ -71,19 +70,17 @@ public class AbilityBlitz implements Listener {
                 public void run() {
                     RegionManager rgManager = SoupCore.getWorldGuard.getRegionManager(p.getWorld());
 
-                    System.out.println("15 seconds");
-
                     if (!Objects.requireNonNull(rgManager.getRegion("pvp")).contains(killer.getLocation().getBlockX(), killer.getLocation().getBlockY(), killer.getLocation().getBlockZ())) {
                         this.cancel();
                         return;
                     }
-                    System.out.println("Killer is still in pvp");
+
                     if (!Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 3)) // Index for blitz kit
                     {
                         this.cancel();
                         return;
                     }
-                    System.out.println("Killer has kit blitz");
+
 
                     killer.removePotionEffect(PotionEffectType.SPEED);
                     PotionEffect speedTwo = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
