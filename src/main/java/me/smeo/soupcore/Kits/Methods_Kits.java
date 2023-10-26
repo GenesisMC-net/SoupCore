@@ -101,15 +101,41 @@ public class Methods_Kits {
         inv.setItem(3 + 9, KitVenom.guiAppearance(player, inv));
         inv.setItem(5 + 9, KitSpiderman.guiAppearance(player, inv));
         inv.setItem(7 + 9, KitBlitz.guiAppearance(player, inv));
-        inv.setItem(1 + (9 * 3), KitStealth.guiAppearance(player, inv));
-        inv.setItem(3 + (9 * 3), KitGrappler.guiAppearance(player, inv));
-        inv.setItem(5 + (9 * 3), KitFisherman.guiAppearance(player, inv));
-        inv.setItem(7 + (9 * 3), KitScientist.guiAppearance(player, inv));
+
+        inv.setItem(2 + (9 * 2), KitStealth.guiAppearance(player, inv));
+        inv.setItem(4 + (9 * 2), KitGrappler.guiAppearance(player, inv));
+        inv.setItem(6 + (9 * 2), KitFisherman.guiAppearance(player, inv));
+
+        inv.setItem(1 + (9 * 3), KitScientist.guiAppearance(player, inv));
+        inv.setItem(3 + (9 * 3), KitGlider.guiAppearance(player, inv));
+        inv.setItem(5 + (9 * 3), KitSoldier.guiAppearance(player, inv));
+        inv.setItem(7 + (9 * 3), KitMage.guiAppearance(player, inv));
+
+        inv.setItem(2 + (9 * 4), KitHulk.guiAppearance(player, inv));
+        inv.setItem(4 + (9 * 4), KitTank.guiAppearance(player, inv));
+
+        ItemStack glassPane = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
+        inv.setItem(0, glassPane);
+        inv.setItem(1, glassPane);
+        inv.setItem(9, glassPane);
+
+        inv.setItem(7, glassPane);
+        inv.setItem(8, glassPane);
+        inv.setItem(17, glassPane);
+
+        inv.setItem(36, glassPane);
+        inv.setItem(45, glassPane);
+        inv.setItem(46, glassPane);
+
+        inv.setItem(44, glassPane);
+        inv.setItem(53, glassPane);
+        inv.setItem(52, glassPane);
+
 
         for (int i = 0; i < 54; i++) {
             if ((inv.getContents()[i] == null) || (inv.getContents()[i].getType() == Material.AIR))
             {
-                inv.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
+                inv.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 0));
             }
         }
 
@@ -160,18 +186,21 @@ public class Methods_Kits {
             case 7:
                 KitScientist.giveItems(player);
                 break;
-//            case 8:
-//                Kit.giveItems(player);
-//                break;
-//            case 9:
-//                Kit.giveItems(player);
-//                break;
-//            case 10:
-//                Kit.giveItems(player);
-//                break;
-//            case 11:
-//                Kit.giveItems(player);
-//                break;
+            case 8:
+                KitGlider.giveItems(player);
+                break;
+            case 9:
+                KitSoldier.giveItems(player);
+                break;
+            case 10:
+                KitMage.giveItems(player);
+                break;
+            case 11:
+                KitHulk.giveItems(player);
+                break;
+            case 12:
+                KitTank.giveItems(player);
+                break;
         }
 
         for (ItemStack item : player.getInventory().getContents())

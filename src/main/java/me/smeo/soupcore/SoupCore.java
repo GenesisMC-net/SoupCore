@@ -51,13 +51,17 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PVPRegionListeners(), this);
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
-        getServer().getPluginManager().registerEvents(new AbilityMage(), this);
         getServer().getPluginManager().registerEvents(new AbilityNinjaStars(), this);
         getServer().getPluginManager().registerEvents(new AbilitySpiderwebs(), this);
         getServer().getPluginManager().registerEvents(new AbilityBlitz(), this);
         getServer().getPluginManager().registerEvents(new AbilityGrappler(), this);
         getServer().getPluginManager().registerEvents(new AbilityFisherman(), this);
         getServer().getPluginManager().registerEvents(new AbilityScientist(), this);
+        getServer().getPluginManager().registerEvents(new AbilityGlider(), this);
+        getServer().getPluginManager().registerEvents(new AbilitySoldier(), this);
+        getServer().getPluginManager().registerEvents(new AbilityMage(), this);
+        getServer().getPluginManager().registerEvents(new AbilityHulk(), this);
+        getServer().getPluginManager().registerEvents(new AbilityTank(), this);
         
         getCommand("ping").setExecutor(new ping());
         getCommand("kits").setExecutor(new kitsCommand());

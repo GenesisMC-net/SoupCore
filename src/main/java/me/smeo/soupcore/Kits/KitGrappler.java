@@ -43,7 +43,7 @@ public class KitGrappler {
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 
         ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 3);
+        sword.addEnchantment(Enchantment.DAMAGE_ALL, 2);
         sword.addEnchantment(Enchantment.DURABILITY, 1);
 
         inv.setItem(0, sword);

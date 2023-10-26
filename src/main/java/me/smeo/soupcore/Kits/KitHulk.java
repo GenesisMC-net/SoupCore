@@ -15,22 +15,22 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KitSpiderman {
+public class KitHulk {
     public static void giveItems(Player p) {
         PlayerInventory inv = p.getInventory();
         inv.clear();
 
-        ItemStack helmet = new ItemStack(Material.CHAINMAIL_HELMET);
+        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         helmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        helmet.addEnchantment(Enchantment.DURABILITY, 3);
+        helmet.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
         inv.setHelmet(helmet);
 
-        ItemStack chestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
-        chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
+        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+        chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         chestplate.addEnchantment(Enchantment.DURABILITY, 3);
         inv.setChestplate(chestplate);
 
-        ItemStack leggings = new ItemStack(Material.CHAINMAIL_LEGGINGS);
+        ItemStack leggings = new ItemStack(Material.IRON_LEGGINGS);
         leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         leggings.addEnchantment(Enchantment.DURABILITY, 3);
         inv.setLeggings(leggings);
@@ -43,44 +43,42 @@ public class KitSpiderman {
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
 
+        inv.setItem(0, new ItemStack(Material.DIAMOND_SWORD));
+
         // Ability
-        ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        inv.setItem(0, sword);
+        ItemStack iceBlock = new ItemStack(Material.ANVIL, 1);
 
-        ItemStack web = new ItemStack(Material.WEB);
+        ItemMeta iceBlockMeta = iceBlock.getItemMeta();
 
-        ItemMeta webMeta = web.getItemMeta();
+        ArrayList<String> iceBlockLore = new ArrayList<>();
+        iceBlockLore.add("");
+        iceBlockLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Hulk Smash");
+        iceBlockLore.add(ChatColor.GRAY + "Launches you 10 blocks into the air and deals");
+        iceBlockLore.add(ChatColor.GRAY + "5 hearts to nearby players when you land");
+        iceBlockMeta.setLore(iceBlockLore);
 
-        ArrayList<String> webLore = new ArrayList<>();
-        webLore.add("");
-        webLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Web Attack");
-        webLore.add(ChatColor.GRAY + "Throw your web like an ender");
-        webLore.add(ChatColor.GRAY + "pearl and trap players for 10s!");
-        webMeta.setLore(webLore);
+        iceBlockMeta.setDisplayName(ChatColor.DARK_GREEN + "Hulk Smash");
 
-        webMeta.setDisplayName(ChatColor.WHITE + "Spider Webs");
-
-        web.setItemMeta(webMeta);
-        inv.setItem(1, web);
+        iceBlock.setItemMeta(iceBlockMeta);
+        inv.setItem(1, iceBlock);
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
         int highlightedKit = Methods_Kits.getActiveKit(player);
 
-        ItemStack item = new ItemStack((Material.WEB));
+        ItemStack item = new ItemStack((Material.ANVIL));
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RED + "Spiderman");
+        meta.setDisplayName(ChatColor.DARK_GREEN + "Hulk");
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Pew Pew! Shoot webs at your enemies");
+        lore.add(ChatColor.GRAY + "HULK SMASH!");
         lore.add("");
-        lore.add(ChatColor.WHITE + "3/4 Chainmail Armour");
-        lore.add(ChatColor.RED + "Sharpness I" + ChatColor.WHITE + " Diamond Sword");
+        lore.add(ChatColor.WHITE + "1/2 Iron, 1/2 Leather Armour");
+        lore.add(ChatColor.RED + "Unenchanted" + ChatColor.WHITE + " Diamond Sword");
         lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed I" + ChatColor.WHITE + " and " + ChatColor.RED + "Resistance I" + ChatColor.WHITE);
-        lore.add(ChatColor.WHITE + "Webs that hit players slow them down in a" + ChatColor.RED + " ring of cobwebs");
+        lore.add(ChatColor.WHITE + "Hulk smash deals " + ChatColor.RED + " Launches You " + ChatColor.WHITE + "and deals" + ChatColor.RED + " 5 Hearts");
         lore.add("");
 
-        if (highlightedKit == 2) {
+        if (highlightedKit == 10) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -93,4 +91,5 @@ public class KitSpiderman {
     }
 
 }
+
 
