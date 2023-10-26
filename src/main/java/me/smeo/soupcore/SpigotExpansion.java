@@ -42,21 +42,19 @@ public class SpigotExpansion extends PlaceholderExpansion {
         }
         if(params.equals("kills"))
         {
-            return (String) Database.getPlayerData(player, "soupData", "kills");
+            return Stats.kills(player);
         }
         if(params.equals("killStreak"))
         {
-            return (String) Database.getPlayerData(player, "soupData", "killStreak");
+            return Stats.killStreak(player);
         }
         if(params.equals("deaths"))
         {
-            return (String) Database.getPlayerData(player, "soupData", "deaths");
+            return Stats.deaths(player);
         }
         if(params.equals("kdr"))
         {
-            float kdr = Float.valueOf((String) Database.getPlayerData(player, "soupData", "kills")) / Float.valueOf((String) Database.getPlayerData(player, "soupData", "deaths"));
-            final DecimalFormat df = new DecimalFormat("0.00");
-            return df.format(kdr);
+            return Stats.kdr(player);
         }
         if(params.equals("credits"))
         {
