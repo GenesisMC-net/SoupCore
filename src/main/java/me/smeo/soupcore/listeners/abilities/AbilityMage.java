@@ -60,7 +60,7 @@ public class AbilityMage implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                System.out.println("It ran after 3 seconds");
+
                 for (int j = -1; j < 2; j++) {
                     for (int k = -1; k < 2; k++) {
                         Location waterGridCell = targetLocation.getBlock().getLocation().clone().add(j, 0, k);
@@ -126,7 +126,7 @@ public class AbilityMage implements Listener {
                                     for (int j = -1; j < 2; j++) {
                                         for (int k = -1; k < 2; k++) {
                                             Location waterGridCell = targetLocation.clone().getBlock().getLocation().add(j, 0, k);
-                                            System.out.println(waterGridCell.toString());
+
                                             if (waterGridCell.getBlock().getType().equals(Material.AIR)) {
                                                 waterGridCell.getBlock().setType(Material.WATER);
                                             }

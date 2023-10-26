@@ -25,7 +25,6 @@ public class AbilitySpiderwebs implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                System.out.println("It ran after 3 seconds");
                 for (int j = -1; j < 2; j++) {
                     for (int k = -1; k < 2; k++) {
                         Location gridCell = targetLocation.getBlock().getLocation().clone().add(j, 0, k);
@@ -86,13 +85,9 @@ public class AbilitySpiderwebs implements Listener {
                             public void run() {
                                 i[0] = i[0] + 1;
                                 for (Player target : p.getWorld().getPlayers()) {
-                                    System.out.println(target.getName());
-                                    System.out.println(target.getLocation().getBlock().getLocation().toString());
-                                    System.out.println(web[0].getLocation().getBlock().getLocation().clone().subtract(0, 1, 0).toString());
-                                    System.out.println(target.getLocation().getBlock().getLocation().equals(web[0].getLocation().getBlock().getLocation().clone().subtract(0, 1, 0)));
+
                                     if (target.getLocation().getBlock().getLocation().equals(web[0].getLocation().getBlock().getLocation().clone()) || target.getLocation().getBlock().getLocation().equals(web[0].getLocation().getBlock().getLocation().clone().subtract(0, 1.5, 0)) || target.getEyeLocation().getBlock().getLocation().equals(web[0].getLocation().getBlock().getLocation().clone())) {
                                         if (target.getUniqueId() != p.getUniqueId()) {
-                                            System.out.println("I hit a player");
                                             Location targetPlayerLocation = target.getLocation().getBlock().getLocation();
                                             for (int j = -1; j < 2; j++) {
                                                 for (int k = -1; k < 2; k++) {
@@ -113,7 +108,6 @@ public class AbilitySpiderwebs implements Listener {
                                     }
                                 }
                                 if (web[0].getLocation().getBlock().getType() != Material.AIR) {
-                                    System.out.println("I hit a wall");
                                     web[0].remove();
                                     this.cancel();
                                     return;
@@ -123,9 +117,7 @@ public class AbilitySpiderwebs implements Listener {
                                     this.cancel();
                                     return;
                                 }
-                                System.out.println(i[0]);
                                 if (i[0] >= 20 * 4) {
-                                    System.out.println("Ran out of time");
                                     web[0].remove();
                                     this.cancel();
                                     return;

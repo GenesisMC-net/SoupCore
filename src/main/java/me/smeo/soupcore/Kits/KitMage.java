@@ -25,7 +25,7 @@ public class KitMage {
         helmet.addEnchantment(Enchantment.DURABILITY, 3);
         inv.setHelmet(helmet);
 
-        ItemStack chestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
         chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
         chestplate.addEnchantment(Enchantment.DURABILITY, 3);
         inv.setChestplate(chestplate);
@@ -88,7 +88,7 @@ public class KitMage {
         lore.add(ChatColor.RED + "Leap forwards" + ChatColor.WHITE + " with no fall damage");
         lore.add("");
 
-        if (highlightedKit == 7) {
+        if (highlightedKit == 9) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

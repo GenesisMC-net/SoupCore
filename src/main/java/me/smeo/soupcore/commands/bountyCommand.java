@@ -76,10 +76,6 @@ public class bountyCommand implements CommandExecutor {
                     p.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + "Top 10 Bounties");
                     while (rows.next() && counter <= 9) {
                         Integer number = counter + 1;
-                        System.out.println(rows.getString("uuid"));
-                        System.out.println(rows.getInt("bounty"));
-                        System.out.println(Database.getNameFromUUIDInDatabase(rows.getString("uuid")));
-                        System.out.println((counter + 1));
                         message = ChatColor.AQUA + String.valueOf(number) + ". " + ChatColor.RESET + Database.getNameFromUUIDInDatabase(rows.getString("uuid")) + ChatColor.GRAY + " | " + ChatColor.GOLD + rows.getInt("bounty");
                         p.sendMessage(message);
                         counter++;

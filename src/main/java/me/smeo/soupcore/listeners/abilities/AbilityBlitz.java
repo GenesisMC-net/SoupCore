@@ -5,10 +5,13 @@ import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,54 +49,45 @@ public class AbilityBlitz implements Listener {
     {
         Player p = e.getEntity();
         Player killer = p.getKiller();
-        System.out.println((killer == null));
         if (killer == null)
         {
             return;
         }
-        System.out.println("Killer: " + killer.getName());
-        System.out.println(Integer.valueOf((String) Database.getPlayerData(p, "soupData", "kit")));
-        if (!Objects.equals(Integer.valueOf((String) Database.getPlayerData(p, "soupData", "kit")), 3)) // Index for blitz kit
+
+        if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 3))// Index for blitz kit
         {
-            return;
-        }
-
-        System.out.println(killer.getName());
-        PlayerInventory inv = killer.getInventory();
-        if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
-            inv.addItem(getBlitzPearl());
-        } else {
-            inv.setItem(1, getBlitzPearl());
-        }
-        killer.removePotionEffect(PotionEffectType.SPEED);
-        PotionEffect speedThree = new PotionEffect(PotionEffectType.SPEED, 15, 2);
-        killer.addPotionEffect(speedThree);
-        new BukkitRunnable()
-        {
-            @Override
-            public void run() {
-                RegionManager rgManager = SoupCore.getWorldGuard.getRegionManager(p.getWorld());
-
-                System.out.println("15 seconds");
-
-                if (!Objects.requireNonNull(rgManager.getRegion("pvp")).contains(killer.getLocation().getBlockX(), killer.getLocation().getBlockY(), killer.getLocation().getBlockZ()))
-                {
-                    this.cancel();
-                    return;
-                }
-                System.out.println("Killer is still in pvp");
-                if (!Objects.equals(Integer.valueOf((String) Database.getPlayerData(p, "soupData", "kit")), 3)) // Index for blitz kit
-                {
-                    this.cancel();
-                    return;
-                }
-                System.out.println("Killer has kit blitz");
-
-                killer.removePotionEffect(PotionEffectType.SPEED);
-                PotionEffect speedTwo = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
-                killer.addPotionEffect(speedTwo);
-
+            PlayerInventory inv = killer.getInventory();
+            if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
+                inv.addItem(getBlitzPearl());
+            } else {
+                inv.setItem(1, getBlitzPearl());
             }
-        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 15L);
+            killer.removePotionEffect(PotionEffectType.SPEED);
+            PotionEffect speedThree = new PotionEffect(PotionEffectType.SPEED, 15, 2);
+            killer.addPotionEffect(speedThree);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    RegionManager rgManager = SoupCore.getWorldGuard.getRegionManager(p.getWorld());
+
+                    if (!Objects.requireNonNull(rgManager.getRegion("pvp")).contains(killer.getLocation().getBlockX(), killer.getLocation().getBlockY(), killer.getLocation().getBlockZ())) {
+                        this.cancel();
+                        return;
+                    }
+
+                    if (!Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 3)) // Index for blitz kit
+                    {
+                        this.cancel();
+                        return;
+                    }
+
+
+                    killer.removePotionEffect(PotionEffectType.SPEED);
+                    PotionEffect speedTwo = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
+                    killer.addPotionEffect(speedTwo);
+
+                }
+            }.runTaskLater(SoupCore.plugin, 20L * 15L);
+        }
     }
 }

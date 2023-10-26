@@ -19,7 +19,6 @@ public class soupDropListener implements Listener
     @EventHandler
     public void onSoupDrop(PlayerDropItemEvent e)
     {
-        System.out.println(e.getItemDrop().getItemStack().getType());
         if(e.getItemDrop().getItemStack().getType().equals(Material.BOWL))
         {
             e.getItemDrop().remove();

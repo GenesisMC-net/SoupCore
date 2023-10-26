@@ -36,7 +36,7 @@ public class KitFisherman {
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 
         ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        sword.addEnchantment(Enchantment.DAMAGE_ALL, 2);
         sword.addEnchantment(Enchantment.DURABILITY, 3);
 
         inv.setItem(0, sword);
@@ -73,9 +73,9 @@ public class KitFisherman {
         lore.add(ChatColor.GRAY + "Reel in players using your fishing rod");
         lore.add("");
         lore.add(ChatColor.WHITE + "1/2 Iron, 1/2 Gold Armour");
-        lore.add(ChatColor.RED + "Sharpness I" + ChatColor.WHITE + " Iron Sword");
+        lore.add(ChatColor.RED + "Sharpness II" + ChatColor.WHITE + " Iron Sword");
         lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed II" + ChatColor.WHITE);
-        lore.add(ChatColor.WHITE + "Fishing rod allows you to " + ChatColor.RED + "Teleport Players" + ChatColor.WHITE + "to your location");
+        lore.add(ChatColor.WHITE + "Fishing rod allows you to " + ChatColor.RED + "Teleport Players" + ChatColor.WHITE + " to your location");
         lore.add("");
 
         if (highlightedKit == 6) {

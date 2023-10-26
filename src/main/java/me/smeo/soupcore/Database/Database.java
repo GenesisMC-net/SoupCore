@@ -216,7 +216,7 @@ public class Database
         try{
             if(table.equals("Users"))
             {
-                statement = connection.prepareStatement("INSERT INTO Users(uuid, name) VALUES('" + p.getUniqueId().toString() + "', '" + p.getName() + ")");
+                statement = connection.prepareStatement("INSERT INTO Users(uuid, name) VALUES('" + p.getUniqueId().toString() + "', '" + p.getName() + "')");
             }else if (table.equals("soupData"))
             {
                 statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', 0, 0, 0, 0, 0, 0)");

@@ -1,5 +1,7 @@
 package me.smeo.soupcore.listeners;
 
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.smeo.soupcore.Credits;
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
@@ -14,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,15 +33,28 @@ public class combatLogListeners implements Listener {
     public HashMap<BukkitTask, UUID[]> combatTimersToAdd = new HashMap<>();
 
     @EventHandler
+    public void onFish(PlayerFishEvent e)
+    {
+        Player p = e.getPlayer();
+        // Put the player in combat if they use a rod
+        if (e.getCaught() instanceof Player) {
+            ((Player) e.getCaught()).getPlayer().damage(0.1, p);
+        }
+    }
+
+    @EventHandler
     public void onQuit(PlayerQuitEvent e)
     {
         Player p = e.getPlayer();
         Location lastLoc = p.getLocation();
         int soupDrop = 0;
         for (ItemStack item: p.getInventory().getContents()) {
-            if (Objects.equals(item.getType(), Material.MUSHROOM_SOUP))
+            if (item != null)
             {
-                soupDrop = soupDrop + 1;
+                if (Objects.equals(item.getType(), Material.MUSHROOM_SOUP))
+                {
+                    soupDrop = soupDrop + 1;
+                }
             }
         }
         if (antiLog.contains(p.getUniqueId()))
@@ -54,7 +70,7 @@ public class combatLogListeners implements Listener {
                     Bukkit.getScheduler().cancelTask(timer.getKey().getTaskId());
 
                     // Player dies
-                    Integer killStreak =  Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak"));
+                    int killStreak = Integer.parseInt((String) Database.getPlayerData(p, "soupData", "killStreak"));
                     if(killStreak >= 20)
                     {
                         Bukkit.broadcastMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
@@ -63,7 +79,6 @@ public class combatLogListeners implements Listener {
                     // If the player was being attacked (Attacker gets the kill)
                     if (timer.getValue()[0] != p.getUniqueId())
                     {
-                        System.out.println("The logger was being attacked");
                         Player killer = Bukkit.getPlayer(timer.getValue()[0]);
                         antiLog.remove(killer.getUniqueId());
                         Integer kills = Integer.valueOf((String) Database.getPlayerData(killer, "soupData", "kills")) + 1;
@@ -81,7 +96,6 @@ public class combatLogListeners implements Listener {
                             Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has reached a killstreak of " + ChatColor.AQUA + attackerKillStreak);
                         }
                     } else { // The player was the attacker (no one gets the kill)
-                        System.out.println("The logger was the attacker");
                         antiLog.remove(timer.getValue()[1]);
                     }
 
@@ -128,14 +142,27 @@ public class combatLogListeners implements Listener {
                 antiLog.remove(playerUUID);
             }
             e.getEntity().getPlayer().sendMessage(ChatColor.GREEN + "You are no longer in combat!");
+            Player killer = e.getEntity().getPlayer().getKiller();
+            if (killer == null) {return;}
+            if (antiLog.contains(killer.getUniqueId())) {
+                while (antiLog.contains(killer.getUniqueId())) {
+                    antiLog.remove(killer.getUniqueId());
+                }
+                killer.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
+            }
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e)
     {
+
         if ((e.getDamager() instanceof Player) && (e.getEntity() instanceof Player))
         {
+            for (ProtectedRegion rg : WGBukkit.getRegionManager(e.getEntity().getWorld()).getApplicableRegions(e.getEntity().getLocation())){
+                if (Objects.equals(rg.getId(), "spawn")) {return;} // Return if they are in spawn
+            }
+
             Player attacker = (Player) e.getEntity();
             Player target = (Player) e.getDamager();
             UUID attackerUUID = attacker.getUniqueId();
@@ -146,9 +173,9 @@ public class combatLogListeners implements Listener {
                 for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
                     if (Objects.equals(timer.getValue()[0], attackerUUID) && Objects.equals(timer.getValue()[1], targetUUID))
                     {
-                        System.out.println("Timer should reset");
                         // Cancel old timer
                         Bukkit.getServer().getScheduler().cancelTask(timer.getKey().getTaskId());
+                        combatTimersToRemove.add(timer.getKey());
 
                         // Create a new timer
                         BukkitTask newCombatTagTimer = Bukkit.getServer().getScheduler().runTaskLater(SoupCore.plugin, new Runnable() {
@@ -166,10 +193,13 @@ public class combatLogListeners implements Listener {
                             }
                         }, 20L * 15L);
                         combatTimersToAdd.put(newCombatTagTimer, new UUID[]{attackerUUID, targetUUID});
-                        System.out.println("Timer has been recreated");
                     }
                 }
                 combatTimers.putAll(combatTimersToAdd);
+                for (BukkitTask key: combatTimersToRemove) {
+                    combatTimers.remove(key);
+                }
+                combatTimersToRemove = new ArrayList<>();
                 combatTimersToAdd = new HashMap<>();
             }
 
@@ -195,7 +225,6 @@ public class combatLogListeners implements Listener {
                     }
                 }, 20L * 15L);
                 combatTimers.put(combatTagTimer, new UUID[]{attackerUUID, targetUUID});
-                System.out.println("Initial timer has been created");
             }
         }
     }
