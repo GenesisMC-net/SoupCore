@@ -26,7 +26,7 @@ public class AbilityFisherman implements Listener {
     }
 
     @EventHandler
-    public void onRightClick(PlayerFishEvent e)
+    public void onFish(PlayerFishEvent e)
     {
         Player p = e.getPlayer();
 

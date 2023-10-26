@@ -9,78 +9,83 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class KitSpiderman {
+public class KitGlider {
     public static void giveItems(Player p) {
         PlayerInventory inv = p.getInventory();
         inv.clear();
 
-        ItemStack helmet = new ItemStack(Material.CHAINMAIL_HELMET);
+        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         helmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        helmet.addEnchantment(Enchantment.DURABILITY, 3);
+        helmet.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
         inv.setHelmet(helmet);
 
-        ItemStack chestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
-        chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
+        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+        chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
         chestplate.addEnchantment(Enchantment.DURABILITY, 3);
         inv.setChestplate(chestplate);
 
-        ItemStack leggings = new ItemStack(Material.CHAINMAIL_LEGGINGS);
-        leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+        ItemStack leggings = new ItemStack(Material.IRON_LEGGINGS);
+        leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
         leggings.addEnchantment(Enchantment.DURABILITY, 3);
         inv.setLeggings(leggings);
 
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
-        boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
+        boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         boots.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
         inv.setBoots(boots);
 
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
 
-        // Ability
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        sword.addEnchantment(Enchantment.DURABILITY, 2);
         inv.setItem(0, sword);
 
-        ItemStack web = new ItemStack(Material.WEB);
+        // Ability
+        ItemStack gliderPearl = new ItemStack(Material.ENDER_PEARL, 1);
+        ItemMeta gliderPearlMeta = gliderPearl.getItemMeta();
 
-        ItemMeta webMeta = web.getItemMeta();
+        ArrayList<String> gliderPearlLore = new ArrayList<>();
+        gliderPearlLore.add("");
+        gliderPearlLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Pearl Ride");
+        gliderPearlLore.add(ChatColor.GRAY + "Throw the pearl like normal but instead");
+        gliderPearlLore.add(ChatColor.GRAY + "you ride the pearl! +1 Pearl per Kill");
+        gliderPearlMeta.setLore(gliderPearlLore);
 
-        ArrayList<String> webLore = new ArrayList<>();
-        webLore.add("");
-        webLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Web Attack");
-        webLore.add(ChatColor.GRAY + "Throw your web like an ender");
-        webLore.add(ChatColor.GRAY + "pearl and trap players for 10s!");
-        webMeta.setLore(webLore);
+        gliderPearlMeta.setDisplayName(ChatColor.YELLOW + "Glider");
 
-        webMeta.setDisplayName(ChatColor.WHITE + "Spider Webs");
+        gliderPearl.setItemMeta(gliderPearlMeta);
+        inv.setItem(1, gliderPearl);
 
-        web.setItemMeta(webMeta);
-        inv.setItem(1, web);
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
         int highlightedKit = Methods_Kits.getActiveKit(player);
 
-        ItemStack item = new ItemStack((Material.WEB));
+        ItemStack item = new ItemStack(Material.ENDER_PEARL, 1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RED + "Spiderman");
+        meta.setDisplayName(ChatColor.YELLOW + "Glider");
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Pew Pew! Shoot webs at your enemies");
+        lore.add(ChatColor.GRAY + "Kill another player to earn back your pearl!");
         lore.add("");
-        lore.add(ChatColor.WHITE + "3/4 Chainmail Armour");
+        lore.add(ChatColor.WHITE + "1/2 Iron, 1/2 Leather Armour");
         lore.add(ChatColor.RED + "Sharpness I" + ChatColor.WHITE + " Diamond Sword");
-        lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed I" + ChatColor.WHITE + " and " + ChatColor.RED + "Resistance I" + ChatColor.WHITE);
-        lore.add(ChatColor.WHITE + "Webs that hit players slow them down in a" + ChatColor.RED + " ring of cobwebs");
+        lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed I");
+        lore.add(ChatColor.WHITE + "Throw a pearl to" + ChatColor.RED + " Ride Your Pearl ");
         lore.add("");
 
-        if (highlightedKit == 2) {
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        if (highlightedKit == 8) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

@@ -9,6 +9,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ import java.util.Objects;
 public class PlayerDeathListener implements Listener
 {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void OnPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
@@ -67,12 +68,16 @@ public class PlayerDeathListener implements Listener
         p.getInventory().clear();
         p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});
 
-        Vector v = p.getVelocity();
-        v.setX(0);
-        v.setY(0);
-        v.setZ(0);
-        p.setVelocity(v);
-        e.getEntity().spigot().respawn();
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                Vector v = p.getVelocity();
+                v.setX(0);
+                v.setY(0);
+                v.setZ(0);
+                p.setVelocity(v);
+                e.getEntity().spigot().respawn();
+            }
+        }.runTaskLater(SoupCore.plugin, 1L);
     }
-
 }

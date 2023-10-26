@@ -43,7 +43,7 @@ public class KitBlitz {
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 
         ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 3);
+        sword.addEnchantment(Enchantment.DAMAGE_ALL, 2);
         sword.addEnchantment(Enchantment.DURABILITY, 3);
 
         inv.setItem(0, sword);
@@ -77,7 +77,7 @@ public class KitBlitz {
         lore.add(ChatColor.GRAY + "Zooooooooooooom!");
         lore.add("");
         lore.add(ChatColor.WHITE + "1/2 Iron, 1/2 Chainmail Armour");
-        lore.add(ChatColor.RED + "Sharpness III" + ChatColor.WHITE + " Iron Sword");
+        lore.add(ChatColor.RED + "Sharpness II" + ChatColor.WHITE + " Iron Sword");
         lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed II" + ChatColor.WHITE);
         lore.add(ChatColor.WHITE + "Spawn with an ender pearl");
         lore.add(ChatColor.WHITE + "Every kill:" + ChatColor.RED + " +1 Ender Pearl" + ChatColor.WHITE + " & " + ChatColor.RED + "Speed III " + ChatColor.GRAY + "(15s)");

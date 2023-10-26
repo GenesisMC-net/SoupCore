@@ -73,10 +73,10 @@ public class KitScientist {
         lore.add(ChatColor.WHITE + "3/4 Iron Armour");
         lore.add(ChatColor.RED + "Sharpness I" + ChatColor.WHITE + " Diamond Sword");
         lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed I" + ChatColor.WHITE + " and " + ChatColor.RED + "Resistance I" + ChatColor.WHITE);
-        lore.add(ChatColor.WHITE + "Spawn with" + ChatColor.RED + " 3 Instant Damage " + ChatColor.WHITE + "potions");
-        lore.add(ChatColor.WHITE + "and" + ChatColor.RED + " 1 Poison " + ChatColor.WHITE + "potion");
+        lore.add(ChatColor.WHITE + "Spawn with" + ChatColor.RED + " 3 Instant Damage " + ChatColor.WHITE + "and" + ChatColor.RED + " 1 Poison " + ChatColor.WHITE + "potion");
         lore.add("");
 
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         if (highlightedKit == 7) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
