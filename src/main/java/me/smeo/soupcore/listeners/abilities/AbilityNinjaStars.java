@@ -29,7 +29,7 @@ public class AbilityNinjaStars implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e)
     {
         ninjaStarCooldown.remove(e.getEntity().getPlayer().getUniqueId());
-
+        if(e.getEntity().getPlayer().getKiller() == null){return;}
         if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit"))), 4)) // Kit ID for stealth is 4
         {
             ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, 4);
