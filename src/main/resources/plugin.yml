@@ -21,7 +21,7 @@ commands:
     description: ADMIN COMMAND
   stats:
     description: Stats Command
-    usage: /stats
+    usage: /statsCommand
 permissions:
   SoupCore.kit.pvp:
     default: true
