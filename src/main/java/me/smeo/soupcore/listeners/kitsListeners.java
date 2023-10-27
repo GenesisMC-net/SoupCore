@@ -58,7 +58,7 @@ public class kitsListeners implements Listener
                 Methods_Kits.selectKit(player, 8);
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.YELLOW + " Glider " + ChatColor.GRAY + "kit");
                 break;
-            case 4 + (9*3):
+            case 5 + (9*3):
                 Methods_Kits.selectKit(player, 9);
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.DARK_AQUA + " Soldier " + ChatColor.GRAY + "kit");
                 break;
