@@ -77,6 +77,7 @@ public class PlayerDeathListener implements Listener
                 v.setZ(0);
                 p.setVelocity(v);
                 e.getEntity().spigot().respawn();
+                p.teleport(new Location(p.getWorld(), -438, 111, -1521, (float) -90.0, (float) 1.0));
             }
         }.runTaskLater(SoupCore.plugin, 1L);
     }
