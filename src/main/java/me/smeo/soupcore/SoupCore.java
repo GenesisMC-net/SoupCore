@@ -62,10 +62,8 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityMage(), this);
         getServer().getPluginManager().registerEvents(new AbilityHulk(), this);
         getServer().getPluginManager().registerEvents(new AbilityTank(), this);
-        
-        getCommand("ping").setExecutor(new ping());
+
         getCommand("kits").setExecutor(new kitsCommand());
-        getCommand("placeholderTestCommand").setExecutor(new placeholderTestCommand());
         getCommand("refill").setExecutor(new refill());
         getCommand("repair").setExecutor(new repair());
         getCommand("bounty").setExecutor(new bountyCommand());

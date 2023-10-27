@@ -21,7 +21,6 @@ public class spongeLaunchListener implements Listener
             // Check if boost height has been adjusted
             if (p.getLocation().subtract(0, 2, 0).getBlock().getType() == Material.SIGN_POST) {
                 Sign sign = (Sign) p.getLocation().subtract(0, 2, 0).getBlock().getState();
-                System.out.println(sign.getLine(1));
                 boostHeight = Integer.parseInt(sign.getLine(1));
             }
 
