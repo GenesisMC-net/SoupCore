@@ -59,11 +59,6 @@ public class bountyCommand implements CommandExecutor {
                 return true;
 
 
-
-
-
-
-
             } else if (args[0].equals("list")) {
                 Player p = Bukkit.getPlayer(sender.getName());
                 Connection connection = getConnection();

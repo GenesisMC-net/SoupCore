@@ -65,7 +65,6 @@ public class SpigotExpansion extends PlaceholderExpansion {
             Integer bounty = Integer.valueOf((String) Database.getPlayerData(player, "soupData", "bounty"));
             if(bounty > 0)
             {
-                //String string = ChatColor.GRAY + " | " + ChatColor.GOLD + bounty.toString();
                 return bounty.toString();
 
             }else
