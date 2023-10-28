@@ -43,19 +43,36 @@ public class bountyCommand implements CommandExecutor {
                 return false;
 
 
-            } else if (args[0].equals("create") && sender instanceof Player)
-            {
-                Player target = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
+            } else if (args[0].equals("create") && sender instanceof Player) {
+                Player target = null;
+                try {
+                    target = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
+                } catch (NullPointerException exc) {
+                    player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
+                }
+                if (target == null) {
+                    player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
+                }
+
                 Integer previousBounty = Integer.valueOf((String) Objects.requireNonNull(getPlayerData(target, "soupData", "bounty")));
                 Integer newBounty = Integer.valueOf(args[2]);
 
-                if (!(args.length >= 3)){bountyUsageMessage(player); return true;}
-                if(!(newBounty >= 50)){player.sendMessage(ChatColor.RED + "Minimum bounty is 50 credits"); return true;}
-                if(!(Credits.checkCreditBalance(player, newBounty))){player.sendMessage(ChatColor.RED + "You do not have enough credits to complete this action!"); return true;}
+                if (!(args.length >= 3)) {
+                    bountyUsageMessage(player);
+                    return true;
+                }
+                if (!(newBounty >= 50)) {
+                    player.sendMessage(ChatColor.RED + "Minimum bounty is 50 credits");
+                    return true;
+                }
+                if (!(Credits.checkCreditBalance(player, newBounty))) {
+                    player.sendMessage(ChatColor.RED + "You do not have enough credits to complete this action!");
+                    return true;
+                }
 
                 Credits.chargeCredits(player, newBounty);
-                Database.SetPlayerData(target, "soupData", "bounty", (previousBounty+newBounty));
-                Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty on " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + (newBounty) + " credits" + ChatColor.GRAY + ". Total: " + (previousBounty+newBounty));
+                Database.SetPlayerData(target, "soupData", "bounty", (previousBounty + newBounty));
+                Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty on " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + (newBounty) + " credits" + ChatColor.GRAY + ". Total: " + (previousBounty + newBounty));
                 return true;
 
 

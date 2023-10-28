@@ -187,7 +187,6 @@ public class combatLogListeners implements Listener {
                                         antiLog.remove(targetUUID);
                                         attacker.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
                                         target.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
-                                        Bukkit.getServer().broadcastMessage("New timer");
                                     }
                                 }
                             }
@@ -219,7 +218,6 @@ public class combatLogListeners implements Listener {
                                 antiLog.remove(targetUUID);
                                 attacker.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
                                 target.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
-                                Bukkit.getServer().broadcastMessage("Initial timer");
                             }
                         }
                     }

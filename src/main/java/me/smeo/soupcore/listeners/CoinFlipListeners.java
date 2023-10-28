@@ -51,7 +51,14 @@ public class CoinFlipListeners implements Listener {
         try {
             wagerAmount = Integer.valueOf(ChatColor.stripColor(e.getMessage()));
         } catch (NumberFormatException nfe) {
-            p.sendMessage(ChatColor.RED + "Invalid number. Please try again (\"cancel\" to Cancel)");
+            p.sendMessage(ChatColor.RED + "Invalid number. Please try again \n(\"cancel\" to Cancel)");
+            return;
+        }
+
+        if (wagerAmount <= 0) {
+            p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
+            p.sendMessage(ChatColor.RED + "Your wager is too small! Please try again \n(\"cancel\" to Cancel)");
+            awaitingNewGameResponse.remove(p.getUniqueId());
             return;
         }
 
@@ -60,7 +67,6 @@ public class CoinFlipListeners implements Listener {
             p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
             p.sendMessage(ChatColor.RED + "Insufficient funds! You require " + ChatColor.GREEN + (wagerAmount - currentCredits) + ChatColor.RED + " more credits to complete this action");
             awaitingNewGameResponse.remove(p.getUniqueId());
-            p.closeInventory();
             return;
         }
 
@@ -74,6 +80,10 @@ public class CoinFlipListeners implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
+        if (e.getView().getTitle().contains("Flipping coin...")) {
+            e.setCancelled(true);
+            return;
+        }
         if (!e.getView().getTitle().contains("Coin-flip Games")) {
             return;
         }

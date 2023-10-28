@@ -17,12 +17,15 @@ commands:
     description: ADMIN COMMAND
   stats:
     description: Stats Command
-    usage: /statsCommand
+    usage: /stats [player]
   spawn:
     description: Teleport to spawn
   coinflip:
     description: Flip a coin!
     aliases: ['cf']
+  pay:
+    description: Pay another player credits
+    usage: /pay <player> <amount>
 permissions:
   SoupCore.kit.pvp:
     default: true
