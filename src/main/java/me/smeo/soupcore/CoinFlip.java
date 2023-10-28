@@ -22,8 +22,8 @@ public class CoinFlip {
     private static Inventory mainMenu(Player p)
     {
         int wins = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
-        int losses = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
-        int moneyMade = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
+        int losses = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "losses")));
+        int moneyMade = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "moneyMade")));
         float percentageWon = (float) wins / (wins + losses) * 100;
         if (wins == 0 && losses == 0) {
             percentageWon = (float) 0;
@@ -231,7 +231,7 @@ public class CoinFlip {
                     Database.SetPlayerData(loser, "coinflip", "losses", loserLosses + 1);
 
                     Database.SetPlayerData(winner, "coinflip", "moneyMade", winnerProfit + bet);
-                    Database.SetPlayerData(loser, "coinflip", "moneyMade", winnerProfit - bet);
+                    Database.SetPlayerData(loser, "coinflip", "moneyMade", loserProfit - bet);
 
 
                     Database.SetPlayerData(better, "coinflip", "activeWager", 0);
