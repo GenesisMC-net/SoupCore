@@ -88,9 +88,8 @@ public class AbilityGlider implements Listener {
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 15L);
 
                     EnderPearl ender = (EnderPearl) e.getEntity();
-                    ArmorStand as = (ArmorStand) ender.getWorld().spawnEntity(new Location(ender.getWorld(), 0, 0, 0), EntityType.ARMOR_STAND);
+                    ArmorStand as = (ArmorStand) ender.getWorld().spawnEntity(ender.getLocation(), EntityType.ARMOR_STAND);
                     as.setVisible(false);
-                    as.teleport(ender);
                     as.setGravity(false);
                     as.setSmall(true);
                     as.setCanPickupItems(false);
