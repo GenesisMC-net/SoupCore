@@ -16,7 +16,7 @@ public class SpigotExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return "Smeo";
+        return "Donut, Smeo";
     }
 
     @Override
@@ -62,19 +62,9 @@ public class SpigotExpansion extends PlaceholderExpansion {
         }
         if(params.equals("bounty"))
         {
-            Integer bounty = Integer.valueOf((String) Database.getPlayerData(player, "soupData", "bounty"));
-            if(bounty > 0)
-            {
-                return bounty.toString();
-
-            }else
-            {
-               return null;
-            }
+            return (String) Database.getPlayerData(player, "soupData", "bounty");
         }
 
         return null;
     }
-
-
 }
