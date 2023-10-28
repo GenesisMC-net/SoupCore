@@ -22,6 +22,8 @@ commands:
   stats:
     description: Stats Command
     usage: /statsCommand
+  spawn:
+    description: Teleport to spawn
 permissions:
   SoupCore.kit.pvp:
     default: true
