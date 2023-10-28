@@ -22,9 +22,16 @@ public class CoinFlip {
     private static Inventory mainMenu(Player p)
     {
         int wins = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
-        int losses = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
-        int moneyMade = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
+        int losses = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "losses")));
+        int moneyMade = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "moneyMade")));
         float percentageWon = (float) wins / (wins + losses) * 100;
+        if (wins == 0 && losses == 0) {
+            percentageWon = (float) 0;
+        } else if (wins == 0) {
+            percentageWon = (float) 0;
+        } else if (losses == 0) {
+            percentageWon = (float) 100;
+        }
         DecimalFormat df = new DecimalFormat("#.#");
 
         Inventory inv = Bukkit.createInventory(null, 36, ChatColor.BLACK + "Coin-flip Games");
@@ -134,12 +141,7 @@ public class CoinFlip {
         return inv;
     }
 
-    private static void coinFlipInvState(Player p, DyeColor dyeColor, Inventory inv) {
-        ItemStack playerSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        SkullMeta playerSkullMeta = (SkullMeta) playerSkull.getItemMeta();
-        playerSkullMeta.setDisplayName(ChatColor.YELLOW + p.getName());
-        playerSkullMeta.setOwner(p.getName());
-        playerSkull.setItemMeta(playerSkullMeta);
+    private static void coinFlipInvState(ItemStack playerSkull, DyeColor dyeColor, Inventory inv) {
         inv.setItem(13, playerSkull);
 
         ItemStack wool = new ItemStack(Material.WOOL, 1, dyeColor.getWoolData());
@@ -165,12 +167,24 @@ public class CoinFlip {
     }
 
     public static void playCoinFlip(Player acceptor, Player better) {
-        int bet = 2 * Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(better, "coinflip", "activeWager")));
+        int bet = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(better, "coinflip", "activeWager")));
+
+        ItemStack acceptorSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta acceptorSkullMeta = (SkullMeta) acceptorSkull.getItemMeta();
+        acceptorSkullMeta.setDisplayName(ChatColor.YELLOW + acceptor.getName());
+        acceptorSkullMeta.setOwner(acceptor.getName());
+        acceptorSkull.setItemMeta(acceptorSkullMeta);
+
+        ItemStack betterSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta betterSkullMeta = (SkullMeta) betterSkull.getItemMeta();
+        betterSkullMeta.setDisplayName(ChatColor.YELLOW + better.getName());
+        betterSkullMeta.setOwner(better.getName());
+        betterSkull.setItemMeta(betterSkullMeta);
 
         Inventory inv = Bukkit.createInventory(null, 27, ChatColor.BLACK + "Flipping coin...");
         acceptor.closeInventory();
         acceptor.openInventory(inv);
-        coinFlipInvState(acceptor, DyeColor.LIME, inv);
+        coinFlipInvState(acceptorSkull, DyeColor.LIME, inv);
 
         Random rd = new Random();
         boolean acceptorWins = rd.nextBoolean();
@@ -187,7 +201,7 @@ public class CoinFlip {
         System.out.println(acceptor.getName() + " | " + winner.getName());
 
         Random rand = new Random();
-        int stopTime = rand.nextInt(4) + 7;
+        int stopTime = rand.nextInt(4) + 4;
         final int[] i = {0};
         System.out.println(stopTime);
         new BukkitRunnable() {
@@ -198,35 +212,47 @@ public class CoinFlip {
 
                 if (i[0] >= stopTime) {
                     if (acceptorWins) {
-                        coinFlipInvState(acceptor, DyeColor.LIME, inv);
+                        coinFlipInvState(acceptorSkull, DyeColor.LIME, inv);
                         acceptor.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 10, 2);
                         if (acceptor.getServer().getOnlinePlayers().contains(better)) {
-                            better.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 10, 1);
+                            better.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 4, 1);
                         }
                     } else {
-                        coinFlipInvState(better, DyeColor.RED, inv);
+                        coinFlipInvState(betterSkull, DyeColor.RED, inv);
                         acceptor.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 10, 1);
                         if (acceptor.getServer().getOnlinePlayers().contains(better)) {
-                            better.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 10, 2);
+                            better.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 6, 2);
                         }
                     }
                     int winnerBalance = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(winner, "soupData", "credits")));
                     acceptor.getServer().broadcastMessage(cfPrefix + ChatColor.GREEN + winner.getName() + ChatColor.WHITE + " beat " + ChatColor.RED + loser.getName() + ChatColor.WHITE + " in a Coin Flip worth " + ChatColor.YELLOW + bet + ChatColor.WHITE + " credits");
 
+                    int winnerProfit = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "moneyMade")));
+                    int loserProfit = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "moneyMade")));
+                    int winnerWins = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "wins")));
+                    int loserLosses = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "losses")));
+
                     Database.SetPlayerData(winner, "soupData", "credits", winnerBalance + (bet * 2));
+
+                    Database.SetPlayerData(winner, "coinflip", "wins", winnerWins + 1);
+                    Database.SetPlayerData(loser, "coinflip", "losses", loserLosses + 1);
+
+                    Database.SetPlayerData(winner, "coinflip", "moneyMade", winnerProfit + bet);
+                    Database.SetPlayerData(loser, "coinflip", "moneyMade", loserProfit - bet);
+
                     Database.SetPlayerData(better, "coinflip", "activeWager", 0);
                     this.cancel();
                     return;
                 }
                 acceptor.playSound(acceptor.getLocation(), Sound.WOOD_CLICK, 10, 1);
                 if (i[0] % 2 == 0) {
-                    coinFlipInvState(acceptor, DyeColor.LIME, inv);
+                    coinFlipInvState(acceptorSkull, DyeColor.LIME, inv);
                 } else {
-                    coinFlipInvState(better, DyeColor.RED, inv);
+                    coinFlipInvState(betterSkull, DyeColor.RED, inv);
                 }
                 i[0]++;
             }
-        }.runTaskTimer(SoupCore.plugin, 0L, 10L);
+        }.runTaskTimer(SoupCore.plugin, 0L, 20L);
 
     }
 

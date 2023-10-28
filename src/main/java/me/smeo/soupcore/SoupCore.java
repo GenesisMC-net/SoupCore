@@ -71,6 +71,7 @@ public final class SoupCore extends JavaPlugin {
         getCommand("stats").setExecutor(new statsCommand());
         getCommand("spawn").setExecutor(new spawnCommand());
         getCommand("coinflip").setExecutor(new coinflip());
+        getCommand("pay").setExecutor(new payCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());

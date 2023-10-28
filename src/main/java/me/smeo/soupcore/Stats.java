@@ -31,9 +31,4 @@ public class Stats
         final DecimalFormat df = new DecimalFormat("0.00");
         return df.format(kdr);
     }
-
-
-
-
-
 }

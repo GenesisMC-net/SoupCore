@@ -59,7 +59,7 @@ public class KitSoldier {
         iceBlockLore.add("");
         iceBlockLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Ice Dome");
         iceBlockLore.add(ChatColor.GRAY + "Create a 5x5 ice dome with around you");
-        iceBlockLore.add(ChatColor.GRAY + "The dome grants temporary strength II to");
+        iceBlockLore.add(ChatColor.GRAY + "which also grants temporary strength II");
         iceBlockMeta.setLore(iceBlockLore);
 
         iceBlockMeta.setDisplayName(ChatColor.DARK_AQUA + "Ice Dome");

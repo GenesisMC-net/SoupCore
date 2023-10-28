@@ -52,7 +52,7 @@ public class KitGlider {
         inv.setItem(0, sword);
 
         // Ability
-        ItemStack gliderPearl = new ItemStack(Material.ENDER_PEARL, 1);
+        ItemStack gliderPearl = new ItemStack(Material.ENDER_PEARL, 4);
         ItemMeta gliderPearlMeta = gliderPearl.getItemMeta();
 
         ArrayList<String> gliderPearlLore = new ArrayList<>();

@@ -2,6 +2,7 @@ package me.smeo.soupcore.listeners;
 
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,7 +47,7 @@ public class SpawnLaunchListener implements Listener {
         Player p = e.getPlayer();
         if(p.getLocation().subtract(0, 1, 0).getBlock().getType() == Material.WOOL)
         {
-            System.out.println("Player on wool");
+            p.playSound(p.getLocation(), Sound.EXPLODE, 8, 1);
             p.setVelocity(new Vector(1 + p.getLocation().getDirection().getX() * 6, 2, 1 + p.getLocation().getDirection().getZ() * 6));
             cancelFallDamage.add(p.getUniqueId());
             new BukkitRunnable() {
