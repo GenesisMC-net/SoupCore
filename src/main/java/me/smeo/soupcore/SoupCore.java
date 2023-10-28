@@ -48,6 +48,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PVPRegionListeners(), this);
         getServer().getPluginManager().registerEvents(new SpawnHotbarListeners(), this);
         getServer().getPluginManager().registerEvents(new SpawnLaunchListener(), this);
+        getServer().getPluginManager().registerEvents(new CoinFlipListeners(), this);
 
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
@@ -69,6 +70,7 @@ public final class SoupCore extends JavaPlugin {
         getCommand("bounty").setExecutor(new bountyCommand());
         getCommand("stats").setExecutor(new statsCommand());
         getCommand("spawn").setExecutor(new spawnCommand());
+        getCommand("coinflip").setExecutor(new coinflip());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());

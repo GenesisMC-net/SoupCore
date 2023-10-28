@@ -20,6 +20,9 @@ commands:
     usage: /statsCommand
   spawn:
     description: Teleport to spawn
+  coinflip:
+    description: Flip a coin!
+    aliases: ['cf']
 permissions:
   SoupCore.kit.pvp:
     default: true

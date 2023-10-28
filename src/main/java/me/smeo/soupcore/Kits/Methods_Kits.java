@@ -4,92 +4,14 @@ import me.smeo.soupcore.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Methods_Kits {
-
-    // KITS - Kit Value in order (0, 1, 2 etc) //
-
-    private static void stealth(Player p)
-    {
-        PlayerInventory inv = p.getInventory();
-        inv.clear();
-
-        ItemStack[] armor = new ItemStack[] {new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_BOOTS)};
-
-        for (ItemStack armorPiece: armor) {
-            armorPiece.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-            armorPiece.addEnchantment(Enchantment.DURABILITY, 20);
-        }
-
-        inv.setArmorContents(armor);
-
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 1));
-
-        ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 2);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-
-        inv.setItem(0, sword);
-
-        // Ability
-        ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, 4);
-
-        ItemMeta ninjaStarMeta = ninjaStar.getItemMeta();
-
-        ArrayList<String> ninjaStarLore = new ArrayList<>();
-        ninjaStarLore.add("");
-        ninjaStarLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Star Throw");
-        ninjaStarLore.add(ChatColor.GRAY + "Throw a ninja star that deals blindness");
-        ninjaStarLore.add(ChatColor.GRAY + "for 5 seconds to any player it hits!");
-        ninjaStarLore.add("");
-        ninjaStarLore.add(ChatColor.WHITE + "Every kill with the Ninja Kit:" + ChatColor.GREEN + " +1 Ninja Star");
-        ninjaStarMeta.setLore(ninjaStarLore);
-
-        ninjaStarMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Ninja Star");
-
-        ninjaStar.setItemMeta(ninjaStarMeta);
-        inv.setItem(1, ninjaStar);
-    }
-
-    private static void fisherman(Player p)
-    {
-        PlayerInventory inv = p.getInventory();
-        inv.clear();
-        ItemStack helmet = new ItemStack(Material.GOLD_HELMET);
-        helmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
-        helmet.addEnchantment(Enchantment.DURABILITY, 3);
-        inv.setHelmet(helmet);
-
-        inv.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
-        inv.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-
-        ItemStack boots = new ItemStack(Material.GOLD_BOOTS);
-        boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
-        boots.addEnchantment(Enchantment.DURABILITY, 3);
-        inv.setBoots(boots);
-
-        ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-        inv.setItem(0, sword);
-
-        // TODO ability
-
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2));
-
-    }
 
     // Kit GUI
 
