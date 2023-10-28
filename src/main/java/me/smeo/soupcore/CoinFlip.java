@@ -25,6 +25,13 @@ public class CoinFlip {
         int losses = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
         int moneyMade = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
         float percentageWon = (float) wins / (wins + losses) * 100;
+        if (wins == 0 && losses == 0) {
+            percentageWon = (float) 0;
+        } else if (wins == 0) {
+            percentageWon = (float) 0;
+        } else if (losses == 0) {
+            percentageWon = (float) 100;
+        }
         DecimalFormat df = new DecimalFormat("#.#");
 
         Inventory inv = Bukkit.createInventory(null, 36, ChatColor.BLACK + "Coin-flip Games");
@@ -213,7 +220,20 @@ public class CoinFlip {
                     int winnerBalance = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(winner, "soupData", "credits")));
                     acceptor.getServer().broadcastMessage(cfPrefix + ChatColor.GREEN + winner.getName() + ChatColor.WHITE + " beat " + ChatColor.RED + loser.getName() + ChatColor.WHITE + " in a Coin Flip worth " + ChatColor.YELLOW + bet + ChatColor.WHITE + " credits");
 
+                    int winnerProfit = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "moneyMade")));
+                    int loserProfit = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "moneyMade")));
+                    int winnerWins = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "wins")));
+                    int loserLosses = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "losses")));
+
                     Database.SetPlayerData(winner, "soupData", "credits", winnerBalance + (bet * 2));
+
+                    Database.SetPlayerData(winner, "coinflip", "wins", winnerWins + 1);
+                    Database.SetPlayerData(loser, "coinflip", "losses", loserLosses + 1);
+
+                    Database.SetPlayerData(winner, "coinflip", "moneyMade", winnerProfit + bet);
+                    Database.SetPlayerData(loser, "coinflip", "moneyMade", winnerProfit - bet);
+
+
                     Database.SetPlayerData(better, "coinflip", "activeWager", 0);
                     this.cancel();
                     return;
