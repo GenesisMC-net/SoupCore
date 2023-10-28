@@ -36,19 +36,19 @@ public final class SoupCore extends JavaPlugin {
         killStreakMilestones.add(30);
         killStreakMilestones.add(50);
         killStreakMilestones.add(60);
-        getServer().getPluginManager().registerEvents(new soupDropListener(), this);
+        getServer().getPluginManager().registerEvents(new ItemDropListener(), this);
         getServer().getPluginManager().registerEvents(new soupUseListener(), this);
         getServer().getPluginManager().registerEvents(new kitsListeners(), this);
         getServer().getPluginManager().registerEvents(new PlayerKillListener(), this);
         getServer().getPluginManager().registerEvents(new soupSignRefillListener(), this);
         getServer().getPluginManager().registerEvents(new spongeLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
-
         getServer().getPluginManager().registerEvents(new PlayerJoinLeaveMessages(), this);
-
         getServer().getPluginManager().registerEvents(new combatLogListeners(), this);
-
         getServer().getPluginManager().registerEvents(new PVPRegionListeners(), this);
+        getServer().getPluginManager().registerEvents(new SpawnHotbarListeners(), this);
+        getServer().getPluginManager().registerEvents(new SpawnLaunchListener(), this);
+
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
         getServer().getPluginManager().registerEvents(new AbilityNinjaStars(), this);
@@ -68,6 +68,7 @@ public final class SoupCore extends JavaPlugin {
         getCommand("repair").setExecutor(new repair());
         getCommand("bounty").setExecutor(new bountyCommand());
         getCommand("stats").setExecutor(new statsCommand());
+        getCommand("spawn").setExecutor(new spawnCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());

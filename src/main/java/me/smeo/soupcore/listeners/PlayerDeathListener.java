@@ -2,6 +2,7 @@ package me.smeo.soupcore.listeners;
 
 import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
+import me.smeo.soupcore.commands.spawnCommand;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -61,12 +62,7 @@ public class PlayerDeathListener implements Listener
             }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
         }
 
-        for (PotionEffect effect : p.getActivePotionEffects())
-        {
-            p.removePotionEffect(effect.getType());
-        }
-        p.getInventory().clear();
-        p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});
+        spawnCommand.spawnInventory(p);
 
         new BukkitRunnable(){
             @Override
@@ -77,7 +73,7 @@ public class PlayerDeathListener implements Listener
                 v.setZ(0);
                 p.setVelocity(v);
                 e.getEntity().spigot().respawn();
-                p.teleport(new Location(p.getWorld(), -438, 111, -1521, (float) -90.0, (float) 1.0));
+                p.teleport(new Location(p.getWorld(), -437.5, 111, -1520.5, (float) -90.0, (float) 1.0));
             }
         }.runTaskLater(SoupCore.plugin, 1L);
     }

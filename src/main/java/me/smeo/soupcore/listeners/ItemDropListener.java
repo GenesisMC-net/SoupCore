@@ -2,18 +2,14 @@ package me.smeo.soupcore.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.Material.*;
 
 import static me.smeo.soupcore.SoupCore.plugin;
 
-public class soupDropListener implements Listener
+public class ItemDropListener implements Listener
 {
 
     @EventHandler
@@ -29,6 +25,8 @@ public class soupDropListener implements Listener
             scheduler.runTaskLater(plugin, () -> {
                 e.getItemDrop().remove();
             }, 20L * 7L);
+        } else {
+            e.setCancelled(true);
         }
     }
 }

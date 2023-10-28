@@ -26,7 +26,7 @@ import java.util.*;
 
 public class combatLogListeners implements Listener {
 
-    public ArrayList<UUID> antiLog = new ArrayList<>();
+    public static ArrayList<UUID> antiLog = new ArrayList<>();
     public HashMap<BukkitTask, UUID[]> combatTimers = new HashMap<>();
     // Lists below prevent ConcurrentModification errors
     public List<BukkitTask> combatTimersToRemove = new ArrayList<>();
