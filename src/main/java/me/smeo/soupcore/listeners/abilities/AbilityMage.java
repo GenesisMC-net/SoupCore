@@ -158,6 +158,7 @@ public class AbilityMage implements Listener {
                                         Player target = (Player) entity;
                                         if (!target.getUniqueId().equals(p.getUniqueId())) {
                                             target.damage(0.1, p);
+                                            target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 5, 2, false));
                                             if (projectile.getNearbyEntities(0.6, 0.6, 0.6).contains(target) && Math.round(projectile.getLocation().getY()) - 1.5 <= Math.round(projectile.getLocation().getY())) {
                                                 Location targetLocation = target.getLocation().clone();
 
@@ -208,7 +209,7 @@ public class AbilityMage implements Listener {
                         }
 
                         p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, (double) 1, p.getEyeLocation().getDirection().getZ() * 15));
-                        p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 5, 0);
+                        p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1, 0);
 
                         p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 0);
                         final int[] i = {0};
