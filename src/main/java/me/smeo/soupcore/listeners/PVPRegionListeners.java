@@ -26,24 +26,23 @@ public class PVPRegionListeners implements Listener {
         {
             return;
         }
-        else {
-            Player p = e.getPlayer();
 
-            RegionManager rgManager = SoupCore.getWorldGuard.getRegionManager(p.getWorld());
+        Player p = e.getPlayer();
 
-            ApplicableRegionSet rgsMovedFrom = rgManager.getApplicableRegions(e.getFrom().getBlock().getLocation());
-            ApplicableRegionSet rgsMovedTo = rgManager.getApplicableRegions(e.getTo().getBlock().getLocation());
+        RegionManager rgManager = SoupCore.getWorldGuard.getRegionManager(p.getWorld());
 
-            if (rgsMovedTo.size() != rgsMovedTo.size() || rgsMovedTo.size() == 1 || rgsMovedFrom.size() == 1)
-            {
-                for (ProtectedRegion rgTo: rgsMovedTo) {
-                    for (ProtectedRegion rgFrom: rgsMovedFrom) {
-                        // Enter a new region
-                        if (Objects.equals(rgFrom.getId(), "spawn") && Objects.equals(rgTo.getId(), "pvp"))
-                        {
-                            p.sendMessage(ChatColor.GRAY + "You are no longer protected");
-                            Methods_Kits.giveKit(p, Methods_Kits.getActiveKit(p));
-                        }
+        ApplicableRegionSet rgsMovedFrom = rgManager.getApplicableRegions(e.getFrom().getBlock().getLocation());
+        ApplicableRegionSet rgsMovedTo = rgManager.getApplicableRegions(e.getTo().getBlock().getLocation());
+
+        if (rgsMovedTo.size() != rgsMovedTo.size() || rgsMovedTo.size() == 1 || rgsMovedFrom.size() == 1)
+        {
+            for (ProtectedRegion rgTo: rgsMovedTo) {
+                for (ProtectedRegion rgFrom: rgsMovedFrom) {
+                    // Enter a new region
+                    if (Objects.equals(rgFrom.getId(), "spawn") && Objects.equals(rgTo.getId(), "pvp"))
+                    {
+                        p.sendMessage(ChatColor.GRAY + "You are no longer protected");
+                        Methods_Kits.giveKit(p, Methods_Kits.getActiveKit(p));
                     }
                 }
             }
