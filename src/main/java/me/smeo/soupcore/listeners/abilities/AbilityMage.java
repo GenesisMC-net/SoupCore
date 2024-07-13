@@ -2,6 +2,8 @@ package me.smeo.soupcore.listeners.abilities;
 
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +13,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -53,6 +57,20 @@ public class AbilityMage implements Listener {
     {
         waterAbilityCooldown.remove(e.getEntity().getPlayer().getUniqueId());
         fireLaunchCooldown.remove(e.getEntity().getPlayer().getUniqueId());
+    }
+
+    private void makeWaterGrid(Location targetLocation) {
+        for (int j = -1; j < 2; j++) {
+            for (int k = -1; k < 2; k++) {
+                Location waterGridCell = targetLocation.clone().getBlock().getLocation().add(j, 0, k);
+
+                if (waterGridCell.getBlock().getType().equals(Material.AIR)) {
+                    waterGridCell.getBlock().setType(Material.WATER);
+                }
+            }
+        }
+
+        deleteWaterGrid(targetLocation);
     }
 
     private void deleteWaterGrid(Location targetLocation)
@@ -109,72 +127,57 @@ public class AbilityMage implements Listener {
                         }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
 
                         Location playerLocation = p.getLocation();
-                        playerLocation.setY(playerLocation.getY() + 1);
-                        Vector playerDirection = playerLocation.clone().getDirection();
-                        playerDirection.setY(0);
-                        Vector directionIncrement = playerDirection.clone();
+
+                        ArmorStand projectile = p.getWorld().spawn(playerLocation, ArmorStand.class);
+
+                        projectile.setVisible(false);
+                        projectile.setSmall(true);
+                        projectile.setHelmet(new ItemStack(Material.PACKED_ICE));
+
+                        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(3, 2, 3));
+                        projectile.setVelocity(projVelocity);
 
                         final int[] i = {0};
-                        final Vector[] waterDirection = {playerDirection.clone()};
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                i[0] = i[0] + 1;
-                                Location newLocation = playerLocation.clone().add(waterDirection[0]);
-                                if (p.getWorld().getBlockAt(newLocation).getType() != Material.AIR) {
-                                    Location targetLocation = newLocation.clone();
-                                    for (int j = -1; j < 2; j++) {
-                                        for (int k = -1; k < 2; k++) {
-                                            Location waterGridCell = targetLocation.clone().getBlock().getLocation().add(j, 0, k);
+                                i[0] ++;
+                                if (projectile.isOnGround()) {
+                                    if (!projectile.getNearbyEntities(3,3,3).contains(p)) {
+                                        Location targetLocation = projectile.getLocation().clone();
 
-                                            if (waterGridCell.getBlock().getType().equals(Material.AIR)) {
-                                                waterGridCell.getBlock().setType(Material.WATER);
-                                            }
-                                        }
+                                        makeWaterGrid(targetLocation);
+                                        projectile.remove();
+                                        this.cancel();
+                                        return;
                                     }
+                                }
 
-                                    deleteWaterGrid(targetLocation);
-                                    i[0] = 10;
-                                    this.cancel();
-                                    return;
-                                } else {
-                                    for (Player player : p.getWorld().getPlayers()) {
-                                        if (player.getUniqueId() != p.getUniqueId()) {
-                                            Location targetPlayerLoc = player.getLocation().clone();
-                                            if (targetPlayerLoc.getBlock().getLocation().equals(newLocation.getBlock().getLocation()) || targetPlayerLoc.getBlock().getLocation().equals(newLocation.clone().subtract(new Vector(0, 1, 0)).getBlock().getLocation())) {
-                                                Location targetPlayerLocation = targetPlayerLoc.clone().add(0, 1, 0);
-                                                for (int j = -1; j < 2; j++) {
-                                                    for (int k = -1; k < 2; k++) {
-                                                        Location waterGridCell = targetPlayerLocation.clone().add(j, 0, k);
-                                                        if (waterGridCell.getBlock().getType().equals(Material.AIR)) {
-                                                            waterGridCell.getBlock().setType(Material.WATER);
-                                                        }
-                                                    }
-                                                }
+                                for (Entity entity : projectile.getNearbyEntities(0.6, 0.6, 0.6)) {
+                                    if (entity instanceof Player) {
+                                        Player target = (Player) entity;
+                                        if (!target.getUniqueId().equals(p.getUniqueId())) {
+                                            target.damage(0.1, p);
+                                            if (projectile.getNearbyEntities(0.6, 0.6, 0.6).contains(target) && Math.round(projectile.getLocation().getY()) - 1.5 <= Math.round(projectile.getLocation().getY())) {
+                                                Location targetLocation = target.getLocation().clone();
 
-                                                player.damage(0.1, p);
-                                                deleteWaterGrid(targetPlayerLocation);
-                                                i[0] = 10;
+                                                makeWaterGrid(targetLocation);
+
+                                                projectile.remove();
                                                 this.cancel();
                                                 return;
                                             }
                                         }
                                     }
-                                    newLocation.getBlock().setType(Material.WATER);
-                                    newLocation.getBlock().setData((byte) 10);
-                                    newLocation.getBlock().getState().update();
                                 }
 
-                                waterDirection[0] = waterDirection[0].add(directionIncrement);
-
-                                Location oldLocation = newLocation.subtract(directionIncrement);
-                                if (p.getWorld().getBlockAt(oldLocation).getType() == Material.WATER) {
-                                    p.getWorld().getBlockAt(oldLocation).setType(Material.AIR);
+                                if (i[0] % 3L == 0) {
+                                    projectile.setVelocity(projVelocity);
                                 }
 
-                                if (i[0] >= 20) {
+                                if (i[0] >= 20L * 5L) {
+                                    projectile.remove();
                                     this.cancel();
-                                    return;
                                 }
                             }
                         }.runTaskTimer(SoupCore.plugin, 0L, 1L);
@@ -203,7 +206,24 @@ public class AbilityMage implements Listener {
                             p.sendMessage(ChatColor.RED + "You must be on the ground to use this ability!");
                             return;
                         }
+
                         p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, (double) 1, p.getEyeLocation().getDirection().getZ() * 15));
+                        p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 5, 0);
+
+                        p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 0);
+                        final int[] i = {0};
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                if (i[0] > 40) {
+                                    this.cancel();
+                                }
+
+                                p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 0);
+
+                                i[0] += 1;
+                            }
+                        }.runTaskTimerAsynchronously(SoupCore.plugin, 5L, 2L);
 
                         fireLaunchCooldown.put(p.getUniqueId(), System.currentTimeMillis());
                         new BukkitRunnable() {
