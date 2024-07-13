@@ -44,7 +44,7 @@ public class PlayerDeathListener implements Listener
         for (ItemStack item: p.getInventory().getContents()) {
             if (!Objects.equals(item, null) && !Objects.equals(item.getType(), Material.AIR)) {
                 if (Objects.equals(item.getType(), Material.MUSHROOM_SOUP)) {
-                    soupDrop = soupDrop + 1;
+                    soupDrop += 1;
                 }
             }
         }
@@ -62,19 +62,15 @@ public class PlayerDeathListener implements Listener
             }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
         }
 
-        spawnCommand.spawnInventory(p);
+        Location spawnLoc = p.getWorld().getSpawnLocation();
 
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                Vector v = p.getVelocity();
-                v.setX(0);
-                v.setY(0);
-                v.setZ(0);
-                p.setVelocity(v);
-                e.getEntity().spigot().respawn();
-                p.teleport(new Location(p.getWorld(), -437.5, 111, -1520.5, (float) -90.0, (float) 1.0));
-            }
-        }.runTaskLater(SoupCore.plugin, 1L);
+        Vector v = p.getVelocity();
+        v.setX(0);
+        v.setY(0);
+        v.setZ(0);
+        p.setVelocity(v);
+        e.getEntity().spigot().respawn();
+
+        spawnCommand.spawnInventory(p);
     }
 }

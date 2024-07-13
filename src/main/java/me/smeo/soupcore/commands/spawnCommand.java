@@ -85,7 +85,9 @@ public class spawnCommand implements CommandExecutor {
                             v.setZ(0);
                             p.setVelocity(v);
 
-                            p.teleport(new Location(p.getWorld(), -437.5, 111, -1520.5, (float) -90.0, (float) 1.0));
+                            Location spawnLoc = p.getWorld().getSpawnLocation();
+
+                            p.teleport(spawnLoc);
                             p.sendMessage(ChatColor.GREEN + "You are now at spawn");
                             p.playSound(p.getLocation(), Sound.LEVEL_UP, 10, 1);
                             spawnInventory(p);
