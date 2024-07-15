@@ -14,7 +14,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -33,18 +32,17 @@ import static me.smeo.soupcore.listeners.abilities.AbilityTank.silverFishCooldow
 
 public class PlayerDeathListener implements Listener
 {
-
     @EventHandler(priority = EventPriority.LOWEST)
-    public void OnPlayerDeath(PlayerDeathEvent e)
+    public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
-        Database.SetPlayerData(p, "soupData", "deaths", ( Integer.valueOf((String) Database.getPlayerData(p, "soupData", "deaths")))+1);
-        Database.SetPlayerData(p, "soupData", "killStreak", 0);
+        Database.SetPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
+        Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
         Location lastLoc = p.getLocation();
 
         removeCooldowns(p);
 
-        int killStreak = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak"));
+        int killStreak = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
         if(killStreak >= 20)
         {
             e.setDeathMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
@@ -73,9 +71,6 @@ public class PlayerDeathListener implements Listener
                 }
             }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
         }
-
-        Location spawnLoc = p.getWorld().getSpawnLocation();
-
         Vector v = p.getVelocity();
         v.setX(0);
         v.setY(0);

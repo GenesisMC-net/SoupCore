@@ -2,12 +2,9 @@ package me.smeo.soupcore.listeners;
 
 import me.smeo.soupcore.CoinFlip;
 import me.smeo.soupcore.Database.Database;
-import me.smeo.soupcore.Kits.*;
 import me.smeo.soupcore.SoupCore;
-import net.kyori.adventure.platform.facet.Facet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,14 +12,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +44,7 @@ public class CoinFlipListeners implements Listener {
 
         int wagerAmount;
         try {
-            wagerAmount = Integer.valueOf(ChatColor.stripColor(e.getMessage()));
+            wagerAmount = Integer.parseInt(ChatColor.stripColor(e.getMessage()));
         } catch (NumberFormatException nfe) {
             p.sendMessage(ChatColor.RED + "Invalid number. Please try again \n(\"cancel\" to Cancel)");
             return;
@@ -62,7 +57,7 @@ public class CoinFlipListeners implements Listener {
             return;
         }
 
-        int currentCredits = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
+        int currentCredits = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
         if (currentCredits < wagerAmount) {
             p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
             p.sendMessage(ChatColor.RED + "Insufficient funds! You require " + ChatColor.GREEN + (wagerAmount - currentCredits) + ChatColor.RED + " more credits to complete this action");
@@ -73,8 +68,8 @@ public class CoinFlipListeners implements Listener {
         p.playSound(p.getLocation(), Sound.ORB_PICKUP, 10, 0);
         p.sendMessage(ChatColor.GRAY + "You created a new coin flip for " + ChatColor.GREEN + wagerAmount + ChatColor.GRAY + " credits");
 
-        Database.SetPlayerData(p, "soupData", "credits", currentCredits - wagerAmount);
-        Database.SetPlayerData(p, "coinflip", "activeWager", wagerAmount);
+        Database.SetPlayerData(p, "soupData", "credits", String.valueOf(currentCredits - wagerAmount));
+        Database.SetPlayerData(p, "coinflip", "activeWager", String.valueOf(wagerAmount));
         awaitingNewGameResponse.remove(p.getUniqueId());
     }
 
@@ -109,12 +104,12 @@ public class CoinFlipListeners implements Listener {
             SkullMeta clickedGameMeta = (SkullMeta) clickedGame.getItemMeta();
             if (Objects.equals(clickedGameMeta.getOwner(), p.getName())) {
                 p.playSound(p.getLocation(), Sound.ORB_PICKUP, 10, 0);
-                int currentWager = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "activeWager")));
-                int currentCredits = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
+                int currentWager = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "activeWager")));
+                int currentCredits = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
                 p.sendMessage(ChatColor.GRAY + "You deleted your coin flip game with a wager of " + ChatColor.GREEN + currentWager + ChatColor.GRAY + " credits");
                 p.closeInventory();
-                Database.SetPlayerData(p, "soupData", "credits", currentCredits + currentWager);
-                Database.SetPlayerData(p, "coinflip", "activeWager", 0);
+                Database.SetPlayerData(p, "soupData", "credits", String.valueOf(currentCredits + currentWager));
+                Database.SetPlayerData(p, "coinflip", "activeWager", "0");
                 return;
             }
 
@@ -145,8 +140,8 @@ public class CoinFlipListeners implements Listener {
                 return;
             }
 
-            int accepterBalance = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
-            int bet = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(target, "coinflip", "activeWager")));
+            int accepterBalance = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
+            int bet = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(target, "coinflip", "activeWager")));
             if (accepterBalance < bet) {
                 p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
 
@@ -172,7 +167,7 @@ public class CoinFlipListeners implements Listener {
                 return;
             }
             CoinFlip.playCoinFlip(p, target);
-            Database.SetPlayerData(p, "soupData", "credits", (Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits"))) - bet));
+            Database.SetPlayerData(p, "soupData", "credits", String.valueOf((Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")).toString()) - bet))); // What a fucking mess LMAO
 
         } else if (e.getSlot() == 35) {
             CoinFlip.newGame(p);

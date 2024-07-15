@@ -37,8 +37,8 @@ public class bountyCommand implements CommandExecutor {
         if (args.length >= 1) // Main Argument Length Check
         {
             if (args[0].equals("me") && sender instanceof Player) {
-                Integer bounty = Integer.valueOf((String) Objects.requireNonNull(getPlayerData(player, "soupData", "bounty")));
-                String string = ChatColor.GRAY + "You have a " + ChatColor.GOLD + String.valueOf(bounty) + " credit" + ChatColor.GRAY + " bounty on your head";
+                int bounty = Integer.parseInt((String) Objects.requireNonNull(getPlayerData(player, "soupData", "bounty")));
+                String string = ChatColor.GRAY + "You have a " + ChatColor.GOLD + bounty + " credit" + ChatColor.GRAY + " bounty on your head";
                 player.sendMessage(string);
                 return true;
             } else if (args[0].equals("create") && sender instanceof Player) {
@@ -55,10 +55,6 @@ public class bountyCommand implements CommandExecutor {
                 Integer previousBounty = Integer.valueOf((String) Objects.requireNonNull(getPlayerData(target, "soupData", "bounty")));
                 Integer newBounty = Integer.valueOf(args[2]);
 
-                if (!(args.length >= 3)) {
-                    bountyUsageMessage(player);
-                    return true;
-                }
                 if (!(newBounty >= 50)) {
                     player.sendMessage(ChatColor.RED + "Minimum bounty is 50 credits");
                     return true;
@@ -70,6 +66,7 @@ public class bountyCommand implements CommandExecutor {
 
                 Credits.chargeCredits(player, newBounty);
                 Database.SetPlayerData(target, "soupData", "bounty", String.valueOf((previousBounty + newBounty)));
+                assert target != null;
                 Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty on " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + (newBounty) + " credits" + ChatColor.GRAY + ". Total: " + (previousBounty + newBounty));
                 return true;
 
@@ -95,7 +92,7 @@ public class bountyCommand implements CommandExecutor {
                     return false;
                 } catch (SQLException e) {
                     System.out.println("Error accessing data");
-                    System.out.println(e);
+                    throw new RuntimeException(e);
                 }
             }else {
                 player.sendMessage("DEBUG: Invalid arg");

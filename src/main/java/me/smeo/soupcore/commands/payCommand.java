@@ -1,14 +1,11 @@
 package me.smeo.soupcore.commands;
 
 import me.smeo.soupcore.Credits;
-import me.smeo.soupcore.Database.Database;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Objects;
 
 public class payCommand implements CommandExecutor {
 
@@ -55,7 +52,7 @@ public class payCommand implements CommandExecutor {
 
             p.sendMessage(ChatColor.GRAY + "You paid " + ChatColor.GREEN + payment + ChatColor.GRAY + " credits to " + ChatColor.GREEN + target.getName());
             if (target.isOnline()) {
-                target.sendMessage(ChatColor.GRAY + "You received " + ChatColor.GREEN + payment + ChatColor.GRAY + " credits from " + ChatColor.GREEN + p.getName());;
+                target.sendMessage(ChatColor.GRAY + "You received " + ChatColor.GREEN + payment + ChatColor.GRAY + " credits from " + ChatColor.GREEN + p.getName());
             }
             return true;
         }
