@@ -25,9 +25,23 @@ commands:
     aliases: ['cf']
   pay:
     description: Pay another player credits
-    usage: /pay <player> <amount>
+    usage: "&c /pay <player> <amount>"
+  balance:
+    description: Check your credit balance
+    usage: "&c/bal [player]"
+    aliases: ['bal', 'creds', 'credits']
+  adminGiveCredits:
+    description: ADMIN COMMAND
+    permission: SoupCore.admin
+    permission-message: Unknown command. Type "/help" for help.
+  giveAbilityItem:
+    description: ADMIN COMMAND
+    permission: SoupCore.admin
+    permission-message: Unknown command. Type "/help" for help.
 permissions:
-  SoupCore.kit.pvp:
+  SoupCore.admin:
+    default: false
+  SoupCore.kit.default:
     default: true
   SoupCore.kit.fisherman:
     default: false
