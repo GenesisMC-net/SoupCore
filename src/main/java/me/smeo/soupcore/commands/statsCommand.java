@@ -24,13 +24,20 @@ public class statsCommand implements CommandExecutor {
             if (args.length == 1) {
                 try {
                     player = sender.getServer().getOfflinePlayer(args[0]).getPlayer();
+                    sender.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + args[0] + "'s Stats");
+
+                    if (Database.isPlayerInDatabase(player, "Users")) {
+                        sender.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
+                        return true;
+                    }
                 } catch (NullPointerException exc) {
                     sender.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
                     return true;
                 }
+            } else {
+                sender.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + "Your Stats");
             }
 
-            sender.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + args[0] + "'s Stats");
             sender.sendMessage("");
             sender.sendMessage(ChatColor.GOLD + "Kills: " + ChatColor.AQUA + Stats.kills(player));
             sender.sendMessage(ChatColor.GOLD + "Kill Streak: " + ChatColor.AQUA + Stats.killStreak(player));

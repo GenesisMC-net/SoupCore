@@ -17,15 +17,12 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
+import static me.smeo.soupcore.listeners.cancelFallDmgListener.cancelFallDamage;
+
 public class AbilityGrappler implements Listener {
-    HashMap<UUID, Long> grapplingHookCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> grapplingHookCooldown = new HashMap<>();
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent e) {
-        grapplingHookCooldown.remove(e.getEntity().getPlayer().getUniqueId());
-    }
-
-        @EventHandler
     public void onFish(PlayerFishEvent e)
     {
         Player p = e.getPlayer();
@@ -44,7 +41,6 @@ public class AbilityGrappler implements Listener {
                 }
 
                 if (!cooldownActive) {
-
                     Location playerLocation = p.getLocation();
                     Location hookLocation = e.getHook().getLocation();
 
@@ -54,12 +50,17 @@ public class AbilityGrappler implements Listener {
                     Vector velocity = new Vector(x, y, z).normalize().multiply(new Vector(-8, -3.5, -8));
                     p.setVelocity(velocity);
 
+                    cancelFallDamage.add(p.getUniqueId());
+
                     grapplingHookCooldown.put(p.getUniqueId(), System.currentTimeMillis());
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            grapplingHookCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GRAY + "Grappling Hook");
+                            if (grapplingHookCooldown.containsKey(p.getUniqueId())) {
+                                grapplingHookCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GRAY + "Grappling Hook");
+                            }
+                            cancelFallDamage.remove(p.getUniqueId());
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 20L);
                 }

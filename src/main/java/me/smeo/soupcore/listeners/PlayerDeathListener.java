@@ -14,25 +14,35 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
+import static me.smeo.soupcore.listeners.abilities.AbilityFisherman.playerReelCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityGlider.gliderCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityGrappler.grapplingHookCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityHulk.hulkSmashCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityMage.fireLaunchCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityMage.waterAbilityCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityNinjaStars.ninjaStarCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilitySoldier.iceDomeCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilitySpiderwebs.spiderWebCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityTank.silverFishCooldown;
+
 public class PlayerDeathListener implements Listener
 {
-
     @EventHandler(priority = EventPriority.LOWEST)
-    public void OnPlayerDeath(PlayerDeathEvent e)
+    public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
-        Database.SetPlayerData(p, "soupData", "deaths", ( Integer.valueOf((String) Database.getPlayerData(p, "soupData", "deaths")))+1);
-        Database.SetPlayerData(p, "soupData", "killStreak", 0);
+        Database.SetPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
+        Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
         Location lastLoc = p.getLocation();
 
+        removeCooldowns(p);
 
-        int killStreak = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak"));
+        int killStreak = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
         if(killStreak >= 20)
         {
             e.setDeathMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
@@ -44,7 +54,7 @@ public class PlayerDeathListener implements Listener
         for (ItemStack item: p.getInventory().getContents()) {
             if (!Objects.equals(item, null) && !Objects.equals(item.getType(), Material.AIR)) {
                 if (Objects.equals(item.getType(), Material.MUSHROOM_SOUP)) {
-                    soupDrop = soupDrop + 1;
+                    soupDrop += 1;
                 }
             }
         }
@@ -61,20 +71,26 @@ public class PlayerDeathListener implements Listener
                 }
             }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
         }
+        Vector v = p.getVelocity();
+        v.setX(0);
+        v.setY(0);
+        v.setZ(0);
+        p.setVelocity(v);
+        e.getEntity().spigot().respawn();
 
         spawnCommand.spawnInventory(p);
+    }
 
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                Vector v = p.getVelocity();
-                v.setX(0);
-                v.setY(0);
-                v.setZ(0);
-                p.setVelocity(v);
-                e.getEntity().spigot().respawn();
-                p.teleport(new Location(p.getWorld(), -437.5, 111, -1520.5, (float) -90.0, (float) 1.0));
-            }
-        }.runTaskLater(SoupCore.plugin, 1L);
+    private void removeCooldowns(Player player) {
+        playerReelCooldown.remove(player.getUniqueId());
+        gliderCooldown.remove(player.getUniqueId());
+        grapplingHookCooldown.remove(player.getUniqueId());
+        hulkSmashCooldown.remove(player.getUniqueId());
+        waterAbilityCooldown.remove(player.getUniqueId());
+        fireLaunchCooldown.remove(player.getUniqueId());
+        ninjaStarCooldown.remove(player.getUniqueId());
+        iceDomeCooldown.remove(player.getUniqueId());
+        spiderWebCooldown.remove(player.getUniqueId());
+        silverFishCooldown.remove(player.getUniqueId());
     }
 }

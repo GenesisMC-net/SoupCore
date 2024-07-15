@@ -9,10 +9,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Methods_Kits {
-
     // Kit GUI
 
     public static void createKitInventory(Player player)
@@ -66,61 +67,61 @@ public class Methods_Kits {
 
     // Methods
 
-    public static int getActiveKit(Player player)
+    public static String getActiveKit(Player player)
     {
-        return Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "kit")));
+        return (String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "kit"));
     }
 
-    public static boolean checkKitPermission(Player player, int kit)
+    public static boolean checkKitPermission(Player player, String kit)
     {
         // TODO Check permission
         return true;
     }
 
-    public static void giveKit(Player player, int kit)
+    public static void giveKit(Player player, String kit)
     {
         for (PotionEffect effect : player.getActivePotionEffects())
         {
             player.removePotionEffect(effect.getType());
         }
-        switch (kit){
-            case 0:
+        switch (ChatColor.stripColor(kit)){
+            case "Default":
                 KitDefault.giveItems(player);
                 break;
-            case 1:
+            case "Venom":
                 KitVenom.giveItems(player);
                 break;
-            case 2:
+            case "Spiderman":
                 KitSpiderman.giveItems(player);
                 break;
-            case 3:
+            case "Blitz":
                 KitBlitz.giveItems(player);
                 break;
-            case 4:
+            case "Stealth":
                 KitStealth.giveItems(player);
                 break;
-            case 5:
+            case "Grappler":
                 KitGrappler.giveItems(player);
                 break;
-            case 6:
+            case "Fisherman":
                 KitFisherman.giveItems(player);
                 break;
-            case 7:
+            case "Scientist":
                 KitScientist.giveItems(player);
                 break;
-            case 8:
+            case "Glider":
                 KitGlider.giveItems(player);
                 break;
-            case 9:
+            case "Soldier":
                 KitSoldier.giveItems(player);
                 break;
-            case 10:
+            case "Mage":
                 KitMage.giveItems(player);
                 break;
-            case 11:
+            case "Hulk":
                 KitHulk.giveItems(player);
                 break;
-            case 12:
+            case "Tank":
                 KitTank.giveItems(player);
                 break;
         }
@@ -139,7 +140,7 @@ public class Methods_Kits {
         // TODO Add permission
     }
 
-    public static void selectKit(Player player, int kit)
+    public static void selectKit(Player player, String kit)
     {
         if (!checkKitPermission(player, kit))
         {

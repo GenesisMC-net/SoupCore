@@ -22,7 +22,7 @@ public final class SoupCore extends JavaPlugin {
     public static LuckPerms luckPerms;
     public static Inventory kits;
     private static String connectionURL;
-    public static List<Integer> killStreakMilestones = new ArrayList<Integer>();
+    public static List<Integer> killStreakMilestones = new ArrayList<>();
 
     public static String getConnectionURL() {
         return connectionURL;
@@ -43,12 +43,13 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new soupSignRefillListener(), this);
         getServer().getPluginManager().registerEvents(new spongeLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinLeaveMessages(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinLeaveListeners(), this);
         getServer().getPluginManager().registerEvents(new combatLogListeners(), this);
         getServer().getPluginManager().registerEvents(new PVPRegionListeners(), this);
         getServer().getPluginManager().registerEvents(new SpawnHotbarListeners(), this);
         getServer().getPluginManager().registerEvents(new SpawnLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new CoinFlipListeners(), this);
+        getServer().getPluginManager().registerEvents(new cancelFallDmgListener(), this);
 
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
@@ -65,13 +66,14 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityTank(), this);
 
         getCommand("kits").setExecutor(new kitsCommand());
-        getCommand("refill").setExecutor(new refill());
-        getCommand("repair").setExecutor(new repair());
+        getCommand("refill").setExecutor(new refillCommand());
+        getCommand("repair").setExecutor(new repairCommand());
         getCommand("bounty").setExecutor(new bountyCommand());
         getCommand("stats").setExecutor(new statsCommand());
         getCommand("spawn").setExecutor(new spawnCommand());
-        getCommand("coinflip").setExecutor(new coinflip());
+        getCommand("coinflip").setExecutor(new coinflipCommand());
         getCommand("pay").setExecutor(new payCommand());
+        getCommand("balance").setExecutor(new balCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());

@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitFisherman {
     public static void giveItems(Player p) {
@@ -64,7 +65,7 @@ public class KitFisherman {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.FISHING_ROD), 1);
         ItemMeta meta = item.getItemMeta();
@@ -78,7 +79,7 @@ public class KitFisherman {
         lore.add(ChatColor.WHITE + "Fishing rod allows you to " + ChatColor.RED + "Teleport Players" + ChatColor.WHITE + " to your location");
         lore.add("");
 
-        if (highlightedKit == 6) {
+        if (Objects.equals(highlightedKit, "Fisherman")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

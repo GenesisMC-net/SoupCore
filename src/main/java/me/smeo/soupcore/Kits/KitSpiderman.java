@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitSpiderman {
     public static void giveItems(Player p) {
@@ -66,7 +67,7 @@ public class KitSpiderman {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.WEB));
         ItemMeta meta = item.getItemMeta();
@@ -80,7 +81,7 @@ public class KitSpiderman {
         lore.add(ChatColor.WHITE + "Webs that hit players slow them down in a" + ChatColor.RED + " ring of cobwebs");
         lore.add("");
 
-        if (highlightedKit == 2) {
+        if (Objects.equals(highlightedKit, "Spiderman")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

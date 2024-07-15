@@ -22,8 +22,7 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class AbilityTank implements Listener {
-
-    HashMap<UUID, Long> silverFishCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> silverFishCooldown = new HashMap<>();
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)
     {
@@ -48,8 +47,10 @@ public class AbilityTank implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            silverFishCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_RED + "Silverfish Army");
+                            if (silverFishCooldown.containsKey(p.getUniqueId())) {
+                                silverFishCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_RED + "Silverfish Army");
+                            }
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 45L);
 

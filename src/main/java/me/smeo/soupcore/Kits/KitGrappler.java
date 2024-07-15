@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitGrappler {
     public static void giveItems(Player p) {
@@ -71,7 +72,7 @@ public class KitGrappler {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.FISHING_ROD), 1);
         ItemMeta meta = item.getItemMeta();
@@ -85,7 +86,7 @@ public class KitGrappler {
         lore.add(ChatColor.RED + "Fishing rod" + ChatColor.WHITE + " that launches you forwards");
         lore.add("");
 
-        if (highlightedKit == 5) {
+        if (Objects.equals(highlightedKit, "Grappler")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

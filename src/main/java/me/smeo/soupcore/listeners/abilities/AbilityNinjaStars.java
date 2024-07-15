@@ -23,7 +23,7 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class AbilityNinjaStars implements Listener {
-    HashMap<UUID, Long> ninjaStarCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> ninjaStarCooldown = new HashMap<>();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e)
@@ -83,8 +83,10 @@ public class AbilityNinjaStars implements Listener {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                ninjaStarCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.LIGHT_PURPLE + "Ninja Star");
+                                if (ninjaStarCooldown.containsKey(p.getUniqueId())){
+                                    ninjaStarCooldown.remove(p.getUniqueId());
+                                    p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.LIGHT_PURPLE + "Ninja Star");
+                                }
                             }
                         }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
 

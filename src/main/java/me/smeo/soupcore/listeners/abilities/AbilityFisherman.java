@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class AbilityFisherman implements Listener {
-    HashMap<UUID, Long> playerReelCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> playerReelCooldown = new HashMap<>();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
@@ -51,8 +51,10 @@ public class AbilityFisherman implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            playerReelCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GREEN + "Player Reel");
+                            if (playerReelCooldown.containsKey(p.getUniqueId())) {
+                                playerReelCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GREEN + "Player Reel");
+                            }
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 30L);
                 }

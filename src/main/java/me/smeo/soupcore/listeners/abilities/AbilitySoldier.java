@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class AbilitySoldier implements Listener {
-    HashMap<UUID, Long> iceDomeCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> iceDomeCooldown = new HashMap<>();
 
     private static List<Location> circle (Player player, Location loc, Integer r, Integer h, Boolean hollow, Boolean sphere, int plus_y) {
         List<Location> circleblocks = new ArrayList<>();
@@ -66,8 +66,10 @@ public class AbilitySoldier implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            iceDomeCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_AQUA + "Ice Dome");
+                            if (iceDomeCooldown.containsKey(p.getUniqueId())) {
+                                iceDomeCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_AQUA + "Ice Dome");
+                            }
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 35L);
 

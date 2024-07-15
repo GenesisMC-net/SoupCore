@@ -16,6 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitTank {
     public static void giveItems(Player p) {
@@ -49,7 +50,7 @@ public class KitTank {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.INK_SACK), 1, (short) (15 - DyeColor.CYAN.getData()));
         ItemMeta meta = item.getItemMeta();
@@ -63,7 +64,7 @@ public class KitTank {
         lore.add(ChatColor.WHITE + "Summon a silver fish army that deal" + ChatColor.RED + " 1.5 Hearts " + ChatColor.WHITE + "each");
         lore.add("");
 
-        if (highlightedKit == 12) {
+        if (Objects.equals(highlightedKit, "Tank")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

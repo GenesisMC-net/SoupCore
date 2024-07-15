@@ -32,7 +32,7 @@ import java.util.UUID;
 
 public class AbilityGlider implements Listener {
 
-    HashMap<UUID, Long> gliderCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> gliderCooldown = new HashMap<>();
 
     private ItemStack getGliderPearl() {
         ItemStack gliderPearl = new ItemStack(Material.ENDER_PEARL, 1);
@@ -82,8 +82,10 @@ public class AbilityGlider implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            gliderCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.YELLOW + "Pearl Ride");
+                            if (gliderCooldown.containsKey(p.getUniqueId())){
+                                gliderCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.YELLOW + "Pearl Ride");
+                            }
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 15L);
 

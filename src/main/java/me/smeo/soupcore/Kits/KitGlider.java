@@ -14,10 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KitGlider {
     public static void giveItems(Player p) {
@@ -70,7 +67,7 @@ public class KitGlider {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack(Material.ENDER_PEARL, 1);
         ItemMeta meta = item.getItemMeta();
@@ -85,7 +82,7 @@ public class KitGlider {
         lore.add("");
 
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        if (highlightedKit == 8) {
+        if (Objects.equals(highlightedKit, "Glider")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

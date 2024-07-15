@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitMage {
     public static void giveItems(Player p) {
@@ -73,7 +74,7 @@ public class KitMage {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.INK_SACK), 1, (short) 12);
         ItemMeta meta = item.getItemMeta();
@@ -88,7 +89,7 @@ public class KitMage {
         lore.add(ChatColor.RED + "Leap forwards" + ChatColor.WHITE + " with no fall damage");
         lore.add("");
 
-        if (highlightedKit == 10) {
+        if (Objects.equals(highlightedKit, "Mage")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

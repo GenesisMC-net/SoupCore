@@ -8,25 +8,22 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.*;
 
+import static me.smeo.soupcore.listeners.cancelFallDmgListener.cancelFallDamage;
+
 public class AbilityHulk implements Listener {
 
-    HashMap<UUID, Long> hulkSmashCooldown = new HashMap<>();
-    ArrayList<UUID> cancelFallDamage = new ArrayList<>();
-    ArrayList<UUID> cancelHulkSmashDamage = new ArrayList<>();
+    public static HashMap<UUID, Long> hulkSmashCooldown = new HashMap<>();
+    private static ArrayList<UUID> cancelHulkSmashDamage = new ArrayList<>();
 
     @EventHandler
     public void onTntDamage(EntityDamageEvent e)
@@ -94,8 +91,10 @@ public class AbilityHulk implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            hulkSmashCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GREEN + "Hulk Smash");
+                            if (hulkSmashCooldown.containsKey(p.getUniqueId())){
+                                hulkSmashCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GREEN + "Hulk Smash");
+                            }
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 30L);
 

@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitSoldier {
     public static void giveItems(Player p) {
@@ -69,7 +70,7 @@ public class KitSoldier {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.PACKED_ICE));
         ItemMeta meta = item.getItemMeta();
@@ -83,7 +84,7 @@ public class KitSoldier {
         lore.add(ChatColor.RED + "5x5 Ice Dome" + ChatColor.WHITE + " that grants temporary " + ChatColor.RED + "Strength I");
         lore.add("");
 
-        if (highlightedKit == 9) {
+        if (Objects.equals(highlightedKit, "Soldier")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
