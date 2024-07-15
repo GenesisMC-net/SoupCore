@@ -40,18 +40,16 @@ public class bountyCommand implements CommandExecutor {
                 Integer bounty = Integer.valueOf((String) Objects.requireNonNull(getPlayerData(player, "soupData", "bounty")));
                 String string = ChatColor.GRAY + "You have a " + ChatColor.GOLD + String.valueOf(bounty) + " credit" + ChatColor.GRAY + " bounty on your head";
                 player.sendMessage(string);
-                return false;
-
-
+                return true;
             } else if (args[0].equals("create") && sender instanceof Player) {
                 Player target = null;
                 try {
                     target = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
                 } catch (NullPointerException exc) {
-                    player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
+                    player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[1]);
                 }
                 if (target == null) {
-                    player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
+                    player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[1]);
                 }
 
                 Integer previousBounty = Integer.valueOf((String) Objects.requireNonNull(getPlayerData(target, "soupData", "bounty")));
@@ -71,7 +69,7 @@ public class bountyCommand implements CommandExecutor {
                 }
 
                 Credits.chargeCredits(player, newBounty);
-                Database.SetPlayerData(target, "soupData", "bounty", (previousBounty + newBounty));
+                Database.SetPlayerData(target, "soupData", "bounty", String.valueOf((previousBounty + newBounty)));
                 Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty on " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + (newBounty) + " credits" + ChatColor.GRAY + ". Total: " + (previousBounty + newBounty));
                 return true;
 

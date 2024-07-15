@@ -65,13 +65,14 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityTank(), this);
 
         getCommand("kits").setExecutor(new kitsCommand());
-        getCommand("refill").setExecutor(new refill());
-        getCommand("repair").setExecutor(new repair());
+        getCommand("refill").setExecutor(new refillCommand());
+        getCommand("repair").setExecutor(new repairCommand());
         getCommand("bounty").setExecutor(new bountyCommand());
         getCommand("stats").setExecutor(new statsCommand());
         getCommand("spawn").setExecutor(new spawnCommand());
-        getCommand("coinflip").setExecutor(new coinflip());
+        getCommand("coinflip").setExecutor(new coinflipCommand());
         getCommand("pay").setExecutor(new payCommand());
+        getCommand("balance").setExecutor(new balCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());

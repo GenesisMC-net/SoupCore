@@ -9,8 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -18,16 +16,16 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
+import static me.smeo.soupcore.listeners.cancelFallDmgListener.cancelFallDamage;
+
 public class AbilityMage implements Listener {
 
-    HashMap<UUID, Long> waterAbilityCooldown = new HashMap<>();
-    HashMap<UUID, Long> fireLaunchCooldown = new HashMap<>();
-    ArrayList<UUID> cancelFallDamage = new ArrayList<>();
+    public static HashMap<UUID, Long> waterAbilityCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> fireLaunchCooldown = new HashMap<>();
 
     // Stop water from flowing
     @EventHandler
@@ -37,26 +35,6 @@ public class AbilityMage implements Listener {
         if(id == 8 || id == 9) {
             e.setCancelled(true);
         }
-    }
-
-    // Cancel fall damage
-    @EventHandler
-    public void onFallDamage(EntityDamageEvent e)
-    {
-        if (e.getEntity() instanceof Player) {
-            if (e.getCause() == EntityDamageEvent.DamageCause.FALL && cancelFallDamage.contains(e.getEntity().getUniqueId()))
-            {
-                e.setCancelled(true);
-                cancelFallDamage.remove(e.getEntity().getUniqueId());
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent e)
-    {
-        waterAbilityCooldown.remove(e.getEntity().getPlayer().getUniqueId());
-        fireLaunchCooldown.remove(e.getEntity().getPlayer().getUniqueId());
     }
 
     private void makeWaterGrid(Location targetLocation) {
@@ -121,8 +99,10 @@ public class AbilityMage implements Listener {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                waterAbilityCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.BLUE + "Water Attack");
+                                if (waterAbilityCooldown.containsKey(p.getUniqueId())){
+                                    waterAbilityCooldown.remove(p.getUniqueId());
+                                    p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.BLUE + "Water Attack");
+                                }
                             }
                         }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
 
@@ -134,7 +114,7 @@ public class AbilityMage implements Listener {
                         projectile.setSmall(true);
                         projectile.setHelmet(new ItemStack(Material.PACKED_ICE));
 
-                        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(3, 2, 3));
+                        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2, 2));
                         projectile.setVelocity(projVelocity);
 
                         final int[] i = {0};
@@ -172,9 +152,7 @@ public class AbilityMage implements Listener {
                                     }
                                 }
 
-                                if (i[0] % 3L == 0) {
-                                    projectile.setVelocity(projVelocity);
-                                }
+                                projectile.setVelocity(projVelocity);
 
                                 if (i[0] >= 20L * 5L) {
                                     projectile.remove();
@@ -209,7 +187,7 @@ public class AbilityMage implements Listener {
                         }
 
                         p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, (double) 1, p.getEyeLocation().getDirection().getZ() * 15));
-                        p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1, 0);
+                        p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1.2F, 0.0F);
 
                         p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 0);
                         final int[] i = {0};
@@ -230,8 +208,10 @@ public class AbilityMage implements Listener {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                fireLaunchCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Fire Jump");
+                                if (fireLaunchCooldown.containsKey(p.getUniqueId())){
+                                    fireLaunchCooldown.remove(p.getUniqueId());
+                                    p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Fire Jump");
+                                }
                             }
                         }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 15L);
 

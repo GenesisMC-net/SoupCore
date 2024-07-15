@@ -25,18 +25,6 @@ public class SpawnLaunchListener implements Listener {
     ArrayList<UUID> cancelFallDamage = new ArrayList<>();
 
     @EventHandler
-    public void onTntDamage(EntityDamageEvent e)
-    {
-        if (e.getEntity() instanceof Player) {
-            // Cancel TNT damage
-            if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)
-            {
-                e.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
     public void onFallDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             if (e.getCause() == EntityDamageEvent.DamageCause.FALL && cancelFallDamage.contains(e.getEntity().getUniqueId())) {
@@ -47,9 +35,13 @@ public class SpawnLaunchListener implements Listener {
     }
 
     @EventHandler
-    public void onPressurePlate(PlayerMoveEvent e)
+    public void onLaunchBlock(PlayerMoveEvent e)
     {
         Player p = e.getPlayer();
+
+        if (cancelFallDamage.contains(p.getUniqueId())) {
+            return;
+        }
 
         RegionContainer container = SoupCore.getWorldGuard.getRegionContainer();
         RegionManager regions = container.get(p.getWorld());
@@ -67,7 +59,7 @@ public class SpawnLaunchListener implements Listener {
             return;
         }
 
-        p.playSound(p.getLocation(), Sound.EXPLODE, 8, 1);
+        p.playSound(p.getLocation(), Sound.EXPLODE, 1.5F, 1F);
         p.setVelocity(new Vector(1 + p.getLocation().getDirection().getX() * 6, 2, 1 + p.getLocation().getDirection().getZ() * 6));
         cancelFallDamage.add(p.getUniqueId());
         new BukkitRunnable() {
