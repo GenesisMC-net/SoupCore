@@ -2,10 +2,18 @@ package me.smeo.soupcore;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.smeo.soupcore.Database.Database;
+import me.smeo.soupcore.Kits.Methods_Kits;
+import me.smeo.soupcore.listeners.combatLogListeners;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class SpigotExpansion extends PlaceholderExpansion {
 
@@ -40,31 +48,41 @@ public class SpigotExpansion extends PlaceholderExpansion {
         {
             return "";
         }
-        if(params.equals("kills"))
-        {
-            return Stats.kills(player);
-        }
-        if(params.equals("killStreak"))
-        {
-            return Stats.killStreak(player);
-        }
-        if(params.equals("deaths"))
-        {
-            return Stats.deaths(player);
-        }
-        if(params.equals("kdr"))
-        {
-            return Stats.kdr(player);
-        }
-        if(params.equals("credits"))
-        {
-            return (String) Database.getPlayerData(player, "soupData", "credits");
-        }
-        if(params.equals("bounty"))
-        {
-            return (String) Database.getPlayerData(player, "soupData", "bounty");
-        }
+        switch (params) {
+            case "kills":
+                return Stats.kills(player);
+            case "killStreak":
+                return Stats.killStreak(player);
+            case "deaths":
+                return Stats.deaths(player);
+            case "kdr":
+                float kdr = Float.parseFloat(Stats.kdr(player));
 
-        return null;
+                if (kdr < 1) {
+                    return ChatColor.RED + Stats.kdr(player);
+                } else if (kdr > 1) {
+                    return ChatColor.GREEN + Stats.kdr(player);
+                }
+                return ChatColor.GRAY + Stats.kdr(player);
+            case "credits":
+                return (String) Database.getPlayerData(player, "soupData", "credits");
+            case "bounty":
+                return (String) Database.getPlayerData(player, "soupData", "bounty");
+            case "kit":
+                return Methods_Kits.getActiveKit(player);
+//            case "combat_timer":
+//                UUID playerUUID = player.getUniqueId();
+//                if (!combatLogListeners.antiLog.contains(playerUUID)) {
+//                    return ChatColor.RED + "N/A";
+//                }
+//
+//                for (Map.Entry<BukkitTask, UUID[]> timer : combatLogListeners.combatTimers.entrySet()) {
+//                    if (Objects.equals(timer.getValue()[0], playerUUID) || Objects.equals(timer.getValue()[1], playerUUID)) {
+//                        // TODO: Get live timer from combatLogListeners
+//                    }
+//                }
+            default:
+                return null;
+        }
     }
 }
