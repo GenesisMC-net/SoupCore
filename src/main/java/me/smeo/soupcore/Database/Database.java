@@ -208,7 +208,7 @@ public class Database
     }
 
 
-    public static void SetPlayerData(Player p, String table, String column, Integer data)
+    public static void SetPlayerData(Player p, String table, String column, String data)
     {
         if(isPlayerInDatabase(p, table) == false)
         {
@@ -219,11 +219,11 @@ public class Database
         try{
             if(stringColumns.contains(column))
             {
-                statement = connection.prepareStatement("UPDATE " + table + " SET " + column + " = '" + data.toString() + "' WHERE uuid = '" + p.getUniqueId().toString() + "'");
+                statement = connection.prepareStatement("UPDATE " + table + " SET " + column + " = '" + data + "' WHERE uuid = '" + p.getUniqueId().toString() + "'");
             }
             else if(integerColumns.contains(column) || booleanColumns.contains(column))
             {
-                statement = connection.prepareStatement("UPDATE " + table + " SET " + column + " = " + data.toString() + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
+                statement = connection.prepareStatement("UPDATE " + table + " SET " + column + " = " + data + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
             }
             else{
                 return;
@@ -248,7 +248,7 @@ public class Database
                     statement = connection.prepareStatement("INSERT INTO Users(uuid, name) VALUES('" + p.getUniqueId().toString() + "', '" + p.getName() + "')");
                     break;
                 case "soupData":
-                    statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', 0, 0, 0, 0, 0, 0)");
+                    statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', 'Default', 0, 0, 0, 0, 0)");
                     break;
                 case "soupKitsData":
                     statement = connection.prepareStatement("INSERT INTO soupKitsData(uuid) VALUES('" + p.getUniqueId().toString() + "')");

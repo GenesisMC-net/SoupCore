@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitBlitz {
     public static void giveItems(Player p) {
@@ -68,7 +69,7 @@ public class KitBlitz {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.ENDER_PEARL), 1);
         ItemMeta meta = item.getItemMeta();
@@ -83,7 +84,7 @@ public class KitBlitz {
         lore.add(ChatColor.WHITE + "Every kill:" + ChatColor.RED + " +1 Ender Pearl" + ChatColor.WHITE + " & " + ChatColor.RED + "Speed III " + ChatColor.GRAY + "(15s)");
         lore.add("");
 
-        if (highlightedKit == 3) {
+        if (Objects.equals(highlightedKit, "Blitz")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

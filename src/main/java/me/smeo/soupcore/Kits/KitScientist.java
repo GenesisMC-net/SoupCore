@@ -14,10 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KitScientist {
     public static void giveItems(Player p) {
@@ -61,7 +58,7 @@ public class KitScientist {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack(Material.POTION, 1, (short)8196);
         ItemMeta meta = item.getItemMeta();
@@ -77,7 +74,7 @@ public class KitScientist {
         lore.add("");
 
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        if (highlightedKit == 7) {
+        if (Objects.equals(highlightedKit, "Scientist")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

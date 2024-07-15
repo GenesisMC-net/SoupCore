@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitStealth {
     public static void giveItems(Player p) {
@@ -69,7 +70,7 @@ public class KitStealth {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.NETHER_STAR));
         ItemMeta meta = item.getItemMeta();
@@ -83,7 +84,7 @@ public class KitStealth {
         lore.add(ChatColor.WHITE + "Ninja Stars that deal" + ChatColor.RED + " 3 Hearts" + ChatColor.WHITE + " and " + ChatColor.RED + "Blindness for 5s");
         lore.add("");
 
-        if (highlightedKit == 4) {
+        if (Objects.equals(highlightedKit, "Stealth")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
         } else {
             lore.add(ChatColor.YELLOW + "Click to activate the kit!");

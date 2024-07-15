@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitVenom {
     public static void giveItems(Player p) {
@@ -62,7 +63,7 @@ public class KitVenom {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.IRON_SWORD));
         ItemMeta meta = item.getItemMeta();
@@ -76,7 +77,7 @@ public class KitVenom {
         lore.add(ChatColor.WHITE + "Sword deals 3 seconds of" + ChatColor.RED + " Poison III " + ChatColor.GRAY + "(30% chance)");
         lore.add("");
 
-        if (highlightedKit == 1) {
+        if (Objects.equals(highlightedKit, "Venom")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

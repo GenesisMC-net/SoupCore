@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitHulk {
     public static void giveItems(Player p) {
@@ -64,7 +65,7 @@ public class KitHulk {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.ANVIL));
         ItemMeta meta = item.getItemMeta();
@@ -78,7 +79,7 @@ public class KitHulk {
         lore.add(ChatColor.WHITE + "Hulk smash deals " + ChatColor.RED + " Launches You " + ChatColor.WHITE + "and deals" + ChatColor.RED + " 5 Hearts");
         lore.add("");
 
-        if (highlightedKit == 11) {
+        if (Objects.equals(highlightedKit, "Hulk")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

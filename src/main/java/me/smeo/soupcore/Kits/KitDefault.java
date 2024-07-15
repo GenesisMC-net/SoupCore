@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class KitDefault {
 
@@ -30,7 +31,7 @@ public class KitDefault {
     }
 
     public static ItemStack guiAppearance(Player player, Inventory inv) {
-        int highlightedKit = Methods_Kits.getActiveKit(player);
+        String highlightedKit = ChatColor.stripColor(Methods_Kits.getActiveKit(player));
 
         ItemStack item = new ItemStack((Material.DIAMOND_SWORD));
         ItemMeta meta = item.getItemMeta();
@@ -42,7 +43,7 @@ public class KitDefault {
         lore.add(ChatColor.WHITE + "Sharpness I Diamond Sword");
         lore.add("");
 
-        if (highlightedKit == 0) {
+        if (Objects.equals(highlightedKit, "Default")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
