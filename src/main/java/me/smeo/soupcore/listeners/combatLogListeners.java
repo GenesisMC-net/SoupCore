@@ -27,10 +27,10 @@ import java.util.*;
 public class combatLogListeners implements Listener {
 
     public static ArrayList<UUID> antiLog = new ArrayList<>();
-    public HashMap<BukkitTask, UUID[]> combatTimers = new HashMap<>();
+    public static HashMap<BukkitTask, UUID[]> combatTimers = new HashMap<>();
     // Lists below prevent ConcurrentModification errors
-    public List<BukkitTask> combatTimersToRemove = new ArrayList<>();
-    public HashMap<BukkitTask, UUID[]> combatTimersToAdd = new HashMap<>();
+    private List<BukkitTask> combatTimersToRemove = new ArrayList<>();
+    private HashMap<BukkitTask, UUID[]> combatTimersToAdd = new HashMap<>();
 
     @EventHandler
     public void onFish(PlayerFishEvent e)
@@ -178,20 +178,7 @@ public class combatLogListeners implements Listener {
                         combatTimersToRemove.add(timer.getKey());
 
                         // Create a new timer
-                        BukkitTask newCombatTagTimer = Bukkit.getServer().getScheduler().runTaskLater(SoupCore.plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                {
-                                    if ((antiLog.contains(attackerUUID) && antiLog.contains(targetUUID))) {
-                                        antiLog.remove(attackerUUID);
-                                        antiLog.remove(targetUUID);
-                                        attacker.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
-                                        target.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
-                                    }
-                                }
-                            }
-                        }, 20L * 15L);
-                        combatTimersToAdd.put(newCombatTagTimer, new UUID[]{attackerUUID, targetUUID});
+                        createCombatTimer(attacker, target);
                     }
                 }
                 combatTimers.putAll(combatTimersToAdd);
@@ -209,22 +196,29 @@ public class combatLogListeners implements Listener {
                 attacker.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
                 target.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
 
-                BukkitTask combatTagTimer = Bukkit.getServer().getScheduler().runTaskLater(SoupCore.plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        {
-                            if ((antiLog.contains(attackerUUID) && antiLog.contains(targetUUID))) {
-                                antiLog.remove(attackerUUID);
-                                antiLog.remove(targetUUID);
-                                attacker.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
-                                target.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
-                            }
-                        }
-                    }
-                }, 20L * 15L);
-                combatTimers.put(combatTagTimer, new UUID[]{attackerUUID, targetUUID});
+                createCombatTimer(attacker, target);
             }
         }
     }
+
+    private void createCombatTimer(Player attacker, Player target) {
+        UUID attackerUUID = attacker.getUniqueId();
+        UUID targetUUID = target.getUniqueId();
+        BukkitTask newCombatTagTimer = Bukkit.getServer().getScheduler().runTaskLater(SoupCore.plugin, new Runnable() {
+            @Override
+            public void run() {
+                {
+                    if ((antiLog.contains(attackerUUID) && antiLog.contains(targetUUID))) {
+                        antiLog.remove(attackerUUID);
+                        antiLog.remove(targetUUID);
+                        attacker.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
+                        target.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
+                    }
+                }
+            }
+        }, 20L * 15L); // TODO: Run task timer every 0.1s (2 ticks) to get a live timer to display as a placeholder
+        combatTimersToAdd.put(newCombatTagTimer, new UUID[]{attackerUUID, targetUUID});
+    }
+}
 
 }
