@@ -4,17 +4,13 @@ main: me.smeo.soupcore.SoupCore
 api-version: 1.20
 commands:
   kits:
-    description: kits
+    description: Open the kit selector
   refill:
     description: Refill your inventory with soup for 200 credits
   repair:
     description: Repair your armour and tools for 50 credits
-  adminGiveCredits:
-    description: ADMIN COMMAND
   bounty:
     description: Bounty System
-  giveAbilityItem:
-    description: ADMIN COMMAND
   stats:
     description: Stats Command
     usage: /stats [player]
@@ -64,6 +60,8 @@ permissions:
   SoupCore.kit.scientist:
     default: false
   SoupCore.kit.grappler:
+    default: false
+  SoupCore.kit.glider:
     default: false
 
 depend: [PlaceholderAPI, WorldGuard, LuckPerms]
