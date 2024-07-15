@@ -20,6 +20,17 @@ import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
+import static me.smeo.soupcore.listeners.abilities.AbilityFisherman.playerReelCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityGlider.gliderCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityGrappler.grapplingHookCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityHulk.hulkSmashCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityMage.fireLaunchCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityMage.waterAbilityCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityNinjaStars.ninjaStarCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilitySoldier.iceDomeCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilitySpiderwebs.spiderWebCooldown;
+import static me.smeo.soupcore.listeners.abilities.AbilityTank.silverFishCooldown;
+
 public class PlayerDeathListener implements Listener
 {
 
@@ -31,6 +42,7 @@ public class PlayerDeathListener implements Listener
         Database.SetPlayerData(p, "soupData", "killStreak", 0);
         Location lastLoc = p.getLocation();
 
+        removeCooldowns(p);
 
         int killStreak = Integer.valueOf((String) Database.getPlayerData(p, "soupData", "killStreak"));
         if(killStreak >= 20)
@@ -72,5 +84,18 @@ public class PlayerDeathListener implements Listener
         e.getEntity().spigot().respawn();
 
         spawnCommand.spawnInventory(p);
+    }
+
+    private void removeCooldowns(Player player) {
+        playerReelCooldown.remove(player.getUniqueId());
+        gliderCooldown.remove(player.getUniqueId());
+        grapplingHookCooldown.remove(player.getUniqueId());
+        hulkSmashCooldown.remove(player.getUniqueId());
+        waterAbilityCooldown.remove(player.getUniqueId());
+        fireLaunchCooldown.remove(player.getUniqueId());
+        ninjaStarCooldown.remove(player.getUniqueId());
+        iceDomeCooldown.remove(player.getUniqueId());
+        spiderWebCooldown.remove(player.getUniqueId());
+        silverFishCooldown.remove(player.getUniqueId());
     }
 }

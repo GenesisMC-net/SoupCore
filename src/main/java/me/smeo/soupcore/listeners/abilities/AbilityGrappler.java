@@ -56,8 +56,11 @@ public class AbilityGrappler implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            grapplingHookCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GRAY + "Grappling Hook");
+                            if (grapplingHookCooldown.containsKey(p.getUniqueId())) {
+                                grapplingHookCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GRAY + "Grappling Hook");
+                            }
+                            cancelFallDamage.remove(p.getUniqueId());
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 20L);
                 }

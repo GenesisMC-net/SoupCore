@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class AbilitySpiderwebs implements Listener {
-    HashMap<UUID, Long> spiderWebCooldown = new HashMap<>();
+    public static HashMap<UUID, Long> spiderWebCooldown = new HashMap<>();
 
     private void deleteWebGrid(Location targetLocation)
     {
@@ -70,8 +70,10 @@ public class AbilitySpiderwebs implements Listener {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                spiderWebCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Web Attack");
+                                if (spiderWebCooldown.containsKey(p.getUniqueId())){
+                                    spiderWebCooldown.remove(p.getUniqueId());
+                                    p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Web Attack");
+                                }
                             }
                         }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 30L);
 

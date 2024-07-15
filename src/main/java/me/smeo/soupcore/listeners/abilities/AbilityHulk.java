@@ -91,8 +91,10 @@ public class AbilityHulk implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            hulkSmashCooldown.remove(p.getUniqueId());
-                            p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GREEN + "Hulk Smash");
+                            if (hulkSmashCooldown.containsKey(p.getUniqueId())){
+                                hulkSmashCooldown.remove(p.getUniqueId());
+                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GREEN + "Hulk Smash");
+                            }
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 30L);
 
