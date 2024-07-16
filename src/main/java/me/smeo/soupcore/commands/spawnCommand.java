@@ -1,10 +1,8 @@
 package me.smeo.soupcore.commands;
 
-import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.SoupCore;
 import me.smeo.soupcore.listeners.combatLogListeners;
 import org.bukkit.ChatColor;
-import me.smeo.soupcore.listeners.combatLogListeners.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -49,7 +47,7 @@ public class spawnCommand implements CommandExecutor {
         {
             Player p = (Player) sender;
 
-            if (combatLogListeners.antiLog.contains(p.getUniqueId()))
+            if (combatLogListeners.antiLog.containsKey(p.getUniqueId()))
             {
                 p.sendMessage(ChatColor.RED + "You cannot use this command while in combat!");
                 return true;

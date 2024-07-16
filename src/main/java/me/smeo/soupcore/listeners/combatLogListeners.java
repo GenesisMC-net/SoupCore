@@ -26,7 +26,7 @@ import java.util.*;
 
 public class combatLogListeners implements Listener {
 
-    public static ArrayList<UUID> antiLog = new ArrayList<>();
+    public static HashMap<UUID, Long> antiLog = new HashMap<>();
     public static HashMap<BukkitTask, UUID[]> combatTimers = new HashMap<>();
     // Lists below prevent ConcurrentModification errors
     private List<BukkitTask> combatTimersToRemove = new ArrayList<>();
@@ -78,9 +78,9 @@ public class combatLogListeners implements Listener {
                 }
             }
         }
-        if (antiLog.contains(p.getUniqueId()))
+        if (antiLog.containsKey(p.getUniqueId()))
         {
-            while (antiLog.contains(p.getUniqueId())) {
+            while (antiLog.containsKey(p.getUniqueId())) {
                 antiLog.remove(p.getUniqueId());
             }
             Database.SetPlayerData(p, "soupData", "deaths", (String) Database.getPlayerData(p, "soupData", "deaths")+1);
@@ -161,13 +161,13 @@ public class combatLogListeners implements Listener {
         Player killer = e.getEntity().getPlayer().getKiller();
         if (killer == null) {return;}
 
-        if (antiLog.contains(playerUUID)) {
-            while (antiLog.contains(playerUUID)) {
+        if (antiLog.containsKey(playerUUID)) {
+            while (antiLog.containsKey(playerUUID)) {
                 antiLog.remove(playerUUID);
             }
 
-            if (antiLog.contains(killer.getUniqueId())) {
-                while (antiLog.contains(killer.getUniqueId())) {
+            if (antiLog.containsKey(killer.getUniqueId())) {
+                while (antiLog.containsKey(killer.getUniqueId())) {
 
                     antiLog.remove(killer.getUniqueId());
                 }
@@ -190,10 +190,19 @@ public class combatLogListeners implements Listener {
         UUID attackerUUID = attacker.getUniqueId();
         UUID targetUUID = target.getUniqueId();
 
-        if (antiLog.contains(attackerUUID) && antiLog.contains(targetUUID))
+        if (antiLog.containsKey(attackerUUID) && antiLog.containsKey(targetUUID))
         {
             for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
                 if (Objects.equals(timer.getValue()[0], attackerUUID) && Objects.equals(timer.getValue()[1], targetUUID))
+                {
+                    // Cancel old timer
+                    Bukkit.getServer().getScheduler().cancelTask(timer.getKey().getTaskId());
+                    combatTimersToRemove.add(timer.getKey());
+
+                    // Create a new timer
+                    createCombatTimer(attacker, target);
+                }
+                if (Objects.equals(timer.getValue()[0], targetUUID) && Objects.equals(timer.getValue()[1], attackerUUID))
                 {
                     // Cancel old timer
                     Bukkit.getServer().getScheduler().cancelTask(timer.getKey().getTaskId());
@@ -211,10 +220,8 @@ public class combatLogListeners implements Listener {
             combatTimersToAdd = new HashMap<>();
         }
 
-        if (!antiLog.contains(attackerUUID) && !antiLog.contains(targetUUID))
+        if (!antiLog.containsKey(attackerUUID) && !antiLog.containsKey(targetUUID))
         {
-            antiLog.add(attackerUUID);
-            antiLog.add(targetUUID);
             attacker.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
             target.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
 
@@ -225,16 +232,36 @@ public class combatLogListeners implements Listener {
     private void createCombatTimer(Player attacker, Player target) {
         UUID attackerUUID = attacker.getUniqueId();
         UUID targetUUID = target.getUniqueId();
-        BukkitTask newCombatTagTimer = Bukkit.getServer().getScheduler().runTaskLater(SoupCore.plugin, () -> {
-            {
-                if ((antiLog.contains(attackerUUID) && antiLog.contains(targetUUID))) {
+
+        antiLog.remove(attackerUUID);
+        antiLog.remove(targetUUID);
+
+        antiLog.put(attackerUUID, 0L);
+        antiLog.put(targetUUID, 0L);
+
+        final int[] i = {0};
+        BukkitTask newCombatTagTimer = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!antiLog.containsKey(attackerUUID) && !antiLog.containsKey(targetUUID)) {
+                    this.cancel();
+                    return;
+                }
+
+                if (i[0] >= 20L * 15L) {
                     antiLog.remove(attackerUUID);
                     antiLog.remove(targetUUID);
                     attacker.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
                     target.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
+                    this.cancel();
+                    return;
                 }
+                antiLog.replace(attackerUUID, (long) i[0]);
+                antiLog.replace(targetUUID, (long) i[0]);
+
+                i[0] += 2;
             }
-        }, 20L * 15L); // TODO: Run task timer every 0.1s (2 ticks) to get a live timer to display as a placeholder
+        }.runTaskTimerAsynchronously(SoupCore.plugin,0L, 2L);
         combatTimersToAdd.put(newCombatTagTimer, new UUID[]{attackerUUID, targetUUID});
     }
 }

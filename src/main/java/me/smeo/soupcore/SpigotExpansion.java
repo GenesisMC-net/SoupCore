@@ -5,14 +5,10 @@ import me.smeo.soupcore.Database.Database;
 import me.smeo.soupcore.Kits.Methods_Kits;
 import me.smeo.soupcore.listeners.combatLogListeners;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
-import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public class SpigotExpansion extends PlaceholderExpansion {
@@ -43,7 +39,7 @@ public class SpigotExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String params) {
+    public String onPlaceholderRequest(Player player, @NotNull String params) {
         if(player == null)
         {
             return "";
@@ -70,17 +66,18 @@ public class SpigotExpansion extends PlaceholderExpansion {
                 return (String) Database.getPlayerData(player, "soupData", "bounty");
             case "kit":
                 return Methods_Kits.getActiveKit(player);
-//            case "combat_timer":
-//                UUID playerUUID = player.getUniqueId();
-//                if (!combatLogListeners.antiLog.contains(playerUUID)) {
-//                    return ChatColor.RED + "N/A";
-//                }
-//
-//                for (Map.Entry<BukkitTask, UUID[]> timer : combatLogListeners.combatTimers.entrySet()) {
-//                    if (Objects.equals(timer.getValue()[0], playerUUID) || Objects.equals(timer.getValue()[1], playerUUID)) {
-//                        // TODO: Get live timer from combatLogListeners
-//                    }
-//                }
+            case "combatTimer":
+                UUID playerUUID = player.getUniqueId();
+                if (!combatLogListeners.antiLog.containsKey(playerUUID)) {
+                    return ChatColor.RED + "N/A";
+                }
+
+                Long timer = combatLogListeners.antiLog.get(playerUUID);
+
+                DecimalFormat df = new DecimalFormat("#.#");
+                String timerFormatted = df.format((15 - ((float) timer / 20)));
+
+                return ChatColor.RED + timerFormatted + "s";
             default:
                 return null;
         }
