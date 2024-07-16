@@ -141,7 +141,7 @@ public class AbilityGlider implements Listener {
             return;
         }
 
-        if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 8)) // Index for glider kit
+        if (Objects.equals(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")), "Glider"))
         {
 
             PlayerInventory inv = killer.getInventory();

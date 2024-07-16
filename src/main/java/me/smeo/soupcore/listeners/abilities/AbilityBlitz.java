@@ -54,7 +54,7 @@ public class AbilityBlitz implements Listener {
             return;
         }
 
-        if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 3))// Index for blitz kit
+        if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), "Blitz"))
         {
             PlayerInventory inv = killer.getInventory();
             if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
@@ -75,12 +75,11 @@ public class AbilityBlitz implements Listener {
                         return;
                     }
 
-                    if (!Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit"))), 3)) // Index for blitz kit
+                    if (!Objects.equals(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")), "Blitz"))
                     {
                         this.cancel();
                         return;
                     }
-
 
                     killer.removePotionEffect(PotionEffectType.SPEED);
                     PotionEffect speedTwo = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
