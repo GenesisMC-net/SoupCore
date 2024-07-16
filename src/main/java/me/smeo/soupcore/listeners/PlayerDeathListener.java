@@ -10,7 +10,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +31,7 @@ import static me.smeo.soupcore.listeners.abilities.AbilityTank.silverFishCooldow
 
 public class PlayerDeathListener implements Listener
 {
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler()
     public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
@@ -71,14 +70,20 @@ public class PlayerDeathListener implements Listener
                 }
             }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
         }
-        Vector v = p.getVelocity();
-        v.setX(0);
-        v.setY(0);
-        v.setZ(0);
-        p.setVelocity(v);
-        e.getEntity().spigot().respawn();
+        new BukkitRunnable()
+        {
+            @Override
+            public void run() {
+                Vector v = p.getVelocity();
+                v.setX(0);
+                v.setY(0);
+                v.setZ(0);
+                p.setVelocity(v);
+                e.getEntity().spigot().respawn();
 
-        spawnCommand.spawnInventory(p);
+                spawnCommand.spawnInventory(p);
+            }
+        }.runTaskLaterAsynchronously(SoupCore.plugin, 1L);
     }
 
     private void removeCooldowns(Player player) {

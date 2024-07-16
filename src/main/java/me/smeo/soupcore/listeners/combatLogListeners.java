@@ -158,18 +158,19 @@ public class combatLogListeners implements Listener {
         }
         combatTimersToRemove = new ArrayList<>();
 
+        Player killer = e.getEntity().getPlayer().getKiller();
+        if (killer == null) {return;}
+
         if (antiLog.contains(playerUUID)) {
             while (antiLog.contains(playerUUID)) {
                 antiLog.remove(playerUUID);
             }
-            e.getEntity().getPlayer().sendMessage(ChatColor.GREEN + "You are no longer in combat!");
-            Player killer = e.getEntity().getPlayer().getKiller();
-            if (killer == null) {return;}
+
             if (antiLog.contains(killer.getUniqueId())) {
                 while (antiLog.contains(killer.getUniqueId())) {
+
                     antiLog.remove(killer.getUniqueId());
                 }
-                killer.sendMessage(ChatColor.GREEN + "You are no longer in combat!");
             }
         }
     }
@@ -177,48 +178,47 @@ public class combatLogListeners implements Listener {
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e)
     {
+        if (!(e.getDamager() instanceof Player) && !(e.getEntity() instanceof Player)) {
+            return;
+        }
+        for (ProtectedRegion rg : WGBukkit.getRegionManager(e.getEntity().getWorld()).getApplicableRegions(e.getEntity().getLocation())){
+            if (Objects.equals(rg.getId(), "spawn")) {return;} // Return if they are in spawn
+        }
 
-        if ((e.getDamager() instanceof Player) && (e.getEntity() instanceof Player))
+        Player attacker = (Player) e.getDamager();
+        Player target = (Player) e.getEntity();
+        UUID attackerUUID = attacker.getUniqueId();
+        UUID targetUUID = target.getUniqueId();
+
+        if (antiLog.contains(attackerUUID) && antiLog.contains(targetUUID))
         {
-            for (ProtectedRegion rg : WGBukkit.getRegionManager(e.getEntity().getWorld()).getApplicableRegions(e.getEntity().getLocation())){
-                if (Objects.equals(rg.getId(), "spawn")) {return;} // Return if they are in spawn
-            }
+            for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
+                if (Objects.equals(timer.getValue()[0], attackerUUID) && Objects.equals(timer.getValue()[1], targetUUID))
+                {
+                    // Cancel old timer
+                    Bukkit.getServer().getScheduler().cancelTask(timer.getKey().getTaskId());
+                    combatTimersToRemove.add(timer.getKey());
 
-            Player attacker = (Player) e.getEntity();
-            Player target = (Player) e.getDamager();
-            UUID attackerUUID = attacker.getUniqueId();
-            UUID targetUUID = target.getUniqueId();
-
-            if (antiLog.contains(attackerUUID) && antiLog.contains(targetUUID))
-            {
-                for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
-                    if (Objects.equals(timer.getValue()[0], attackerUUID) && Objects.equals(timer.getValue()[1], targetUUID))
-                    {
-                        // Cancel old timer
-                        Bukkit.getServer().getScheduler().cancelTask(timer.getKey().getTaskId());
-                        combatTimersToRemove.add(timer.getKey());
-
-                        // Create a new timer
-                        createCombatTimer(attacker, target);
-                    }
+                    // Create a new timer
+                    createCombatTimer(attacker, target);
                 }
-                combatTimers.putAll(combatTimersToAdd);
-                for (BukkitTask key: combatTimersToRemove) {
-                    combatTimers.remove(key);
-                }
-                combatTimersToRemove = new ArrayList<>();
-                combatTimersToAdd = new HashMap<>();
             }
-
-            if (!antiLog.contains(attackerUUID) && !antiLog.contains(targetUUID))
-            {
-                antiLog.add(attackerUUID);
-                antiLog.add(targetUUID);
-                attacker.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
-                target.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
-
-                createCombatTimer(attacker, target);
+            combatTimers.putAll(combatTimersToAdd);
+            for (BukkitTask key: combatTimersToRemove) {
+                combatTimers.remove(key);
             }
+            combatTimersToRemove = new ArrayList<>();
+            combatTimersToAdd = new HashMap<>();
+        }
+
+        if (!antiLog.contains(attackerUUID) && !antiLog.contains(targetUUID))
+        {
+            antiLog.add(attackerUUID);
+            antiLog.add(targetUUID);
+            attacker.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
+            target.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
+
+            createCombatTimer(attacker, target);
         }
     }
 
