@@ -23,12 +23,9 @@ public class AbilityScientist implements Listener {
 
             Player killer = p.getKiller();
 
-            Integer activeKit = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")));
-            if (activeKit == null) {
-                return;
-            }
+            String activeKit = Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")).toString();
 
-            if (Objects.equals(activeKit, 7)) {
+            if (Objects.equals(activeKit, "Scientist")) {
                 PlayerInventory inv = killer.getInventory();
                 ItemStack poisonPot = new ItemStack(Material.POTION, 1, (short) 16388);
 
