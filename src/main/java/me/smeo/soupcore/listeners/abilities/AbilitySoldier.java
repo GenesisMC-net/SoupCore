@@ -8,19 +8,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 
 public class AbilitySoldier implements Listener {
-    public static HashMap<UUID, Long> iceDomeCooldown = new HashMap<>();
+    public static final HashMap<UUID, Long> iceDomeCooldown = new HashMap<>();
 
     private static List<Location> circle (Player player, Location loc, Integer r, Integer h, Boolean hollow, Boolean sphere, int plus_y) {
         List<Location> circleblocks = new ArrayList<>();
@@ -63,15 +60,8 @@ public class AbilitySoldier implements Listener {
 
                 if (!cooldownActive) {
                     iceDomeCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            if (iceDomeCooldown.containsKey(p.getUniqueId())) {
-                                iceDomeCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_AQUA + "Ice Dome");
-                            }
-                        }
-                    }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 35L);
+
+                    Cooldowns.addAbilityCooldown(p, iceDomeCooldown, 35, ChatColor.DARK_AQUA + "Ice Dome");
 
                     PotionEffect strengthTwo = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 10, 0);
                     p.addPotionEffect(strengthTwo);

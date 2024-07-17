@@ -18,16 +18,7 @@ import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
-import static me.smeo.soupcore.listeners.abilities.AbilityFisherman.playerReelCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilityGlider.gliderCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilityGrappler.grapplingHookCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilityHulk.hulkSmashCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilityMage.fireLaunchCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilityMage.waterAbilityCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilityNinjaStars.ninjaStarCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilitySoldier.iceDomeCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilitySpiderwebs.spiderWebCooldown;
-import static me.smeo.soupcore.listeners.abilities.AbilityTank.silverFishCooldown;
+import static me.smeo.soupcore.listeners.abilities.Cooldowns.removeCooldowns;
 
 public class PlayerDeathListener implements Listener
 {
@@ -70,32 +61,13 @@ public class PlayerDeathListener implements Listener
                 }
             }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
         }
-        new BukkitRunnable()
-        {
-            @Override
-            public void run() {
-                Vector v = p.getVelocity();
-                v.setX(0);
-                v.setY(0);
-                v.setZ(0);
-                p.setVelocity(v);
-                e.getEntity().spigot().respawn();
+        Vector v = p.getVelocity();
+        v.setX(0);
+        v.setY(0);
+        v.setZ(0);
+        p.setVelocity(v);
+        e.getEntity().spigot().respawn();
 
-                spawnCommand.spawnInventory(p);
-            }
-        }.runTaskLaterAsynchronously(SoupCore.plugin, 1L);
-    }
-
-    private void removeCooldowns(Player player) {
-        playerReelCooldown.remove(player.getUniqueId());
-        gliderCooldown.remove(player.getUniqueId());
-        grapplingHookCooldown.remove(player.getUniqueId());
-        hulkSmashCooldown.remove(player.getUniqueId());
-        waterAbilityCooldown.remove(player.getUniqueId());
-        fireLaunchCooldown.remove(player.getUniqueId());
-        ninjaStarCooldown.remove(player.getUniqueId());
-        iceDomeCooldown.remove(player.getUniqueId());
-        spiderWebCooldown.remove(player.getUniqueId());
-        silverFishCooldown.remove(player.getUniqueId());
+        spawnCommand.spawnInventory(p);
     }
 }

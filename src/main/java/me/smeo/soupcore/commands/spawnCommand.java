@@ -19,6 +19,8 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
+import static me.smeo.soupcore.listeners.abilities.Cooldowns.removeCooldowns;
+
 public class spawnCommand implements CommandExecutor {
 
     private final Map<UUID, Long> spawnCooldown = new HashMap<>();
@@ -88,6 +90,7 @@ public class spawnCommand implements CommandExecutor {
                             p.teleport(spawnLoc);
                             p.sendMessage(ChatColor.GREEN + "You are now at spawn");
                             p.playSound(p.getLocation(), Sound.LEVEL_UP, 10, 1);
+                            removeCooldowns(p);
                             spawnInventory(p);
 
                             this.cancel();

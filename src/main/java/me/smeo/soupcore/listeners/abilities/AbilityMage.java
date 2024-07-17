@@ -24,8 +24,8 @@ import static me.smeo.soupcore.listeners.cancelFallDmgListener.cancelFallDamage;
 
 public class AbilityMage implements Listener {
 
-    public static HashMap<UUID, Long> waterAbilityCooldown = new HashMap<>();
-    public static HashMap<UUID, Long> fireLaunchCooldown = new HashMap<>();
+    public static final HashMap<UUID, Long> waterAbilityCooldown = new HashMap<>();
+    public static final HashMap<UUID, Long> fireLaunchCooldown = new HashMap<>();
 
     // Stop water from flowing
     @EventHandler
@@ -96,15 +96,7 @@ public class AbilityMage implements Listener {
                     if (!cooldownActive) {
                         waterAbilityCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (waterAbilityCooldown.containsKey(p.getUniqueId())){
-                                    waterAbilityCooldown.remove(p.getUniqueId());
-                                    p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.BLUE + "Water Attack");
-                                }
-                            }
-                        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
+                        Cooldowns.addAbilityCooldown(p, waterAbilityCooldown, 10, ChatColor.BLUE + "Water Attack");
 
                         Location playerLocation = p.getLocation();
 
@@ -186,7 +178,7 @@ public class AbilityMage implements Listener {
                             return;
                         }
 
-                        p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, (double) 1, p.getEyeLocation().getDirection().getZ() * 15));
+                        p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, 1, p.getEyeLocation().getDirection().getZ() * 15));
                         p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1.2F, 0.0F);
 
                         p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 0);
@@ -205,15 +197,8 @@ public class AbilityMage implements Listener {
                         }.runTaskTimerAsynchronously(SoupCore.plugin, 5L, 2L);
 
                         fireLaunchCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (fireLaunchCooldown.containsKey(p.getUniqueId())){
-                                    fireLaunchCooldown.remove(p.getUniqueId());
-                                    p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Fire Jump");
-                                }
-                            }
-                        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 15L);
+
+                        Cooldowns.addAbilityCooldown(p, fireLaunchCooldown, 15, ChatColor.RED + "Fire Jump");
 
                         cancelFallDamage.add(p.getUniqueId());
 

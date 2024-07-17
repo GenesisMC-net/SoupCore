@@ -1,16 +1,12 @@
 package me.smeo.soupcore.listeners.abilities;
 
-import me.smeo.soupcore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -20,7 +16,7 @@ import java.util.UUID;
 import static me.smeo.soupcore.listeners.cancelFallDmgListener.cancelFallDamage;
 
 public class AbilityGrappler implements Listener {
-    public static HashMap<UUID, Long> grapplingHookCooldown = new HashMap<>();
+    public static final HashMap<UUID, Long> grapplingHookCooldown = new HashMap<>();
 
     @EventHandler
     public void onFish(PlayerFishEvent e)
@@ -53,16 +49,8 @@ public class AbilityGrappler implements Listener {
                     cancelFallDamage.add(p.getUniqueId());
 
                     grapplingHookCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            if (grapplingHookCooldown.containsKey(p.getUniqueId())) {
-                                grapplingHookCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GRAY + "Grappling Hook");
-                            }
-                            cancelFallDamage.remove(p.getUniqueId());
-                        }
-                    }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 20L);
+
+                    Cooldowns.addAbilityCooldown(p, grapplingHookCooldown, 20, ChatColor.DARK_GRAY + "Grappling Hook");
                 }
             }
         }

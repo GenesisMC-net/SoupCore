@@ -1,5 +1,6 @@
 package me.smeo.soupcore.listeners.abilities;
 
+import me.smeo.soupcore.Kits.Methods_Kits;
 import me.smeo.soupcore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,8 +23,7 @@ import static me.smeo.soupcore.listeners.cancelFallDmgListener.cancelFallDamage;
 
 public class AbilityHulk implements Listener {
 
-    public static HashMap<UUID, Long> hulkSmashCooldown = new HashMap<>();
-    private static ArrayList<UUID> cancelHulkSmashDamage = new ArrayList<>();
+    public static final HashMap<UUID, Long> hulkSmashCooldown = new HashMap<>();
 
     @EventHandler
     public void onTntDamage(EntityDamageEvent e)
@@ -44,11 +44,13 @@ public class AbilityHulk implements Listener {
             // Fall Damage from Hulk (activate ability)
             if (e.getCause() == EntityDamageEvent.DamageCause.FALL && cancelFallDamage.contains(e.getEntity().getUniqueId()))
             {
+                Player p = ((Player) e.getEntity()).getPlayer();
+                if (!Objects.equals(ChatColor.stripColor(Methods_Kits.getActiveKit(p)), "Hulk")) {
+                    return;
+                }
 
                 e.setCancelled(true);
-                cancelFallDamage.remove(e.getEntity().getUniqueId());
-
-                Player p = ((Player) e.getEntity()).getPlayer();
+                cancelFallDamage.remove(p.getUniqueId());
 
                 List<Entity> nearbyPlayers = p.getNearbyEntities(3, 3, 3);
                 for (Entity entity : nearbyPlayers) {
@@ -88,25 +90,16 @@ public class AbilityHulk implements Listener {
 
                 if (!cooldownActive) {
                     hulkSmashCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            if (hulkSmashCooldown.containsKey(p.getUniqueId())){
-                                hulkSmashCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_GREEN + "Hulk Smash");
-                            }
-                        }
-                    }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 30L);
+
+                    Cooldowns.addAbilityCooldown(p, hulkSmashCooldown, 30, ChatColor.DARK_GREEN + "Hulk Smash");
 
                     p.setVelocity(new Vector(0, 1.5, 0));
                     cancelFallDamage.add(p.getUniqueId());
-                    cancelHulkSmashDamage.add(p.getUniqueId());
 
                     new BukkitRunnable() {
                         @Override
                         public void run() {
                             cancelFallDamage.remove(p.getUniqueId());
-                            cancelHulkSmashDamage.remove(p.getUniqueId());
                         }
                     }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
                 }

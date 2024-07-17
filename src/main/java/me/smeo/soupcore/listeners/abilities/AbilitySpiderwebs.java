@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class AbilitySpiderwebs implements Listener {
-    public static HashMap<UUID, Long> spiderWebCooldown = new HashMap<>();
+    public static final HashMap<UUID, Long> spiderWebCooldown = new HashMap<>();
 
     private void deleteWebGrid(Location targetLocation)
     {
@@ -67,15 +67,7 @@ public class AbilitySpiderwebs implements Listener {
                     if (!cooldownActive) {
                         spiderWebCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (spiderWebCooldown.containsKey(p.getUniqueId())){
-                                    spiderWebCooldown.remove(p.getUniqueId());
-                                    p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.RED + "Web Attack");
-                                }
-                            }
-                        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 30L);
+                        Cooldowns.addAbilityCooldown(p, spiderWebCooldown, 30, ChatColor.RED + "Web Attack");
 
                         final Item[] web = {p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(Material.WEB))};
                         Vector webVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2.5, 1, 2.5));
@@ -122,7 +114,6 @@ public class AbilitySpiderwebs implements Listener {
                                 if (i[0] >= 20 * 4) {
                                     web[0].remove();
                                     this.cancel();
-                                    return;
                                 }
                             }
 

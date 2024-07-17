@@ -1,10 +1,7 @@
 package me.smeo.soupcore.listeners.abilities;
 
-import com.sk89q.worldguard.protection.managers.RegionManager;
 import me.smeo.soupcore.Database.Database;
-import me.smeo.soupcore.SoupCore;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EnderPearl;
@@ -17,13 +14,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +25,7 @@ import java.util.UUID;
 
 public class AbilityGlider implements Listener {
 
-    public static HashMap<UUID, Long> gliderCooldown = new HashMap<>();
+    public static final HashMap<UUID, Long> gliderCooldown = new HashMap<>();
 
     private ItemStack getGliderPearl() {
         ItemStack gliderPearl = new ItemStack(Material.ENDER_PEARL, 1);
@@ -76,18 +69,10 @@ public class AbilityGlider implements Listener {
                     } else {
                         inv.setItem(1, getGliderPearl());
                     }
-                    return;
                 } else {
                     gliderCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            if (gliderCooldown.containsKey(p.getUniqueId())){
-                                gliderCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.YELLOW + "Pearl Ride");
-                            }
-                        }
-                    }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 15L);
+
+                    Cooldowns.addAbilityCooldown(p, gliderCooldown, 15, ChatColor.YELLOW + "Pearl Ride");
 
                     EnderPearl ender = (EnderPearl) e.getEntity();
                     ArmorStand as = (ArmorStand) ender.getWorld().spawnEntity(ender.getLocation(), EntityType.ARMOR_STAND);

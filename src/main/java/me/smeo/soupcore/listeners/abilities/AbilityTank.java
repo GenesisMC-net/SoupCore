@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -17,12 +16,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 
 public class AbilityTank implements Listener {
-    public static HashMap<UUID, Long> silverFishCooldown = new HashMap<>();
+    public static final HashMap<UUID, Long> silverFishCooldown = new HashMap<>();
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)
     {
@@ -44,15 +42,8 @@ public class AbilityTank implements Listener {
 
                 if (!cooldownActive) {
                     silverFishCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            if (silverFishCooldown.containsKey(p.getUniqueId())) {
-                                silverFishCooldown.remove(p.getUniqueId());
-                                p.sendMessage(ChatColor.GRAY + "You can now use " + ChatColor.DARK_RED + "Silverfish Army");
-                            }
-                        }
-                    }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 45L);
+
+                    Cooldowns.addAbilityCooldown(p, silverFishCooldown, 30, ChatColor.RED + "Silverfish Army");
 
                     List<Entity> silverfishArmy = new ArrayList<>();
                     for (int i = 0; i < 6; i++) {
