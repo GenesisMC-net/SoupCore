@@ -1,6 +1,6 @@
 name: SoupCore
 version: '${project.version}'
-main: me.smeo.soupcore.SoupCore
+main: org.genesismc.SoupCore.SoupCore
 api-version: 1.20
 commands:
   kits:
