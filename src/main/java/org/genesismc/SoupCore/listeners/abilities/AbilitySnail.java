@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Objects;
 import java.util.Random;
 
-public class AbilityPoisonSword implements Listener {
+public class AbilitySnail implements Listener {
     @EventHandler
     public void onDamagePlayer(EntityDamageByEntityEvent e) {
         if ((e.getDamager() instanceof Player) && (e.getEntity() instanceof Player)) {
@@ -21,13 +21,13 @@ public class AbilityPoisonSword implements Listener {
             Player attacker = (Player) e.getDamager();
             ItemStack weapon = attacker.getItemInHand();
 
-            if (Objects.equals(weapon.getType(), Material.IRON_SWORD) && Objects.equals(weapon.getItemMeta().getDisplayName(), ChatColor.GREEN + "Dagger of Venom")) {
+            if (Objects.equals(weapon.getType(), Material.IRON_SWORD) && Objects.equals(weapon.getItemMeta().getDisplayName(), ChatColor.GREEN + "Snail Sword")) {
                 Random rand = new Random();
                 int randomNumber = rand.nextInt(100);
-                if (randomNumber <= 15) // 15% chance
+                if (randomNumber <= 10) // 10% chance
                 {
-                    PotionEffect poisonEffect = new PotionEffect(PotionEffectType.POISON, 20 * 3, 1);
-                    target.addPotionEffect(poisonEffect);
+                    PotionEffect slownessEffect = new PotionEffect(PotionEffectType.SLOW, 20 * 5, 1);
+                    target.addPotionEffect(slownessEffect);
                 }
             }
         }

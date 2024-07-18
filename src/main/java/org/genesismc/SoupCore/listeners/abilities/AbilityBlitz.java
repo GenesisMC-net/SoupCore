@@ -51,7 +51,7 @@ public class AbilityBlitz implements Listener {
             return;
         }
 
-        if (Objects.equals(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")), "Blitz"))
+        if (Objects.equals(ChatColor.stripColor(Database.getPlayerData(killer, "soupData", "kit")), "Blitz"))
         {
             PlayerInventory inv = killer.getInventory();
             if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {

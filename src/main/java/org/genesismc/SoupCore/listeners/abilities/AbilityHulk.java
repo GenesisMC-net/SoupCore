@@ -23,6 +23,7 @@ import java.util.*;
 public class AbilityHulk implements Listener {
 
     public static final HashMap<UUID, Long> hulkSmashCooldown = new HashMap<>();
+    private final ArrayList<UUID> activeAbility = new ArrayList<>();
 
     @EventHandler
     public void onTntDamage(EntityDamageEvent e)
@@ -40,10 +41,10 @@ public class AbilityHulk implements Listener {
     public void onFallDamage(EntityDamageEvent e)
     {
         if (e.getEntity() instanceof Player) {
+            Player p = ((Player) e.getEntity()).getPlayer();
             // Fall Damage from Hulk (activate ability)
-            if (e.getCause() == EntityDamageEvent.DamageCause.FALL && cancelFallDmgListener.cancelFallDamage.contains(e.getEntity().getUniqueId()))
+            if (e.getCause() == EntityDamageEvent.DamageCause.FALL && activeAbility.contains(p.getUniqueId()))
             {
-                Player p = ((Player) e.getEntity()).getPlayer();
                 if (!Objects.equals(ChatColor.stripColor(Methods_Kits.getActiveKit(p)), "Hulk")) {
                     return;
                 }
@@ -51,7 +52,7 @@ public class AbilityHulk implements Listener {
                 e.setCancelled(true);
                 cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
 
-                List<Entity> nearbyPlayers = p.getNearbyEntities(3, 3, 3);
+                List<Entity> nearbyPlayers = p.getNearbyEntities(4, 4, 4);
                 for (Entity entity : nearbyPlayers) {
                     if (entity instanceof Player)
                     {
@@ -94,6 +95,7 @@ public class AbilityHulk implements Listener {
 
                     p.setVelocity(new Vector(0, 1.5, 0));
                     cancelFallDmgListener.cancelFallDamage.add(p.getUniqueId());
+                    activeAbility.add(p.getUniqueId());
 
                     new BukkitRunnable() {
                         @Override

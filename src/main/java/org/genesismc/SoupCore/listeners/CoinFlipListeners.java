@@ -57,7 +57,7 @@ public class CoinFlipListeners implements Listener {
             return;
         }
 
-        int currentCredits = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
+        int currentCredits = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
         if (currentCredits < wagerAmount) {
             p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
             p.sendMessage(ChatColor.RED + "Insufficient funds! You require " + ChatColor.GREEN + (wagerAmount - currentCredits) + ChatColor.RED + " more credits to complete this action");
@@ -104,8 +104,8 @@ public class CoinFlipListeners implements Listener {
             SkullMeta clickedGameMeta = (SkullMeta) clickedGame.getItemMeta();
             if (Objects.equals(clickedGameMeta.getOwner(), p.getName())) {
                 p.playSound(p.getLocation(), Sound.ORB_PICKUP, 10, 0);
-                int currentWager = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "activeWager")));
-                int currentCredits = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
+                int currentWager = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "activeWager")));
+                int currentCredits = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
                 p.sendMessage(ChatColor.GRAY + "You deleted your coin flip game with a wager of " + ChatColor.GREEN + currentWager + ChatColor.GRAY + " credits");
                 p.closeInventory();
                 Database.SetPlayerData(p, "soupData", "credits", String.valueOf(currentCredits + currentWager));
@@ -140,8 +140,8 @@ public class CoinFlipListeners implements Listener {
                 return;
             }
 
-            int accepterBalance = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
-            int bet = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(target, "coinflip", "activeWager")));
+            int accepterBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
+            int bet = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(target, "coinflip", "activeWager")));
             if (accepterBalance < bet) {
                 p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
 
@@ -167,14 +167,14 @@ public class CoinFlipListeners implements Listener {
                 return;
             }
             CoinFlip.playCoinFlip(p, target);
-            Database.SetPlayerData(p, "soupData", "credits", String.valueOf((Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")).toString()) - bet))); // What a fucking mess LMAO
+            Database.SetPlayerData(p, "soupData", "credits", String.valueOf((Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits"))) - bet))); // What a fucking mess LMAO
 
         } else if (e.getSlot() == 35) {
             CoinFlip.newGame(p);
-        } else if (e.getSlot() == 30) {
-            // TODO previous page
-        } else if (e.getSlot() == 32) {
-            // TODO next page
+//        } else if (e.getSlot() == 30) {
+//            // TODO previous page
+//        } else if (e.getSlot() == 32) {
+//            // TODO next page
         }
     }
 }

@@ -103,7 +103,7 @@ public class Database
         }
     }
 
-    public static String getUUIDFromNameInDatabase(String name)
+    public static UUID getUUIDFromNameInDatabase(String name)
     {
         Connection connection = getConnection();
         PreparedStatement preparedStatement;
@@ -116,7 +116,7 @@ public class Database
                     if(rows.getString("name").equalsIgnoreCase(name))
                     {
                         connection.close();
-                        return rows.getString("uuid");
+                        return UUID.fromString(rows.getString("uuid"));
                     }
                 }
 
@@ -154,7 +154,7 @@ public class Database
     }
     public static Boolean isPlayerInDatabaseByName(String table, String name)
     {
-        String uuid = getUUIDFromNameInDatabase(name);
+        String uuid = String.valueOf(getUUIDFromNameInDatabase(name));
         Connection connection = getConnection();
         PreparedStatement preparedStatement;
         boolean isFound;
@@ -179,7 +179,7 @@ public class Database
         }
     }
 
-    public static Object getPlayerData(Player p, String table, String column)
+    public static String getPlayerData(Player p, String table, String column)
     {
         if(!isPlayerInDatabase(p, table))
         {
@@ -190,16 +190,12 @@ public class Database
         try{
             queryStatement = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
             ResultSet rows = queryStatement.executeQuery();
-            while(rows.next())
-            {
-                return rows.getString(column);
-            }
             connection.close();
+            return rows.getString(column);
         }catch(SQLException e){
             System.out.println("Error accessing data");
             throw new RuntimeException(e);
         }
-        return null;
     }
 
 

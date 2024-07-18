@@ -19,9 +19,9 @@ public class CoinFlip {
 
     private static Inventory mainMenu(Player p)
     {
-        int wins = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
-        int losses = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "losses")));
-        int moneyMade = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "moneyMade")));
+        int wins = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "wins")));
+        int losses = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "losses")));
+        int moneyMade = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "moneyMade")));
         float percentageWon = (float) wins / (wins + losses) * 100;
         if (wins == 0 && losses == 0) {
             percentageWon = (float) 0;
@@ -165,7 +165,7 @@ public class CoinFlip {
     }
 
     public static void playCoinFlip(Player acceptor, Player better) {
-        int bet = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(better, "coinflip", "activeWager")));
+        int bet = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(better, "coinflip", "activeWager")));
 
         ItemStack acceptorSkull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta acceptorSkullMeta = (SkullMeta) acceptorSkull.getItemMeta();
@@ -222,13 +222,13 @@ public class CoinFlip {
                             better.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 6, 2);
                         }
                     }
-                    int winnerBalance = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(winner, "soupData", "credits")));
+                    int winnerBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(winner, "soupData", "credits")));
                     acceptor.getServer().broadcastMessage(cfPrefix + ChatColor.GREEN + winner.getName() + ChatColor.WHITE + " beat " + ChatColor.RED + loser.getName() + ChatColor.WHITE + " in a Coin Flip worth " + ChatColor.YELLOW + bet + ChatColor.WHITE + " credits");
 
-                    int winnerProfit = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "moneyMade")));
-                    int loserProfit = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "moneyMade")));
-                    int winnerWins = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "wins")));
-                    int loserLosses = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "losses")));
+                    int winnerProfit = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "moneyMade")));
+                    int loserProfit = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "moneyMade")));
+                    int winnerWins = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "wins")));
+                    int loserLosses = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "losses")));
 
                     Database.SetPlayerData(winner, "soupData", "credits", String.valueOf(winnerBalance + (bet * 2)));
 
@@ -256,12 +256,12 @@ public class CoinFlip {
 
     public static void newGame(Player p)
     {
-        if (Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "activeWager"))) > 0) {
+        if (Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "activeWager"))) > 0) {
             p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
             p.sendMessage(ChatColor.RED + "You already have a coin flip active! Click the icon in /cf to delete your wager");
             p.closeInventory();
             return;
-        } else if (Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits"))) == 0) {
+        } else if (Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits"))) == 0) {
             p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
             p.sendMessage(ChatColor.RED + "You do not have enough credits to make a wager!");
             p.closeInventory();

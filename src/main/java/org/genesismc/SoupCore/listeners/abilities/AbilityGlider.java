@@ -106,7 +106,7 @@ public class AbilityGlider implements Listener {
         Player p = e.getPlayer();
         if(Objects.equals(e.getCause(), PlayerTeleportEvent.TeleportCause.ENDER_PEARL))
         {
-            if (Objects.equals(Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "kit"))), 8)) {
+            if (Objects.equals(ChatColor.stripColor(Database.getPlayerData(p, "soupData", "kit")), "Glider")) {
                 e.setCancelled(true);
                 p.setNoDamageTicks(1);
                 p.teleport(e.getTo());
@@ -117,18 +117,15 @@ public class AbilityGlider implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerKill(PlayerDeathEvent e)
     {
-
-        Player p = e.getEntity();
-        Player killer = p.getKiller();
-
-        if (killer == null)
-        {
+        Player p = e.getEntity().getPlayer();
+        if (p.getKiller() == null) {
             return;
         }
 
-        if (Objects.equals(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")), "Glider"))
+        Player killer = p.getKiller();
+        String activeKit = ChatColor.stripColor(Database.getPlayerData(killer, "soupData", "kit"));
+        if (Objects.equals(activeKit, "Glider"))
         {
-
             PlayerInventory inv = killer.getInventory();
             if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
                 inv.addItem(getGliderPearl());

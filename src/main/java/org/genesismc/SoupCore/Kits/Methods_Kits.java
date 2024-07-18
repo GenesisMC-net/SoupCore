@@ -34,6 +34,7 @@ public class Methods_Kits {
 
         inv.setItem(2 + (9 * 4), KitHulk.guiAppearance(player));
         inv.setItem(4 + (9 * 4), KitTank.guiAppearance(player));
+        inv.setItem(6 + (9 * 4), KitSnail.guiAppearance(player));
 
         ItemStack glassPane = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
         inv.setItem(0, glassPane);
@@ -67,7 +68,7 @@ public class Methods_Kits {
 
     public static String getActiveKit(Player player)
     {
-        return (String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "kit"));
+        return Objects.requireNonNull(Database.getPlayerData(player, "soupData", "kit"));
     }
 
     public static boolean checkKitPermission(Player player, String kit)
@@ -121,6 +122,9 @@ public class Methods_Kits {
                 break;
             case "Tank":
                 KitTank.giveItems(player);
+                break;
+            case "Snail":
+                KitSnail.giveItems(player);
                 break;
         }
 

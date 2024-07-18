@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
+import org.bukkit.ChatColor;
 import org.genesismc.SoupCore.Database.Database;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class AbilityScientist implements Listener {
 
             Player killer = p.getKiller();
 
-            String activeKit = Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")).toString();
+            String activeKit = ChatColor.stripColor(Database.getPlayerData(killer, "soupData", "kit"));
 
             if (Objects.equals(activeKit, "Scientist")) {
                 PlayerInventory inv = killer.getInventory();

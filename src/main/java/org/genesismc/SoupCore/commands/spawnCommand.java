@@ -1,7 +1,6 @@
 package org.genesismc.SoupCore.commands;
 
 import org.genesismc.SoupCore.SoupCore;
-import org.genesismc.SoupCore.listeners.combatLogListeners;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +18,8 @@ import org.bukkit.util.Vector;
 import org.genesismc.SoupCore.listeners.abilities.Cooldowns;
 
 import java.util.*;
+
+import static org.genesismc.SoupCore.listeners.combatLogListeners.antiLog;
 
 public class spawnCommand implements CommandExecutor {
 
@@ -48,7 +49,7 @@ public class spawnCommand implements CommandExecutor {
         {
             Player p = (Player) sender;
 
-            if (combatLogListeners.antiLog.containsKey(p.getUniqueId()))
+            if (antiLog.containsKey(p.getUniqueId()))
             {
                 p.sendMessage(ChatColor.RED + "You cannot use this command while in combat!");
                 return true;
@@ -72,6 +73,11 @@ public class spawnCommand implements CommandExecutor {
                     public void run() {
                         System.out.println(startLocation.toString() + " | " + p.getLocation().getBlock().getLocation().toString());
                         if (!startLocation.equals(p.getLocation().getBlock().getLocation())) {
+                            p.sendMessage(ChatColor.RED + "Teleport Failed");
+                            this.cancel();
+                            return;
+                        }
+                        if (antiLog.containsKey(p.getUniqueId())) {
                             p.sendMessage(ChatColor.RED + "Teleport Failed");
                             this.cancel();
                             return;

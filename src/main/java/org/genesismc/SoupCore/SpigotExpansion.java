@@ -61,9 +61,9 @@ public class SpigotExpansion extends PlaceholderExpansion {
                 }
                 return ChatColor.GRAY + Stats.kdr(player);
             case "credits":
-                return (String) Database.getPlayerData(player, "soupData", "credits");
+                return Database.getPlayerData(player, "soupData", "credits");
             case "bounty":
-                return (String) Database.getPlayerData(player, "soupData", "bounty");
+                return Database.getPlayerData(player, "soupData", "bounty");
             case "kit":
                 return Methods_Kits.getActiveKit(player);
             case "combatTimer":
@@ -75,7 +75,10 @@ public class SpigotExpansion extends PlaceholderExpansion {
                 Long timer = combatLogListeners.antiLog.get(playerUUID);
 
                 DecimalFormat df = new DecimalFormat("#.#");
-                String timerFormatted = df.format((15 - ((float) timer / 20)));
+                String timerFormatted = df.format((10 - ((float) timer / 20)));
+                if (timer % 20 == 0) {
+                    timerFormatted += ".0";
+                }
 
                 return ChatColor.RED + timerFormatted + "s";
             default:

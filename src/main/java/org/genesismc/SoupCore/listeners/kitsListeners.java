@@ -90,6 +90,10 @@ public class kitsListeners implements Listener
                 inv.setItem(4 + (9 * 4), KitTank.guiAppearance(player));
                 player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.DARK_RED + " Tank " + ChatColor.GRAY + "kit");
                 break;
+            case 6 + (9*4):
+                Methods_Kits.selectKit(player, ChatColor.GREEN + "Snail");
+                inv.setItem(6 + (9 * 4), KitSnail.guiAppearance(player));
+                player.sendMessage(ChatColor.GRAY + "You selected the" + ChatColor.GREEN + " Snail " + ChatColor.GRAY + "kit");
         }
     }
 }
