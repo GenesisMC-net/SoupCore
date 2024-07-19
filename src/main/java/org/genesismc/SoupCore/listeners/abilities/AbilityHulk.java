@@ -1,5 +1,7 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
+import org.bukkit.Sound;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.genesismc.SoupCore.Kits.Methods_Kits;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.ChatColor;
@@ -51,6 +53,7 @@ public class AbilityHulk implements Listener {
 
                 e.setCancelled(true);
                 cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
+                activeAbility.remove(p.getUniqueId());
 
                 List<Entity> nearbyPlayers = p.getNearbyEntities(4, 4, 4);
                 for (Entity entity : nearbyPlayers) {
@@ -67,6 +70,29 @@ public class AbilityHulk implements Listener {
                 tnt.setFuseTicks(1);
             }
         }
+    }
+
+    @EventHandler
+    public void onShift(PlayerToggleSneakEvent e) {
+        if (!e.isSneaking()) { return; }
+        Player p = e.getPlayer();
+        if (!Objects.equals(ChatColor.stripColor(Methods_Kits.getActiveKit(p)), "Hulk")) {
+            return;
+        }
+        if (p.isOnGround()) { return; }
+
+        Vector velocity = p.getVelocity().setY(-2);
+        p.setVelocity(velocity);
+
+        p.playSound(p.getLocation(), Sound.ANVIL_LAND, 2F, 1F);
+
+        cancelFallDmgListener.cancelFallDamage.add(p.getUniqueId());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
+            }
+        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
     }
 
     @EventHandler
