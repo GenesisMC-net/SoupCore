@@ -1,5 +1,8 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.genesismc.SoupCore.Kits.Methods_Kits;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
@@ -66,7 +69,7 @@ public class AbilityMage implements Listener {
                     }
                 }
             }
-        }.runTaskLater(SoupCore.plugin, 20L * 3L);
+        }.runTaskLater(SoupCore.plugin, 20L * 5L);
     }
 
 
@@ -75,6 +78,13 @@ public class AbilityMage implements Listener {
     {
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Player p = e.getPlayer();
+            for (ProtectedRegion rg : WGBukkit.getRegionManager(p.getWorld()).getApplicableRegions(p.getLocation())){
+                if (Objects.equals(rg.getId(), "spawn")) { return; }
+            }
+
+            if (!Objects.equals(ChatColor.stripColor(Methods_Kits.getActiveKit(p)), "Mage")) {
+                return;
+            }
 
             // Water ability
             if (!p.isSneaking())
@@ -105,7 +115,7 @@ public class AbilityMage implements Listener {
                         projectile.setSmall(true);
                         projectile.setHelmet(new ItemStack(Material.PACKED_ICE));
 
-                        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2, 2));
+                        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2.3, 2));
                         projectile.setVelocity(projVelocity);
 
                         final int[] i = {0};
@@ -113,7 +123,7 @@ public class AbilityMage implements Listener {
                             @Override
                             public void run() {
                                 i[0] ++;
-                                if (projectile.isOnGround()) {
+                                if (!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
                                     if (!projectile.getNearbyEntities(3,3,3).contains(p)) {
                                         Location targetLocation = projectile.getLocation().clone();
 
@@ -128,12 +138,14 @@ public class AbilityMage implements Listener {
                                     if (entity instanceof Player) {
                                         Player target = (Player) entity;
                                         if (!target.getUniqueId().equals(p.getUniqueId())) {
-                                            target.damage(0.1, p);
-                                            target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 5, 2, false));
-                                            if (projectile.getNearbyEntities(0.6, 0.6, 0.6).contains(target) && Math.round(projectile.getLocation().getY()) - 1.5 <= Math.round(projectile.getLocation().getY())) {
+                                            if (Math.round(projectile.getLocation().getY()) - 1.5 <= Math.round(projectile.getLocation().getY())) {
                                                 Location targetLocation = target.getLocation().clone();
 
+                                                PotionEffect slowness = new PotionEffect(PotionEffectType.SLOW, 20 * 5, 2, true, false);
+                                                target.addPotionEffect(slowness);
                                                 makeWaterGrid(targetLocation);
+                                                target.damage(0.1, p);
+                                                target.setVelocity(new Vector(0, 0, 0));
 
                                                 projectile.remove();
                                                 this.cancel();
@@ -156,61 +168,66 @@ public class AbilityMage implements Listener {
             } else
             // Fire Launch Ability
             {
-                ItemStack itemInHand = p.getItemInHand();
+                boolean cooldownActive = false;
+                if (fireLaunchCooldown.containsKey(p.getUniqueId())) {
+                    if (System.currentTimeMillis() - fireLaunchCooldown.get(p.getUniqueId()) < 15 * 1000) {
+                        cooldownActive = true;
+                        p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (15 - (System.currentTimeMillis() - fireLaunchCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
+                    } else {
+                        fireLaunchCooldown.remove(p.getUniqueId());
+                    }
+                }
 
-                if (Objects.equals(itemInHand.getType(), Material.INK_SACK) && Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.BLUE + "Mage Abilities")) {
-
-                    boolean cooldownActive = false;
-                    if (fireLaunchCooldown.containsKey(p.getUniqueId())) {
-                        if (System.currentTimeMillis() - fireLaunchCooldown.get(p.getUniqueId()) < 15 * 1000) {
-                            cooldownActive = true;
-                            p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (15 - (System.currentTimeMillis() - fireLaunchCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
-                        } else {
-                            fireLaunchCooldown.remove(p.getUniqueId());
-                        }
+                if (!cooldownActive) {
+                    if (!p.isOnGround()) {
+                        p.sendMessage(ChatColor.RED + "You must be on the ground to use this ability!");
+                        return;
                     }
 
-                    if (!cooldownActive) {
+                    p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, 1, p.getEyeLocation().getDirection().getZ() * 15));
+                    p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1.2F, 0.0F);
 
-                        if (!p.isOnGround()) {
-                            p.sendMessage(ChatColor.RED + "You must be on the ground to use this ability!");
-                            return;
+                    p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 1, 1);
+                    final int[] i = {0};
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if (i[0] > 20 * 5 || p.isOnGround()) {
+                                this.cancel();
+                                return;
+                            }
+
+                            p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 1, 1);
+
+                            for (Entity entity : p.getNearbyEntities(2, 10, 2)) {
+                                if (entity instanceof Player) {
+                                    Player target = (Player) entity;
+                                    if (target.getLocation().getY() < p.getLocation().getY()) {
+                                        target.damage(0.1, p);
+                                        target.setFireTicks(20 * 4);
+                                    }
+                                }
+                            }
+
+                            i[0] += 1;
                         }
+                    }.runTaskTimerAsynchronously(SoupCore.plugin, 5L, 1L);
 
-                        p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, 1, p.getEyeLocation().getDirection().getZ() * 15));
-                        p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1.2F, 0.0F);
+                    fireLaunchCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
-                        p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 0);
-                        final int[] i = {0};
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (i[0] > 40) {
-                                    this.cancel();
-                                }
+                    Cooldowns.addAbilityCooldown(p, fireLaunchCooldown, 15, ChatColor.RED + "Fire Jump");
 
-                                p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 0);
+                    cancelFallDmgListener.cancelFallDamage.add(p.getUniqueId());
 
-                                i[0] += 1;
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            while (cancelFallDmgListener.cancelFallDamage.contains(p.getUniqueId()))
+                            {
+                                cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
                             }
-                        }.runTaskTimerAsynchronously(SoupCore.plugin, 5L, 2L);
-
-                        fireLaunchCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-
-                        Cooldowns.addAbilityCooldown(p, fireLaunchCooldown, 15, ChatColor.RED + "Fire Jump");
-
-                        cancelFallDmgListener.cancelFallDamage.add(p.getUniqueId());
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                while (cancelFallDmgListener.cancelFallDamage.contains(p.getUniqueId()))
-                                {
-                                    cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
-                                }
-                            }
-                        }.runTaskLater(SoupCore.plugin, 20L * 10L);
-                    }
+                        }
+                    }.runTaskLater(SoupCore.plugin, 20L * 10L);
                 }
             }
         }

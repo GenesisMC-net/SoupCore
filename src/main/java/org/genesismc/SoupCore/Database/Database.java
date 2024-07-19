@@ -190,12 +190,15 @@ public class Database
         try{
             queryStatement = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
             ResultSet rows = queryStatement.executeQuery();
+            if (rows.next()) {
+                return rows.getString(column);
+            }
             connection.close();
-            return rows.getString(column);
         }catch(SQLException e){
             System.out.println("Error accessing data");
             throw new RuntimeException(e);
         }
+        return null;
     }
 
 
