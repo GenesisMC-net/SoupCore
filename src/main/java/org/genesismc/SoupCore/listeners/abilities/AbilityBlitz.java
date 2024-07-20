@@ -67,7 +67,7 @@ public class AbilityBlitz implements Listener {
                 inv.setItem(1, getBlitzPearl());
             }
             killer.removePotionEffect(PotionEffectType.SPEED);
-            PotionEffect speedThree = new PotionEffect(PotionEffectType.SPEED, 15, 2);
+            PotionEffect speedThree = new PotionEffect(PotionEffectType.SPEED, 20 * 15, 2);
             killer.addPotionEffect(speedThree);
             new BukkitRunnable() {
                 @Override
@@ -79,7 +79,7 @@ public class AbilityBlitz implements Listener {
                         return;
                     }
 
-                    if (!Objects.equals(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")), "Blitz"))
+                    if (!Objects.equals(ChatColor.stripColor(Database.getPlayerData(p, "soupData", "kit")), "Blitz"))
                     {
                         this.cancel();
                         return;

@@ -27,7 +27,7 @@ public class AbilityNinjaStars implements Listener {
     {
         ninjaStarCooldown.remove(e.getEntity().getPlayer().getUniqueId());
         if(e.getEntity().getPlayer().getKiller() == null){return;}
-        if (Objects.equals(Objects.requireNonNull(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit")), "Stealth"))
+        if (Objects.requireNonNull(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit")).contains("Stealth"))
         {
             ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, 1);
 

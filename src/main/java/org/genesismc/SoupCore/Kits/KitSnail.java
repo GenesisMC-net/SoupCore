@@ -40,7 +40,7 @@ public class KitSnail {
         boots.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
         inv.setBoots(boots);
 
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
 
         // Ability
         ItemStack sword = new ItemStack(Material.IRON_SWORD);
@@ -72,7 +72,7 @@ public class KitSnail {
         lore.add("");
         lore.add(ChatColor.WHITE + "Iron Armour");
         lore.add(ChatColor.RED + "Sharpness I" + ChatColor.WHITE + " Iron Sword");
-        lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed I" + ChatColor.WHITE);
+        lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed I");
         lore.add(ChatColor.WHITE + "Sword deals 5 seconds of" + ChatColor.RED + " Slowness I " + ChatColor.GRAY + "(10% chance)");
         lore.add("");
 
