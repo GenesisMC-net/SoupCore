@@ -33,18 +33,22 @@ public class kitsListeners implements Listener
 
         // Update GUI
         inv.setItem(1 + 9, KitDefault.guiAppearance(player));
-        inv.setItem(3 + 9, KitVenom.guiAppearance(player));
-        inv.setItem(5 + 9, KitSpiderman.guiAppearance(player));
-        inv.setItem(7 + 9, KitBlitz.guiAppearance(player));
-        inv.setItem(2 + (9 * 2), KitStealth.guiAppearance(player));
-        inv.setItem(4 + (9 * 2), KitGrappler.guiAppearance(player));
-        inv.setItem(6 + (9 * 2), KitFisherman.guiAppearance(player));
-        inv.setItem(1 + (9 * 3), KitScientist.guiAppearance(player));
-        inv.setItem(3 + (9 * 3), KitGlider.guiAppearance(player));
-        inv.setItem(5 + (9 * 3), KitSoldier.guiAppearance(player));
-        inv.setItem(7 + (9 * 3), KitMage.guiAppearance(player));
-        inv.setItem(2 + (9 * 4), KitHulk.guiAppearance(player));
-        inv.setItem(4 + (9 * 4), KitTank.guiAppearance(player));
-        inv.setItem(6 + (9 * 4), KitSnail.guiAppearance(player));
+        inv.setItem(2 + 9, KitVenom.guiAppearance(player));
+        inv.setItem(3 + 9, KitSpiderman.guiAppearance(player));
+        inv.setItem(4 + 9, KitBlitz.guiAppearance(player));
+        inv.setItem(5 + 9, KitStealth.guiAppearance(player));
+        inv.setItem(6 + 9, KitGrappler.guiAppearance(player));
+        inv.setItem(7 + 9, KitFisherman.guiAppearance(player));
+
+        inv.setItem(1 + (9 * 2), KitScientist.guiAppearance(player));
+        inv.setItem(2 + (9 * 2), KitGlider.guiAppearance(player));
+        inv.setItem(3 + (9 * 2), KitSoldier.guiAppearance(player));
+        inv.setItem(4 + (9 * 2), KitMage.guiAppearance(player));
+        inv.setItem(5 + (9 * 2), KitHulk.guiAppearance(player));
+        inv.setItem(6 + (9 * 2), KitTank.guiAppearance(player));
+        inv.setItem(7 + (9 * 2), KitSnail.guiAppearance(player));
+
+        inv.setItem(1 + (9 * 3), KitSwitcher.guiAppearance(player));
+        inv.setItem(2 + (9 * 3), KitTurbo.guiAppearance(player));
     }
 }
