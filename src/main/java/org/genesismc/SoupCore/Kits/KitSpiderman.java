@@ -55,8 +55,8 @@ public class KitSpiderman {
         ArrayList<String> webLore = new ArrayList<>();
         webLore.add("");
         webLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Web Attack");
-        webLore.add(ChatColor.GRAY + "Throw your web like an ender");
-        webLore.add(ChatColor.GRAY + "pearl and trap players for 10s!");
+        webLore.add(ChatColor.GRAY + "Throw your web at an enemy");
+        webLore.add(ChatColor.GRAY + "to trap them in webs for 10s!");
         webMeta.setLore(webLore);
 
         webMeta.setDisplayName(ChatColor.WHITE + "Spider Webs");

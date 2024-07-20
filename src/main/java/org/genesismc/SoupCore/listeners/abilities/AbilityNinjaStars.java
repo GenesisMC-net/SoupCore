@@ -1,12 +1,9 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.genesismc.SoupCore.Database.Database;
 import org.genesismc.SoupCore.SoupCore;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -30,7 +27,7 @@ public class AbilityNinjaStars implements Listener {
     {
         ninjaStarCooldown.remove(e.getEntity().getPlayer().getUniqueId());
         if(e.getEntity().getPlayer().getKiller() == null){return;}
-        if (Objects.equals(Objects.requireNonNull(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit")), "Stealth"))
+        if (Objects.requireNonNull(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit")).contains("Stealth"))
         {
             ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, 1);
 
@@ -82,57 +79,52 @@ public class AbilityNinjaStars implements Listener {
 
                         Cooldowns.addAbilityCooldown(p, ninjaStarCooldown, 10, ChatColor.LIGHT_PURPLE + "Ninja Star");
 
-                        ItemStack oneNinjaStar = itemInHand.clone();
+                        ArmorStand projectile = p.getWorld().spawn(p.getLocation(), ArmorStand.class);
 
-                        p.getInventory().removeItem(itemInHand);
-                        if (itemInHand.getAmount() > 1) {
-                            oneNinjaStar.setAmount(itemInHand.getAmount() - 1);
-                            p.getInventory().addItem(oneNinjaStar);
-                        }
+                        projectile.setVisible(false);
+                        projectile.setSmall(true);
+                        projectile.setHelmet(new ItemStack(Material.NETHER_STAR));
 
-                        oneNinjaStar.setAmount(1);
-
-                        final Item[] ninjaStar = {p.getWorld().dropItem(p.getEyeLocation(), oneNinjaStar)};
-                        Vector starVelocity = p.getEyeLocation().clone().getDirection();
-                        ninjaStar[0].setVelocity(starVelocity);
+                        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2.3, 2));
+                        projectile.setVelocity(projVelocity);
 
                         final int[] i = {0};
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                Location oldLocation = ninjaStar[0].getLocation().clone();
-                                ninjaStar[0].remove();
-                                ninjaStar[0] = p.getWorld().dropItem(oldLocation, oneNinjaStar);
-                                ninjaStar[0].setVelocity(starVelocity);
-                                i[0] = i[0] + 1;
-                                for (Player target : p.getWorld().getPlayers()) {
-                                    if (target.getLocation().getBlock().getLocation().equals(ninjaStar[0].getLocation().getBlock().getLocation().clone().subtract(0, 1, 0)) || target.getLocation().getBlock().getLocation().equals(ninjaStar[0].getLocation().getBlock().getLocation().clone().subtract(0, 0, 0))) {
-                                        if (target.getUniqueId() != p.getUniqueId()) {
-                                            target.damage(6, p);
-                                            PotionEffect blindness = new PotionEffect(PotionEffectType.BLINDNESS, 20 * 5, 0);
-                                            target.addPotionEffect(blindness);
-                                            ninjaStar[0].remove();
-                                            this.cancel();
-                                            return;
+                                i[0] ++;
+                                if (!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
+                                    projectile.remove();
+                                    this.cancel();
+                                    return;
+                                }
+
+                                for (Entity entity : projectile.getNearbyEntities(0.6, 0.6, 0.6)) {
+                                    if (entity instanceof Player) {
+                                        Player target = (Player) entity;
+                                        if (!target.getUniqueId().equals(p.getUniqueId())) {
+                                            if (Math.round(projectile.getLocation().getY()) - 1.5 <= Math.round(projectile.getLocation().getY())) {
+                                                PotionEffect blindness = new PotionEffect(PotionEffectType.BLINDNESS, 20 * 5, 2, true, false);
+                                                target.addPotionEffect(blindness);
+                                                target.damage(6, p);
+
+                                                p.playSound(p.getLocation(), Sound.ANVIL_LAND, 2, 1);
+
+                                                projectile.remove();
+                                                this.cancel();
+                                                return;
+                                            }
                                         }
                                     }
                                 }
-                                if (ninjaStar[0].getLocation().getBlock().getType() != Material.AIR) {
-                                    ninjaStar[0].remove();
-                                    this.cancel();
-                                    return;
-                                }
-                                if (ninjaStar[0].isOnGround()) {
-                                    ninjaStar[0].remove();
-                                    this.cancel();
-                                    return;
-                                }
-                                if (i[0] >= 20 * 2) {
-                                    ninjaStar[0].remove();
+
+                                projectile.setVelocity(projVelocity);
+
+                                if (i[0] >= 20L * 10L) {
+                                    projectile.remove();
                                     this.cancel();
                                 }
                             }
-
                         }.runTaskTimer(SoupCore.plugin, 0L, 1L);
                     }
                 }

@@ -19,7 +19,7 @@ public class statsCommand implements CommandExecutor {
 
             if (args.length == 1) {
                 try {
-                    player = sender.getServer().getOfflinePlayer(args[0]).getPlayer();
+                    player = sender.getServer().getOfflinePlayer(Database.getUUIDFromNameInDatabase(args[0])).getPlayer();
                     sender.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + args[0] + "'s Stats");
 
                     if (Database.isPlayerInDatabase(player, "Users")) {

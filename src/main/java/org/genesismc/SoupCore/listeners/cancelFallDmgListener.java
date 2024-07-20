@@ -13,7 +13,7 @@ public class cancelFallDmgListener implements Listener {
     public static final ArrayList<UUID> cancelFallDamage = new ArrayList<>();
 
     @EventHandler
-    public void onPlayerDeath(EntityDamageEvent e) {
+    public void onPlayerDamaged(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             if (e.getCause() == EntityDamageEvent.DamageCause.FALL && cancelFallDamage.contains(e.getEntity().getUniqueId()))
             {

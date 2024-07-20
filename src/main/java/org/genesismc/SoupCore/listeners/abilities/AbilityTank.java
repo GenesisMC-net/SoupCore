@@ -79,8 +79,9 @@ public class AbilityTank implements Listener {
                     return;
                 }
 
-                Player silverFishOwner = Bukkit.getPlayer(e.getDamager().getCustomName().replace((CharSequence) ChatColor.RED, ""));
+                Player silverFishOwner = Bukkit.getPlayer(ChatColor.stripColor(e.getDamager().getCustomName()));
                 p.damage(3, silverFishOwner);
+                e.setDamage(0);
                 e.setCancelled(true);
             }
         }
@@ -89,9 +90,21 @@ public class AbilityTank implements Listener {
     @EventHandler
     public void onSilverfishTarget(EntityTargetLivingEntityEvent e)
     {
-        if (e.getEntity().getType() == EntityType.SILVERFISH && Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + e.getTarget().getName()))
+        if (!(e.getEntity().getType() == EntityType.SILVERFISH)) {
+            return;
+        }
+
+        if (Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + e.getTarget().getName()))
         {
-            e.setCancelled(true);
+            for (Entity target : e.getEntity().getNearbyEntities(10, 10, 10)) {
+                if (target instanceof Player) {
+                    if (!target.isDead() && !Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + target.getName())) {
+                        e.setTarget(target);
+                        return;
+                    }
+                }
+            }
+            e.setTarget(null);
         }
     }
 

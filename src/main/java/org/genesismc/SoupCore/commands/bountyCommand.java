@@ -35,14 +35,14 @@ public class bountyCommand implements CommandExecutor {
         if (args.length >= 1) // Main Argument Length Check
         {
             if (args[0].equals("me") && sender instanceof Player) {
-                int bounty = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "bounty")));
+                int bounty = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(player, "soupData", "bounty")));
                 String string = ChatColor.GRAY + "You have a " + ChatColor.GOLD + bounty + " credit" + ChatColor.GRAY + " bounty on your head";
                 player.sendMessage(string);
                 return true;
             } else if (args[0].equals("create") && sender instanceof Player) {
                 Player target = null;
                 try {
-                    target = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
+                    target = Bukkit.getServer().getOfflinePlayer(Database.getUUIDFromNameInDatabase(args[1])).getPlayer();
                 } catch (NullPointerException exc) {
                     player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[1]);
                 }
@@ -50,7 +50,7 @@ public class bountyCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[1]);
                 }
 
-                Integer previousBounty = Integer.valueOf((String) Objects.requireNonNull(Database.getPlayerData(target, "soupData", "bounty")));
+                Integer previousBounty = Integer.valueOf(Objects.requireNonNull(Database.getPlayerData(target, "soupData", "bounty")));
                 Integer newBounty = Integer.valueOf(args[2]);
 
                 if (!(newBounty >= 50)) {

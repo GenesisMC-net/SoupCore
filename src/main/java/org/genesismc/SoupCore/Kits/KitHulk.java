@@ -75,7 +75,7 @@ public class KitHulk {
         lore.add(ChatColor.WHITE + "1/2 Iron, 1/2 Leather Armour");
         lore.add(ChatColor.RED + "Unenchanted" + ChatColor.WHITE + " Diamond Sword");
         lore.add(ChatColor.WHITE + "Permanent " + ChatColor.RED + "Speed I" + ChatColor.WHITE + " and " + ChatColor.RED + "Resistance I" + ChatColor.WHITE);
-        lore.add(ChatColor.WHITE + "Hulk smash deals " + ChatColor.RED + " Launches You " + ChatColor.WHITE + "and deals" + ChatColor.RED + " 5 Hearts");
+        lore.add(ChatColor.WHITE + "Hulk smash " + ChatColor.RED + " Launches You " + ChatColor.WHITE + "and deals" + ChatColor.RED + " 5 Hearts");
         lore.add("");
 
         if (Objects.equals(highlightedKit, "Hulk")) {

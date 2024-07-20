@@ -17,18 +17,18 @@ public class balCommand implements CommandExecutor {
             if (args.length >= 1) {
                 Player target;
                 try {
-                    target = p.getServer().getOfflinePlayer(args[0]).getPlayer();
+                    target = p.getServer().getOfflinePlayer(Database.getUUIDFromNameInDatabase(args[0])).getPlayer();
                 } catch (NullPointerException exc) {
                     p.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
                     return true;
                 }
-                String balance = (String) Database.getPlayerData(p, "soupData", "credits");
+                String balance = Database.getPlayerData(p, "soupData", "credits");
 
                 p.sendMessage(ChatColor.GREEN + target.getDisplayName() + ChatColor.GRAY + " has " + ChatColor.GREEN + balance + ChatColor.GRAY + " credits");
                 return true;
             }
 
-            String balance = (String) Database.getPlayerData(p, "soupData", "credits");
+            String balance = Database.getPlayerData(p, "soupData", "credits");
 
             p.sendMessage(ChatColor.GRAY + "You have " + ChatColor.GREEN + balance + ChatColor.GRAY + " credits");
             return true;

@@ -50,6 +50,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SpawnLaunchListener(), this);
         getServer().getPluginManager().registerEvents(new CoinFlipListeners(), this);
         getServer().getPluginManager().registerEvents(new cancelFallDmgListener(), this);
+        getServer().getPluginManager().registerEvents(new scoreboardListeners(), this);
 
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
@@ -64,6 +65,9 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityMage(), this);
         getServer().getPluginManager().registerEvents(new AbilityHulk(), this);
         getServer().getPluginManager().registerEvents(new AbilityTank(), this);
+        getServer().getPluginManager().registerEvents(new AbilitySnail(), this);
+        getServer().getPluginManager().registerEvents(new AbilitySwitcher(), this);
+        getServer().getPluginManager().registerEvents(new AbilityTurbo(), this);
 
         getCommand("kits").setExecutor(new kitsCommand());
         getCommand("refill").setExecutor(new refillCommand());
@@ -82,6 +86,8 @@ public final class SoupCore extends JavaPlugin {
         {
             new SpigotExpansion().register();
         }
+
+        scoreboardListeners.enableHeartsBelowName();
 
         getWorldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 

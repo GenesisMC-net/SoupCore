@@ -83,7 +83,7 @@ public class combatLogListeners implements Listener {
             while (antiLog.containsKey(p.getUniqueId())) {
                 antiLog.remove(p.getUniqueId());
             }
-            Database.SetPlayerData(p, "soupData", "deaths", (String) Database.getPlayerData(p, "soupData", "deaths")+1);
+            Database.SetPlayerData(p, "soupData", "deaths", Database.getPlayerData(p, "soupData", "deaths") +1);
             Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
 
             for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
@@ -91,7 +91,7 @@ public class combatLogListeners implements Listener {
                     Bukkit.getScheduler().cancelTask(timer.getKey().getTaskId());
 
                     // Player dies
-                    int killStreak = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
+                    int killStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
                     if(killStreak >= 20)
                     {
                         Bukkit.broadcastMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
@@ -102,9 +102,9 @@ public class combatLogListeners implements Listener {
                     {
                         Player killer = Bukkit.getPlayer(timer.getValue()[0]);
                         antiLog.remove(killer.getUniqueId());
-                        Integer kills = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kills"))) + 1;
+                        Integer kills = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kills"))) + 1;
                         Database.SetPlayerData(killer, "soupData", "kills", String.valueOf(kills));
-                        Integer attackerKillStreak = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "killStreak"))) + 1;
+                        Integer attackerKillStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "killStreak"))) + 1;
                         Database.SetPlayerData(killer, "soupData", "killStreak", String.valueOf(attackerKillStreak));
 
                         Random rand = new Random();
@@ -151,6 +151,10 @@ public class combatLogListeners implements Listener {
             if (Objects.equals(timer.getValue()[0], playerUUID) || Objects.equals(timer.getValue()[1], playerUUID)) {
                 Bukkit.getScheduler().cancelTask(timer.getKey().getTaskId());
                 combatTimersToRemove.add(timer.getKey());
+
+                for (UUID inCombatUUID : timer.getValue()) {
+                    antiLog.remove(inCombatUUID);
+                }
             }
         }
         for (BukkitTask key: combatTimersToRemove) {
@@ -161,24 +165,13 @@ public class combatLogListeners implements Listener {
         Player killer = e.getEntity().getPlayer().getKiller();
         if (killer == null) {return;}
 
-        if (antiLog.containsKey(playerUUID)) {
-            while (antiLog.containsKey(playerUUID)) {
-                antiLog.remove(playerUUID);
-            }
-
-            if (antiLog.containsKey(killer.getUniqueId())) {
-                while (antiLog.containsKey(killer.getUniqueId())) {
-
-                    antiLog.remove(killer.getUniqueId());
-                }
-            }
-        }
+        System.out.println(antiLog);
     }
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e)
     {
-        if (!(e.getDamager() instanceof Player) && !(e.getEntity() instanceof Player)) {
+        if (!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) {
             return;
         }
         for (ProtectedRegion rg : WGBukkit.getRegionManager(e.getEntity().getWorld()).getApplicableRegions(e.getEntity().getLocation())){
@@ -222,8 +215,8 @@ public class combatLogListeners implements Listener {
 
         if (!antiLog.containsKey(attackerUUID) && !antiLog.containsKey(targetUUID))
         {
-            attacker.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
-            target.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(15s)");
+            attacker.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(10s)");
+            target.sendMessage(ChatColor.GRAY + "You are now in combat! " + ChatColor.RED + "(10s)");
 
             createCombatTimer(attacker, target);
         }
@@ -248,7 +241,7 @@ public class combatLogListeners implements Listener {
                     return;
                 }
 
-                if (i[0] >= 20L * 15L) {
+                if (i[0] >= 20L * 10L) {
                     antiLog.remove(attackerUUID);
                     antiLog.remove(targetUUID);
                     attacker.sendMessage(ChatColor.GREEN + "You are no longer in combat!");

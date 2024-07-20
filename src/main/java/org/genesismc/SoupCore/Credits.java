@@ -10,18 +10,18 @@ public class Credits
 
     public static boolean checkCreditBalance(Player player, Integer amount) // Checks if user has enough credits
     {
-        return Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits"))) >= amount;
+        return Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits"))) >= amount;
     }
 
     public static void giveCredits(Player player, int amount)
     {
-        int newBalance = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits"))) + amount;
+        int newBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits"))) + amount;
         Database.SetPlayerData(player, "soupData", "credits", String.valueOf(newBalance));
     }
 
     public static void chargeCredits(Player player, int amount)
     {
-        int currentBalance = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits")));
+        int currentBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits")));
         Database.SetPlayerData(player, "soupData", "credits", String.valueOf(currentBalance-amount));
     }
 

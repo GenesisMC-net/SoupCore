@@ -25,13 +25,13 @@ public class PlayerDeathListener implements Listener
     public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
-        Database.SetPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
+        Database.SetPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
         Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
         Location lastLoc = p.getLocation();
 
         Cooldowns.removeCooldowns(p);
 
-        int killStreak = Integer.parseInt((String) Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
+        int killStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
         if(killStreak >= 20)
         {
             e.setDeathMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
@@ -60,13 +60,19 @@ public class PlayerDeathListener implements Listener
                 }
             }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 7L);
         }
-        Vector v = p.getVelocity();
-        v.setX(0);
-        v.setY(0);
-        v.setZ(0);
-        p.setVelocity(v);
-        e.getEntity().spigot().respawn();
+        new BukkitRunnable()
+        {
+            @Override
+            public void run() {
+                Vector v = p.getVelocity();
+                v.setX(0);
+                v.setY(0);
+                v.setZ(0);
+                p.setVelocity(v);
+                e.getEntity().spigot().respawn();
 
-        spawnCommand.spawnInventory(p);
+                spawnCommand.spawnInventory(p);
+            }
+        }.runTaskLater(SoupCore.plugin, 1L);
     }
 }

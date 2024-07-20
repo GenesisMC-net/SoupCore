@@ -40,8 +40,11 @@ public class Cooldowns {
                     return;
                 }
 
-                p.setLevel(cooldown - Math.round((float) i[0] / 20));
-                p.setExp(1 - ((float) i[0] / (float) (20L * cooldown)));
+                int lvlTimer = cooldown - Math.round((float) i[0] / 20);
+                if (lvlTimer <= p.getLevel() || p.getLevel() == 0) {
+                    p.setLevel(lvlTimer);
+                    p.setExp(1 - ((float) i[0] / (float) (20L * cooldown)));
+                }
 
                 i[0]++;
             }

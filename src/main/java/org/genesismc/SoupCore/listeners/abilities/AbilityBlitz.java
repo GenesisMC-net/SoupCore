@@ -1,6 +1,9 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import org.bukkit.entity.EnderPearl;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.genesismc.SoupCore.Database.Database;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.ChatColor;
@@ -17,9 +20,13 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 public class AbilityBlitz implements Listener {
+
+    public static final HashMap<UUID, Long> pearlCooldown = new HashMap<>();
 
     private ItemStack getBlitzPearl()
     {
@@ -51,7 +58,7 @@ public class AbilityBlitz implements Listener {
             return;
         }
 
-        if (Objects.equals(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")), "Blitz"))
+        if (Objects.equals(ChatColor.stripColor(Database.getPlayerData(killer, "soupData", "kit")), "Blitz"))
         {
             PlayerInventory inv = killer.getInventory();
             if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
@@ -60,7 +67,7 @@ public class AbilityBlitz implements Listener {
                 inv.setItem(1, getBlitzPearl());
             }
             killer.removePotionEffect(PotionEffectType.SPEED);
-            PotionEffect speedThree = new PotionEffect(PotionEffectType.SPEED, 15, 2);
+            PotionEffect speedThree = new PotionEffect(PotionEffectType.SPEED, 20 * 15, 2);
             killer.addPotionEffect(speedThree);
             new BukkitRunnable() {
                 @Override
@@ -72,7 +79,7 @@ public class AbilityBlitz implements Listener {
                         return;
                     }
 
-                    if (!Objects.equals(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kit")), "Blitz"))
+                    if (!Objects.equals(ChatColor.stripColor(Database.getPlayerData(p, "soupData", "kit")), "Blitz"))
                     {
                         this.cancel();
                         return;
@@ -84,6 +91,51 @@ public class AbilityBlitz implements Listener {
 
                 }
             }.runTaskLater(SoupCore.plugin, 20L * 15L);
+        }
+    }
+
+    @EventHandler
+    public void onThrow(ProjectileLaunchEvent e) {
+        if (e.getEntity().getShooter() instanceof Player) {
+            Player p = (Player) e.getEntity().getShooter();
+
+            if (e.getEntity() instanceof EnderPearl && Objects.equals(p.getItemInHand().getItemMeta().getDisplayName(), ChatColor.YELLOW + "Glider")) {
+                boolean cooldownActive = false;
+                if (pearlCooldown.containsKey(p.getUniqueId())) {
+                    if (System.currentTimeMillis() - pearlCooldown.get(p.getUniqueId()) < 5 * 1000) {
+                        cooldownActive = true;
+                        p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (5 - (System.currentTimeMillis() - pearlCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
+                    } else {
+                        pearlCooldown.remove(p.getUniqueId());
+                    }
+                }
+
+                if (cooldownActive) {
+                    e.setCancelled(true);
+                    PlayerInventory inv = p.getInventory();
+                    if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
+                        inv.addItem(getBlitzPearl());
+                    } else {
+                        inv.setItem(1, getBlitzPearl());
+                    }
+                } else {
+                    pearlCooldown.put(p.getUniqueId(), System.currentTimeMillis());
+
+                    Cooldowns.addAbilityCooldown(p, pearlCooldown, 5, ChatColor.YELLOW + "E-Pearl");
+                }
+            }
+        }
+    }
+    @EventHandler
+    public void onPearlDamage(PlayerTeleportEvent e){
+        Player p = e.getPlayer();
+        if(Objects.equals(e.getCause(), PlayerTeleportEvent.TeleportCause.ENDER_PEARL))
+        {
+            if (Objects.equals(ChatColor.stripColor(Database.getPlayerData(p, "soupData", "kit")), "Blitz")) {
+                e.setCancelled(true);
+                p.setNoDamageTicks(2);
+                p.teleport(e.getTo());
+            }
         }
     }
 }

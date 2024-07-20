@@ -62,8 +62,8 @@ public class KitMage {
         mageItemLore.add(ChatColor.GRAY + "players down when they are hit");
         mageItemLore.add("");
         mageItemLore.add(ChatColor.WHITE + "Shift-Right Click: " + ChatColor.RED + "Fire Jump");
-        mageItemLore.add(ChatColor.GRAY + "Launch yourself forwards into the");
-        mageItemLore.add(ChatColor.GRAY + "the direction you are facing");
+        mageItemLore.add(ChatColor.GRAY + "Launch yourself into the air and");
+        mageItemLore.add(ChatColor.GRAY + "set enemies below you on fire!");
         mageItemMeta.setLore(mageItemLore);
 
         mageItemMeta.setDisplayName(ChatColor.BLUE + "Mage Abilities");
