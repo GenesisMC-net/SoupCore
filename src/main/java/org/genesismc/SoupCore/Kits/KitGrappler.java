@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -16,41 +17,37 @@ import java.util.List;
 import java.util.Objects;
 
 public class KitGrappler {
-    public static void giveItems(Player p) {
-        PlayerInventory inv = p.getInventory();
-        inv.clear();
+    public static ItemStack HELMET;
+    public static ItemStack CHESTPLATE;
+    public static ItemStack LEGGINGS;
+    public static ItemStack BOOTS;
+    public static ItemStack SWORD;
+    public static ItemStack ABILITY_ITEM;
 
-        ItemStack helmet = new ItemStack(Material.IRON_HELMET);
-        helmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        helmet.addEnchantment(Enchantment.DURABILITY, 2);
-        inv.setHelmet(helmet);
+    public static void setKitItems() {
+        HELMET = new ItemStack(Material.IRON_HELMET);
+        HELMET.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+        HELMET.addEnchantment(Enchantment.DURABILITY, 2);
 
-        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
-        chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        chestplate.addEnchantment(Enchantment.DURABILITY, 2);
-        inv.setChestplate(chestplate);
+        CHESTPLATE = new ItemStack(Material.IRON_CHESTPLATE);
+        CHESTPLATE.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+        CHESTPLATE.addEnchantment(Enchantment.DURABILITY, 2);
 
-        ItemStack leggings = new ItemStack(Material.CHAINMAIL_LEGGINGS);
-        leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
-        leggings.addEnchantment(Enchantment.DURABILITY, 2);
-        inv.setLeggings(leggings);
+        LEGGINGS = new ItemStack(Material.CHAINMAIL_LEGGINGS);
+        LEGGINGS.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
+        LEGGINGS.addEnchantment(Enchantment.DURABILITY, 2);
 
-        ItemStack boots = new ItemStack(Material.IRON_BOOTS);
-        boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-        boots.addEnchantment(Enchantment.DURABILITY, 2);
-        inv.setBoots(boots);
+        BOOTS = new ItemStack(Material.IRON_BOOTS);
+        BOOTS.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+        BOOTS.addEnchantment(Enchantment.DURABILITY, 2);
 
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
-
-        ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 2);
-        sword.addEnchantment(Enchantment.DURABILITY, 1);
-
-        inv.setItem(0, sword);
+        SWORD = new ItemStack(Material.IRON_SWORD);
+        SWORD.addEnchantment(Enchantment.DAMAGE_ALL, 2);
+        SWORD.addEnchantment(Enchantment.DURABILITY, 1);
 
         // Ability
-        ItemStack fishingRod = new ItemStack(Material.FISHING_ROD, 1);
-        ItemMeta fishingRodMeta = fishingRod.getItemMeta();
+        ABILITY_ITEM = new ItemStack(Material.FISHING_ROD, 1);
+        ItemMeta fishingRodMeta = ABILITY_ITEM.getItemMeta();
 
         fishingRodMeta.spigot().setUnbreakable(true);
         fishingRodMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -66,8 +63,34 @@ public class KitGrappler {
 
         fishingRodMeta.setDisplayName(ChatColor.DARK_GRAY + "Grappling Hook");
 
-        fishingRod.setItemMeta(fishingRodMeta);
-        inv.setItem(1, fishingRod);
+        ABILITY_ITEM.setItemMeta(fishingRodMeta);
+    }
+
+    public static void giveItems(Player p)
+    {
+        PlayerInventory inv = p.getInventory();
+        inv.clear();
+        setKitItems();
+
+        inv.setHelmet(HELMET);
+        inv.setChestplate(CHESTPLATE);
+        inv.setLeggings(LEGGINGS);
+        inv.setBoots(BOOTS);
+
+        inv.setItem(0, SWORD);
+        inv.setItem(1, ABILITY_ITEM);
+        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
+    }
+
+    public static void preview(Inventory inv) {
+        setKitItems();
+        inv.setItem(10, HELMET);
+        inv.setItem(11, CHESTPLATE);
+        inv.setItem(12, LEGGINGS);
+        inv.setItem(13, BOOTS);
+
+        inv.setItem(14, SWORD);
+        inv.setItem(15, ABILITY_ITEM);
     }
 
     public static ItemStack guiAppearance(Player player) {
@@ -90,7 +113,8 @@ public class KitGrappler {
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         } else {
-            lore.add(ChatColor.YELLOW + "Click to activate the kit!");
+            lore.add(ChatColor.YELLOW + "Left-Click" + ChatColor.GRAY + " to activate");
+            lore.add(ChatColor.YELLOW + "Right-Click" + ChatColor.GRAY + " to preview");
         }
         meta.setLore(lore);
         item.setItemMeta(meta);

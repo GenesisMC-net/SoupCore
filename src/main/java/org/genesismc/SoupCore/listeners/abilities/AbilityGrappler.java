@@ -7,7 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.genesismc.SoupCore.SoupCore;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -47,6 +49,13 @@ public class AbilityGrappler implements Listener {
                     p.setVelocity(velocity);
 
                     cancelFallDamage.add(p.getUniqueId());
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            cancelFallDamage.remove(p.getUniqueId());
+                        }
+                    }.runTaskLater(SoupCore.plugin, 20L * 10L);
 
                     grapplingHookCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 

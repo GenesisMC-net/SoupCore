@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -16,27 +17,23 @@ import java.util.List;
 import java.util.Objects;
 
 public class KitTurbo {
-    public static void giveItems(Player p) {
-        PlayerInventory inv = p.getInventory();
-        inv.clear();
+    public static ItemStack HELMET;
+    public static ItemStack CHESTPLATE;
+    public static ItemStack LEGGINGS;
+    public static ItemStack BOOTS;
+    public static ItemStack SWORD;
 
-        ItemStack helmet = new ItemStack(Material.IRON_HELMET);
-        inv.setHelmet(helmet);
+    public static void setKitItems() {
+        HELMET = new ItemStack(Material.IRON_HELMET);
+        CHESTPLATE = new ItemStack(Material.IRON_CHESTPLATE);
+        LEGGINGS = new ItemStack(Material.IRON_LEGGINGS);
+        BOOTS = new ItemStack(Material.IRON_BOOTS);
 
-        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
-        inv.setChestplate(chestplate);
+        SWORD = new ItemStack(Material.IRON_SWORD);
+        SWORD.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        SWORD.addEnchantment(Enchantment.DURABILITY, 3);
 
-        ItemStack leggings = new ItemStack(Material.IRON_LEGGINGS);
-        inv.setLeggings(leggings);
-
-        ItemStack boots = new ItemStack(Material.IRON_BOOTS);
-        inv.setBoots(boots);
-
-        ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-
-        ItemMeta swordMeta = sword.getItemMeta();
+        ItemMeta swordMeta = SWORD.getItemMeta();
 
         ArrayList<String> swordLore = new ArrayList<>();
         swordLore.add("");
@@ -45,11 +42,33 @@ public class KitTurbo {
         swordLore.add(ChatColor.GRAY + "Regeneration III for 8 seconds");
         swordMeta.setLore(swordLore);
 
-        sword.setItemMeta(swordMeta);
+        SWORD.setItemMeta(swordMeta);
+    }
 
-        inv.setItem(0, sword);
+    public static void giveItems(Player p)
+    {
+        PlayerInventory inv = p.getInventory();
+        inv.clear();
+        setKitItems();
+
+        inv.setHelmet(HELMET);
+        inv.setChestplate(CHESTPLATE);
+        inv.setLeggings(LEGGINGS);
+        inv.setBoots(BOOTS);
+
+        inv.setItem(0, SWORD);
 
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
+    }
+
+    public static void preview(Inventory inv) {
+        setKitItems();
+        inv.setItem(10, HELMET);
+        inv.setItem(11, CHESTPLATE);
+        inv.setItem(12, LEGGINGS);
+        inv.setItem(13, BOOTS);
+
+        inv.setItem(14, SWORD);
     }
 
     public static ItemStack guiAppearance(Player player) {
@@ -72,7 +91,8 @@ public class KitTurbo {
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         } else {
-            lore.add(ChatColor.YELLOW + "Click to activate the kit!");
+            lore.add(ChatColor.YELLOW + "Left-Click" + ChatColor.GRAY + " to activate");
+            lore.add(ChatColor.YELLOW + "Right-Click" + ChatColor.GRAY + " to preview");
         }
         meta.setLore(lore);
         item.setItemMeta(meta);

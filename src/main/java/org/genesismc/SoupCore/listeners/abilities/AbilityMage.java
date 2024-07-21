@@ -123,7 +123,7 @@ public class AbilityMage implements Listener {
                             @Override
                             public void run() {
                                 i[0] ++;
-                                if (!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
+                                if (!projectile.getLocation().subtract(new Vector(0, 0.1, 0)).getBlock().getType().equals(Material.AIR)) {
                                     if (!projectile.getNearbyEntities(3,3,3).contains(p)) {
                                         Location targetLocation = projectile.getLocation().clone();
 
@@ -184,7 +184,7 @@ public class AbilityMage implements Listener {
                         return;
                     }
 
-                    p.setVelocity(new Vector(p.getEyeLocation().getDirection().getX() * 15, 1, p.getEyeLocation().getDirection().getZ() * 15));
+                    p.setVelocity(p.getEyeLocation().getDirection().multiply(new Vector(12, 6, 12)));
                     p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1.2F, 0.0F);
 
                     p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 1, 1);

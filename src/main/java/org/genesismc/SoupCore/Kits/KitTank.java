@@ -5,6 +5,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -17,22 +18,27 @@ import java.util.List;
 import java.util.Objects;
 
 public class KitTank {
-    public static void giveItems(Player p) {
-        PlayerInventory inv = p.getInventory();
-        inv.clear();
-        inv.setArmorContents(new ItemStack[]{null, null, null, null});
+    public static ItemStack HELMET;
+    public static ItemStack CHESTPLATE;
+    public static ItemStack LEGGINGS;
+    public static ItemStack BOOTS;
+    public static ItemStack SWORD;
+    public static ItemStack ABILITY_ITEM;
 
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 2));
+    public static void setKitItems() {
+        HELMET = null;
+        CHESTPLATE = null;
+        LEGGINGS = null;
+        BOOTS = null;
 
-        ItemStack sword = new ItemStack(Material.STONE_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 3);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-        inv.setItem(0, sword);
+        SWORD = new ItemStack(Material.STONE_SWORD);
+        SWORD.addEnchantment(Enchantment.DAMAGE_ALL, 3);
+        SWORD.addEnchantment(Enchantment.DURABILITY, 3);
 
         // Ability
-        ItemStack tankAbility = new ItemStack((Material.INK_SACK), 1, (short) (15 - DyeColor.CYAN.getData()));
+        ABILITY_ITEM = new ItemStack((Material.INK_SACK), 1, (short) (15 - DyeColor.CYAN.getData()));
 
-        ItemMeta tankAbilityMeta = tankAbility.getItemMeta();
+        ItemMeta tankAbilityMeta = ABILITY_ITEM.getItemMeta();
 
         ArrayList<String> tankAbilityLore = new ArrayList<>();
         tankAbilityLore.add("");
@@ -43,8 +49,32 @@ public class KitTank {
 
         tankAbilityMeta.setDisplayName(ChatColor.DARK_RED + "Silverfish Army");
 
-        tankAbility.setItemMeta(tankAbilityMeta);
-        inv.setItem(1, tankAbility);
+        ABILITY_ITEM.setItemMeta(tankAbilityMeta);
+    }
+
+    public static void giveItems(Player p)
+    {
+        PlayerInventory inv = p.getInventory();
+        inv.clear();
+        setKitItems();
+
+        inv.setArmorContents(new ItemStack[]{null, null, null, null});
+
+        inv.setItem(0, SWORD);
+        inv.setItem(1, ABILITY_ITEM);
+
+        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 2));
+    }
+
+    public static void preview(Inventory inv) {
+        setKitItems();
+        inv.setItem(10, HELMET);
+        inv.setItem(11, CHESTPLATE);
+        inv.setItem(12, LEGGINGS);
+        inv.setItem(13, BOOTS);
+
+        inv.setItem(14, SWORD);
+        inv.setItem(15, ABILITY_ITEM);
     }
 
     public static ItemStack guiAppearance(Player player) {
@@ -67,7 +97,8 @@ public class KitTank {
             meta.addEnchant(Enchantment.LUCK, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         } else {
-            lore.add(ChatColor.YELLOW + "Click to activate the kit!");
+            lore.add(ChatColor.YELLOW + "Left-Click" + ChatColor.GRAY + " to activate");
+            lore.add(ChatColor.YELLOW + "Right-Click" + ChatColor.GRAY + " to preview");
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
