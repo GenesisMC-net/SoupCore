@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,32 +17,53 @@ import java.util.List;
 import java.util.Objects;
 
 public class KitSwitcher {
-    public static void giveItems(Player p) {
-        PlayerInventory inv = p.getInventory();
-        inv.clear();
+    public static ItemStack HELMET;
+    public static ItemStack CHESTPLATE;
+    public static ItemStack LEGGINGS;
+    public static ItemStack BOOTS;
+    public static ItemStack SWORD;
+    public static ItemStack ABILITY_ITEM;
 
-        ItemStack helmet = new ItemStack(Material.IRON_HELMET);
-        inv.setHelmet(helmet);
+    public static void setKitItems() {
+        HELMET = new ItemStack(Material.IRON_HELMET);
+        CHESTPLATE = new ItemStack(Material.IRON_CHESTPLATE);
+        LEGGINGS = new ItemStack(Material.IRON_LEGGINGS);
+        BOOTS = new ItemStack(Material.IRON_BOOTS);
 
-        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
-        inv.setChestplate(chestplate);
-
-        ItemStack leggings = new ItemStack(Material.IRON_LEGGINGS);
-        inv.setLeggings(leggings);
-
-        ItemStack boots = new ItemStack(Material.IRON_BOOTS);
-        inv.setBoots(boots);
-
-        ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-        inv.setItem(0, sword);
-
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
+        SWORD = new ItemStack(Material.IRON_SWORD);
+        SWORD.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        SWORD.addEnchantment(Enchantment.DURABILITY, 3);
 
         // Ability
-        ItemStack snowball = getAbilityItem(4);
-        inv.setItem(1, snowball);
+        ABILITY_ITEM = getAbilityItem(4);
+    }
+
+    public static void giveItems(Player p)
+    {
+        PlayerInventory inv = p.getInventory();
+        inv.clear();
+        setKitItems();
+
+        inv.setHelmet(HELMET);
+        inv.setChestplate(CHESTPLATE);
+        inv.setLeggings(LEGGINGS);
+        inv.setBoots(BOOTS);
+
+        inv.setItem(0, SWORD);
+        inv.setItem(1, ABILITY_ITEM);
+
+        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
+    }
+
+    public static void preview(Inventory inv) {
+        setKitItems();
+        inv.setItem(10, HELMET);
+        inv.setItem(11, CHESTPLATE);
+        inv.setItem(12, LEGGINGS);
+        inv.setItem(13, BOOTS);
+
+        inv.setItem(14, SWORD);
+        inv.setItem(15, ABILITY_ITEM);
     }
 
     @NotNull
@@ -83,7 +105,8 @@ public class KitSwitcher {
         if (Objects.equals(highlightedKit, "Switcher")) {
             lore.add(ChatColor.GREEN + "Kit Selected");
         } else {
-            lore.add(ChatColor.YELLOW + "Click to activate the kit!");
+            lore.add(ChatColor.YELLOW + "Left-Click" + ChatColor.GRAY + " to activate");
+            lore.add(ChatColor.YELLOW + "Right-Click" + ChatColor.GRAY + " to preview");
         }
         meta.setLore(lore);
         item.setItemMeta(meta);

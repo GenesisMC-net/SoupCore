@@ -1,5 +1,8 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,12 +47,14 @@ public class AbilityTank implements Listener {
                     silverFishCooldown.put(p.getUniqueId(), System.currentTimeMillis());
 
                     Cooldowns.addAbilityCooldown(p, silverFishCooldown, 30, ChatColor.RED + "Silverfish Army");
+                    PotionEffect speedTwo = new PotionEffect(PotionEffectType.SPEED, 20 * 15, 1, false, false);
 
                     List<Entity> silverfishArmy = new ArrayList<>();
                     for (int i = 0; i < 6; i++) {
-                        Entity silverfish = p.getWorld().spawnEntity(p.getLocation(), EntityType.SILVERFISH);
+                        LivingEntity silverfish = (LivingEntity) p.getWorld().spawnEntity(p.getLocation(), EntityType.SILVERFISH);
                         silverfish.setCustomName(ChatColor.RED + p.getName());
                         silverfish.setCustomNameVisible(true);
+                        silverfish.addPotionEffect(speedTwo);
                         silverfishArmy.add(silverfish);
                     }
 
