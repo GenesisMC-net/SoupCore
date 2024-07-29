@@ -13,6 +13,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.*;
 
+import static org.genesismc.SoupCore.listeners.cancelFallDmgListener.cancelFallDamage;
+
 public class PVPRegionListeners implements Listener {
 
     @EventHandler
@@ -39,6 +41,9 @@ public class PVPRegionListeners implements Listener {
                     {
                         p.sendMessage(ChatColor.GRAY + "You are no longer protected");
                         Methods_Kits.giveKit(p, Methods_Kits.getActiveKit(p));
+                        if (!cancelFallDamage.contains(p.getUniqueId())) {
+                            cancelFallDmgListener.addPlayer(p);
+                        }
                     }
                 }
             }

@@ -13,32 +13,29 @@ public class repairCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) { return false; }
 
-        if(sender instanceof Player)
+        Player p = ((Player) sender).getPlayer();
+        if(Credits.checkCreditBalance(p, 50))
         {
-            Player p = ((Player) sender).getPlayer();
-            if(Credits.checkCreditBalance(p, 50))
+            for (ItemStack item : p.getInventory().getContents())
             {
-                for (ItemStack item : p.getInventory().getContents())
+                if ((item != null) && (item.getType() != Material.AIR) && item.getType() != Material.INK_SACK)
                 {
-                    if ((item != null) && (item.getType() != Material.AIR) && item.getType() != Material.INK_SACK)
-                    {
-                        item.setDurability((short) 0);
-                    }
+                    item.setDurability((short) 0);
                 }
-                for (ItemStack item : p.getInventory().getArmorContents())
-                {
-                    if ((item != null) && (item.getType() != Material.AIR))
-                    {
-                        item.setDurability((short) 0);
-                    }
-                }
-                Credits.chargeCredits(p, 50);
-                p.sendMessage(ChatColor.GREEN + "Repaired Kit " + ChatColor.GRAY + "[" + ChatColor.RED + "-50" + ChatColor.GRAY + "]");
-            } else {
-                p.sendMessage(ChatColor.RED + "You require 50 credits to complete this action!");
             }
-
+            for (ItemStack item : p.getInventory().getArmorContents())
+            {
+                if ((item != null) && (item.getType() != Material.AIR))
+                {
+                    item.setDurability((short) 0);
+                }
+            }
+            Credits.chargeCredits(p, 50);
+            p.sendMessage(ChatColor.GREEN + "Repaired Kit " + ChatColor.GRAY + "[" + ChatColor.RED + "-50" + ChatColor.GRAY + "]");
+        } else {
+            p.sendMessage(ChatColor.RED + "You require 50 credits to complete this action!");
         }
         return false;
     }

@@ -51,21 +51,20 @@ public class CoinFlipListeners implements Listener {
         }
 
         if (wagerAmount <= 0) {
-            p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
+            p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
             p.sendMessage(ChatColor.RED + "Your wager is too small! Please try again \n(\"cancel\" to Cancel)");
-            awaitingNewGameResponse.remove(p.getUniqueId());
             return;
         }
 
         int currentCredits = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
         if (currentCredits < wagerAmount) {
-            p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
+            p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
             p.sendMessage(ChatColor.RED + "Insufficient funds! You require " + ChatColor.GREEN + (wagerAmount - currentCredits) + ChatColor.RED + " more credits to complete this action");
             awaitingNewGameResponse.remove(p.getUniqueId());
             return;
         }
 
-        p.playSound(p.getLocation(), Sound.ORB_PICKUP, 10, 0);
+        p.playSound(p.getLocation(), Sound.ORB_PICKUP, 0.5F, 0);
         p.sendMessage(ChatColor.GRAY + "You created a new coin flip for " + ChatColor.GREEN + wagerAmount + ChatColor.GRAY + " credits");
 
         Database.SetPlayerData(p, "soupData", "credits", String.valueOf(currentCredits - wagerAmount));
@@ -103,7 +102,7 @@ public class CoinFlipListeners implements Listener {
             ItemStack clickedGame = inv.getItem(e.getSlot());
             SkullMeta clickedGameMeta = (SkullMeta) clickedGame.getItemMeta();
             if (Objects.equals(clickedGameMeta.getOwner(), p.getName())) {
-                p.playSound(p.getLocation(), Sound.ORB_PICKUP, 10, 0);
+                p.playSound(p.getLocation(), Sound.ORB_PICKUP, 0.75F, 0);
                 int currentWager = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "coinflip", "activeWager")));
                 int currentCredits = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
                 p.sendMessage(ChatColor.GRAY + "You deleted your coin flip game with a wager of " + ChatColor.GREEN + currentWager + ChatColor.GRAY + " credits");
@@ -116,7 +115,7 @@ public class CoinFlipListeners implements Listener {
             Player target = p.getServer().getPlayer(clickedGameMeta.getOwner());
 
             if (!target.isOnline()) {
-                p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
+                p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
 
                 ItemStack offlineItem = new ItemStack(Material.BARRIER, 1);
                 ItemMeta offlineItemMeta = offlineItem.getItemMeta();
@@ -142,8 +141,32 @@ public class CoinFlipListeners implements Listener {
 
             int accepterBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
             int bet = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(target, "coinflip", "activeWager")));
-            if (accepterBalance < bet) {
-                p.playSound(p.getLocation(), Sound.ANVIL_LAND, 10, 1);
+
+            if (bet <= 0) {
+                p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
+
+                ItemStack noFundsItem = new ItemStack(Material.BARRIER, 1);
+                ItemMeta noFundsItemMeta = noFundsItem.getItemMeta();
+
+                noFundsItemMeta.setDisplayName(ChatColor.RED + String.valueOf(ChatColor.BOLD) + "Error");
+
+                ArrayList<String> noFundsItemLore = new ArrayList<>();
+                noFundsItemLore.add(ChatColor.GRAY + "This game no longer exists!");
+                noFundsItemMeta.setLore(noFundsItemLore);
+                noFundsItem.setItemMeta(noFundsItemMeta);
+
+                inv.setItem(e.getSlot(), noFundsItem);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (inv.getViewers().contains(p)) {
+                            inv.setItem(e.getSlot(), null);
+                        }
+                    }
+                }.runTaskLater(SoupCore.plugin, 20L * 2L);
+                return;
+            } else if (accepterBalance < bet) {
+                p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
 
                 ItemStack noFundsItem = new ItemStack(Material.BARRIER, 1);
                 ItemMeta noFundsItemMeta = noFundsItem.getItemMeta();

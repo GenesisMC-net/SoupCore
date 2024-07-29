@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static org.genesismc.SoupCore.listeners.abilities.AbilityBlitz.pearlCooldown;
 import static org.genesismc.SoupCore.listeners.abilities.AbilityFisherman.playerReelCooldown;
 import static org.genesismc.SoupCore.listeners.abilities.AbilityGlider.gliderCooldown;
 import static org.genesismc.SoupCore.listeners.abilities.AbilityGrappler.grapplingHookCooldown;
@@ -18,24 +19,27 @@ import static org.genesismc.SoupCore.listeners.abilities.AbilityMage.waterAbilit
 import static org.genesismc.SoupCore.listeners.abilities.AbilityNinjaStars.ninjaStarCooldown;
 import static org.genesismc.SoupCore.listeners.abilities.AbilitySoldier.iceDomeCooldown;
 import static org.genesismc.SoupCore.listeners.abilities.AbilitySpiderwebs.spiderWebCooldown;
+import static org.genesismc.SoupCore.listeners.abilities.AbilitySwitcher.switcherCooldown;
 import static org.genesismc.SoupCore.listeners.abilities.AbilityTank.silverFishCooldown;
 
 public class Cooldowns {
     private static final HashMap<UUID, BukkitTask> activeCooldowns = new HashMap<>();
-    public static void addAbilityCooldown(Player p, HashMap<UUID, Long> abilityCooldowns, int cooldown, String abilityName) {
+    public static void addAbilityCooldown(Player p, HashMap<UUID, Long> abilityCooldown, int cooldown, String abilityName) {
+        abilityCooldown.put(p.getUniqueId(), System.currentTimeMillis());
         final int[] i = {0};
         BukkitTask newCooldown = new BukkitRunnable() {
             @Override
             public void run() {
                 if (i[0] >= 20L * cooldown) {
-                    if (abilityCooldowns.containsKey(p.getUniqueId())){
-                        abilityCooldowns.remove(p.getUniqueId());
+                    if (abilityCooldown.containsKey(p.getUniqueId())){
+                        abilityCooldown.remove(p.getUniqueId());
                         p.sendMessage(ChatColor.GRAY + "You can now use " + abilityName);
                     }
-                    p.setLevel(0);
-                    p.setExp(0);
-
                     activeCooldowns.remove(p.getUniqueId());
+                    if (!activeCooldowns.containsKey(p.getUniqueId())) { // Multiple Cooldowns
+                        p.setLevel(0);
+                        p.setExp(0);
+                    }
                     this.cancel();
                     return;
                 }
@@ -62,6 +66,7 @@ public class Cooldowns {
                 player.setExp(0);
             }
         }
+        pearlCooldown.remove(playerUUID);
         playerReelCooldown.remove(playerUUID);
         gliderCooldown.remove(playerUUID);
         grapplingHookCooldown.remove(playerUUID);
@@ -71,6 +76,7 @@ public class Cooldowns {
         ninjaStarCooldown.remove(playerUUID);
         iceDomeCooldown.remove(playerUUID);
         spiderWebCooldown.remove(playerUUID);
+        switcherCooldown.remove(playerUUID);
         silverFishCooldown.remove(playerUUID);
     }
 }

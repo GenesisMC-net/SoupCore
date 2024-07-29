@@ -1,6 +1,7 @@
 package org.genesismc.SoupCore.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,6 +44,7 @@ public class kitsListeners implements Listener
             if (e.getCurrentItem().getItemMeta().getDisplayName() == null) { return; }
 
             if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Back")) {
+                player.playSound(player.getLocation(), Sound.WOOD_CLICK, 0.8F, 1F);
                 createKitInventory(player);
             }
         }

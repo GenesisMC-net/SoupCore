@@ -49,69 +49,69 @@ public class AbilityGlider implements Listener {
         if (e.getEntity().getShooter() instanceof Player) {
             Player p = (Player) e.getEntity().getShooter();
 
-            if (e.getEntity() instanceof EnderPearl && Objects.equals(p.getItemInHand().getItemMeta().getDisplayName(), ChatColor.YELLOW + "Glider"))
-            {
-                boolean cooldownActive = false;
-                if (gliderCooldown.containsKey(p.getUniqueId())) {
-                    if (System.currentTimeMillis() - gliderCooldown.get(p.getUniqueId()) < 15 * 1000) {
-                        cooldownActive = true;
-                        p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (15 - (System.currentTimeMillis() - gliderCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
-                    } else {
-                        gliderCooldown.remove(p.getUniqueId());
-                    }
-                }
+            if (!(e.getEntity() instanceof EnderPearl)) { return; }
+            if (!Objects.equals(ChatColor.stripColor(Database.getPlayerData(p, "soupData", "kit")), "Glider")) { return; }
 
-                if (cooldownActive) {
-                    e.setCancelled(true);
-                    PlayerInventory inv = p.getInventory();
-                    if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
-                        inv.addItem(getGliderPearl());
-                    } else {
-                        inv.setItem(1, getGliderPearl());
-                    }
+            boolean cooldownActive = false;
+            if (gliderCooldown.containsKey(p.getUniqueId())) {
+                if (System.currentTimeMillis() - gliderCooldown.get(p.getUniqueId()) < 15 * 1000) {
+                    cooldownActive = true;
+                    p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (15 - (System.currentTimeMillis() - gliderCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
                 } else {
-                    gliderCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-
-                    Cooldowns.addAbilityCooldown(p, gliderCooldown, 15, ChatColor.YELLOW + "Pearl Ride");
-
-                    EnderPearl ender = (EnderPearl) e.getEntity();
-                    ArmorStand as = (ArmorStand) ender.getWorld().spawnEntity(ender.getLocation(), EntityType.ARMOR_STAND);
-                    as.setVisible(false);
-                    as.setGravity(false);
-                    as.setSmall(true);
-                    as.setCanPickupItems(false);
-                    as.setArms(false);
-                    as.setBasePlate(false);
-                    as.setMarker(true);
-                    as.setMaxHealth(1);
-                    as.setHealth(1);
-                    ender.setPassenger(as);
-                    as.setPassenger(p);
+                    gliderCooldown.remove(p.getUniqueId());
                 }
             }
+
+            if (cooldownActive) {
+                e.setCancelled(true);
+                PlayerInventory inv = p.getInventory();
+                if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
+                    inv.addItem(getGliderPearl());
+                } else {
+                    inv.setItem(1, getGliderPearl());
+                }
+                return;
+            }
+            Cooldowns.addAbilityCooldown(p, gliderCooldown, 15, ChatColor.YELLOW + "Pearl Ride");
+
+            EnderPearl ender = (EnderPearl) e.getEntity();
+            ArmorStand as = (ArmorStand) ender.getWorld().spawnEntity(ender.getLocation(), EntityType.ARMOR_STAND);
+            as.setVisible(false);
+            as.setGravity(false);
+            as.setSmall(true);
+            as.setCanPickupItems(false);
+            as.setArms(false);
+            as.setBasePlate(false);
+            as.setMarker(true);
+            as.setMaxHealth(1);
+            as.setHealth(1);
+            ender.setPassenger(as);
+            as.setPassenger(p);
         }
     }
 
     @EventHandler
     public void onPearlLand(ProjectileHitEvent e) {
-        if(e.getEntity() instanceof EnderPearl) {
-            if(e.getEntity().getPassenger() instanceof ArmorStand) {
-                e.getEntity().getPassenger().remove();
-            }
+        if (!(e.getEntity() instanceof EnderPearl)) {
+            return;
+        }
+        if(e.getEntity().getPassenger() instanceof ArmorStand) {
+            e.getEntity().getPassenger().remove();
         }
     }
 
     @EventHandler
     public void onPearlDamage(PlayerTeleportEvent e){
         Player p = e.getPlayer();
-        if(Objects.equals(e.getCause(), PlayerTeleportEvent.TeleportCause.ENDER_PEARL))
-        {
-            if (Objects.equals(ChatColor.stripColor(Database.getPlayerData(p, "soupData", "kit")), "Glider")) {
-                e.setCancelled(true);
-                p.setNoDamageTicks(1);
-                p.teleport(e.getTo());
-            }
+        if(!Objects.equals(e.getCause(), PlayerTeleportEvent.TeleportCause.ENDER_PEARL)) {
+            return;
         }
+        if (!Objects.equals(ChatColor.stripColor(Database.getPlayerData(p, "soupData", "kit")), "Glider")) {
+            return;
+        }
+        e.setCancelled(true);
+        p.setNoDamageTicks(1);
+        p.teleport(e.getTo());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -124,14 +124,14 @@ public class AbilityGlider implements Listener {
 
         Player killer = p.getKiller();
         String activeKit = ChatColor.stripColor(Database.getPlayerData(killer, "soupData", "kit"));
-        if (Objects.equals(activeKit, "Glider"))
-        {
-            PlayerInventory inv = killer.getInventory();
-            if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
-                inv.addItem(getGliderPearl());
-            } else {
-                inv.setItem(1, getGliderPearl());
-            }
+        if (!Objects.equals(activeKit, "Glider")) {
+            return;
+        }
+        PlayerInventory inv = killer.getInventory();
+        if (inv.contains(Material.ENDER_PEARL) || inv.contains((ItemStack) null)) {
+            inv.addItem(getGliderPearl());
+        } else {
+            inv.setItem(1, getGliderPearl());
         }
     }
 }

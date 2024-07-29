@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.Kits;
 
+import org.bukkit.Sound;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.genesismc.SoupCore.Database.Database;
 import org.bukkit.Bukkit;
@@ -181,6 +182,7 @@ public class Methods_Kits {
             return;
         }
 
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.5F, 0);
         Database.SetPlayerData(player, "soupData", "kit", kit);
     }
 }

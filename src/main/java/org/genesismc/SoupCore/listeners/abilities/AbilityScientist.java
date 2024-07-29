@@ -24,47 +24,48 @@ public class AbilityScientist implements Listener {
 
             String activeKit = ChatColor.stripColor(Database.getPlayerData(killer, "soupData", "kit"));
 
-            if (Objects.equals(activeKit, "Scientist")) {
-                PlayerInventory inv = killer.getInventory();
-                ItemStack poisonPot = new ItemStack(Material.POTION, 1, (short) 16388);
+            if (!Objects.equals(activeKit, "Scientist")) {
+                return;
+            }
+            PlayerInventory inv = killer.getInventory();
+            ItemStack poisonPot = new ItemStack(Material.POTION, 1, (short) 16388);
 
-                boolean emptySlot;
-                if (!inv.contains(poisonPot)) {
-                    emptySlot = false;
-                    for (ItemStack item : p.getInventory().getContents()) {
-                        if ((item == null) || item.getType() == Material.AIR) {
-                            inv.addItem(poisonPot);
-                            emptySlot = true;
-                            break;
-                        }
-                    }
-                    if (!emptySlot) {
-                        inv.setItem(2, poisonPot);
-                    }
-
-                }
-
-                int currentDmgPots = 0;
+            boolean emptySlot;
+            if (!inv.contains(poisonPot)) {
                 emptySlot = false;
-                for (ItemStack item : inv.getContents()) {
-                    if (item == null){
-                         emptySlot = true;
-                    } else if (Objects.equals(item.getDurability(), (short) 16428)) {
-                        currentDmgPots += 1;
+                for (ItemStack item : p.getInventory().getContents()) {
+                    if ((item == null) || item.getType() == Material.AIR) {
+                        inv.addItem(poisonPot);
+                        emptySlot = true;
+                        break;
                     }
                 }
-                if (currentDmgPots == 0) {
-                    if (!emptySlot) {
-                        inv.setItem(1, new ItemStack(Material.POTION, 1, (short) 16428));
-                    } else {
-                        inv.addItem(new ItemStack(Material.POTION, 1, (short) 16428));
-                    }
-                } else if (currentDmgPots < 3) {
-                    if (!emptySlot) {
-                        inv.setItem(1, new ItemStack(Material.POTION, currentDmgPots + 1, (short) 16428));
-                    } else {
-                        inv.addItem(new ItemStack(Material.POTION, 1, (short) 16428));
-                    }
+                if (!emptySlot) {
+                    inv.setItem(2, poisonPot);
+                }
+
+            }
+
+            int currentDmgPots = 0;
+            emptySlot = false;
+            for (ItemStack item : inv.getContents()) {
+                if (item == null){
+                    emptySlot = true;
+                } else if (Objects.equals(item.getDurability(), (short) 16428)) {
+                    currentDmgPots += 1;
+                }
+            }
+            if (currentDmgPots == 0) {
+                if (!emptySlot) {
+                    inv.setItem(1, new ItemStack(Material.POTION, 1, (short) 16428));
+                } else {
+                    inv.addItem(new ItemStack(Material.POTION, 1, (short) 16428));
+                }
+            } else if (currentDmgPots < 3) {
+                if (!emptySlot) {
+                    inv.setItem(1, new ItemStack(Material.POTION, currentDmgPots + 1, (short) 16428));
+                } else {
+                    inv.addItem(new ItemStack(Material.POTION, 1, (short) 16428));
                 }
             }
         }

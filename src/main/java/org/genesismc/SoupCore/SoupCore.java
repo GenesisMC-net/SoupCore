@@ -80,7 +80,6 @@ public final class SoupCore extends JavaPlugin {
         getCommand("balance").setExecutor(new balCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
-        getCommand("giveAbilityItem").setExecutor(new giveAbilityItem());
 
         if(Bukkit.getPluginManager().getPlugin("PlaceHolderAPI") != null)
         {
@@ -101,8 +100,5 @@ public final class SoupCore extends JavaPlugin {
         Database.initialiseDatabase();
 
         System.out.println("SoupCore has been enabled!");
-
     }
-
-
 }

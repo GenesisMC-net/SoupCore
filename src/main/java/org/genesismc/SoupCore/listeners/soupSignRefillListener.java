@@ -19,13 +19,12 @@ public class soupSignRefillListener implements Listener
     {
         Inventory inv = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Soup Refill");
         ItemStack soup = new ItemStack(Material.MUSHROOM_SOUP);
-        for(int i=0; i<54; i++)
+        for(int i = 0; i < 54; i++)
         {
             inv.setItem(i, soup);
         }
         return inv;
     }
-
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)

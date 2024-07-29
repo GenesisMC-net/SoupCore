@@ -1,31 +1,19 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
-import jdk.vm.ci.meta.Local;
 import org.bukkit.*;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import org.genesismc.SoupCore.Database.Database;
 import org.genesismc.SoupCore.Kits.KitSwitcher;
-import org.genesismc.SoupCore.SoupCore;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -37,17 +25,15 @@ public class AbilitySwitcher implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e)
     {
-        switcherCooldown.remove(e.getEntity().getPlayer().getUniqueId());
         if(e.getEntity().getPlayer().getKiller() == null){return;}
-        if (Objects.requireNonNull(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit")).contains("Switcher"))
-        {
-            ItemStack snowball = KitSwitcher.getAbilityItem(1);
-            PlayerInventory inv = e.getEntity().getPlayer().getKiller().getInventory();
-            if (inv.contains(Material.SNOW_BALL) || inv.contains((ItemStack) null)) {
-                inv.addItem(snowball);
-            } else {
-                inv.setItem(1, snowball);
-            }
+        if (!Objects.requireNonNull(Database.getPlayerData(e.getEntity().getPlayer().getKiller(), "soupData", "kit")).contains("Switcher")) { return; }
+
+        ItemStack snowball = KitSwitcher.getAbilityItem(1);
+        PlayerInventory inv = e.getEntity().getPlayer().getKiller().getInventory();
+        if (inv.contains(Material.SNOW_BALL) || inv.contains((ItemStack) null)) {
+            inv.addItem(snowball);
+        } else {
+            inv.setItem(1, snowball);
         }
     }
 
@@ -61,10 +47,8 @@ public class AbilitySwitcher implements Listener {
 
         if (!(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "kit")).contains("Switcher"))) { return; }
 
-        boolean cooldownActive = false;
         if (switcherCooldown.containsKey(p.getUniqueId())) {
             if (System.currentTimeMillis() - switcherCooldown.get(p.getUniqueId()) < 10 * 1000) {
-                cooldownActive = true;
                 p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (10 - (System.currentTimeMillis() - switcherCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
 
                 e.setCancelled(true);
@@ -77,17 +61,12 @@ public class AbilitySwitcher implements Listener {
                 } else {
                     inv.setItem(1, snowball);
                 }
-            } else {
-                switcherCooldown.remove(p.getUniqueId());
+                return;
             }
+            switcherCooldown.remove(p.getUniqueId());
         }
-
-        if (!cooldownActive) {
-            switcherCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-            thrownSnowballs.put(e.getEntity().getUniqueId(), p.getUniqueId());
-
-            Cooldowns.addAbilityCooldown(p, switcherCooldown, 10, ChatColor.AQUA + "Switcher Ball");
-        }
+        thrownSnowballs.put(e.getEntity().getUniqueId(), p.getUniqueId());
+        Cooldowns.addAbilityCooldown(p, switcherCooldown, 10, ChatColor.AQUA + "Switcher Ball");
     }
 
     @EventHandler

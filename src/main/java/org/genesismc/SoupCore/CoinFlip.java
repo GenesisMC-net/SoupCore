@@ -211,15 +211,15 @@ public class CoinFlip {
                 if (i[0] >= stopTime) {
                     if (acceptorWins) {
                         coinFlipInvState(acceptorSkull, DyeColor.LIME, inv);
-                        acceptor.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 10, 2);
+                        acceptor.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 0.8F, 2);
                         if (acceptor.getServer().getOnlinePlayers().contains(better)) {
-                            better.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 4, 1);
+                            better.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
                         }
                     } else {
                         coinFlipInvState(betterSkull, DyeColor.RED, inv);
-                        acceptor.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 10, 1);
+                        acceptor.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
                         if (acceptor.getServer().getOnlinePlayers().contains(better)) {
-                            better.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 6, 2);
+                            better.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 0.8F, 2);
                         }
                     }
                     int winnerBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(winner, "soupData", "credits")));
@@ -242,7 +242,7 @@ public class CoinFlip {
                     this.cancel();
                     return;
                 }
-                acceptor.playSound(acceptor.getLocation(), Sound.WOOD_CLICK, 10, 1);
+                acceptor.playSound(acceptor.getLocation(), Sound.WOOD_CLICK, 1F, 1);
                 if (i[0] % 2 == 0) {
                     coinFlipInvState(acceptorSkull, DyeColor.LIME, inv);
                 } else {
@@ -268,7 +268,7 @@ public class CoinFlip {
             return;
         }
 
-        p.playSound(p.getLocation(), Sound.CLICK, 10, 1);
+        p.playSound(p.getLocation(), Sound.CLICK, 1F, 1);
         p.closeInventory();
 
         CoinFlipListeners.awaitingNewGameResponse.add(p.getUniqueId());

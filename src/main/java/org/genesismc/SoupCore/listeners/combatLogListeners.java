@@ -15,7 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
@@ -31,16 +30,6 @@ public class combatLogListeners implements Listener {
     // Lists below prevent ConcurrentModification errors
     private List<BukkitTask> combatTimersToRemove = new ArrayList<>();
     private HashMap<BukkitTask, UUID[]> combatTimersToAdd = new HashMap<>();
-
-    @EventHandler
-    public void onFish(PlayerFishEvent e)
-    {
-        Player p = e.getPlayer();
-        // Put the player in combat if they use a rod
-        if (e.getCaught() instanceof Player) {
-            ((Player) e.getCaught()).getPlayer().damage(0.1, p);
-        }
-    }
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent e) {
@@ -74,7 +63,7 @@ public class combatLogListeners implements Listener {
             {
                 if (Objects.equals(item.getType(), Material.MUSHROOM_SOUP))
                 {
-                    soupDrop = soupDrop + 1;
+                    soupDrop ++;
                 }
             }
         }

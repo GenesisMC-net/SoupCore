@@ -17,17 +17,14 @@ public class soupUseListener implements Listener
         {
             if (p.getHealth() <= 12)
             {
-               p.setHealth((p.getHealth())+8);
+               p.setHealth((p.getHealth()) + 8); // +4 Hearts
                p.getItemInHand().setType(Material.BOWL);
             }
-            else if(12 < p.getHealth() && p.getHealth() < 20)
+            else if(p.getHealth() < 20)
             {
                 p.setHealth(p.getMaxHealth());
                 p.getItemInHand().setType(Material.BOWL);
             }
         }
-
-
-
     }
 }

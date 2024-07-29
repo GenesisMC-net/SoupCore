@@ -12,16 +12,14 @@ public class coinflipCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(!(sender instanceof Player)) { return false; }
 
-        if(sender instanceof Player)
-        {
-            Player p = (Player) sender;
-            if (CoinFlipListeners.awaitingNewGameResponse.contains(p.getUniqueId())) {
-                p.sendMessage(ChatColor.RED + "You are already creating a coin flip game!");
-                return false;
-            }
-            CoinFlip.openGui(p, "main");
+        Player p = (Player) sender;
+        if (CoinFlipListeners.awaitingNewGameResponse.contains(p.getUniqueId())) {
+            p.sendMessage(ChatColor.RED + "You are already creating a coin flip game!");
+            return false;
         }
+        CoinFlip.openGui(p, "main");
         return false;
     }
 }

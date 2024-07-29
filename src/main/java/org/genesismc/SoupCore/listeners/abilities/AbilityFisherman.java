@@ -27,26 +27,20 @@ public class AbilityFisherman implements Listener {
 
         ItemStack itemInHand = p.getItemInHand().clone();
 
-        if (e.getCaught() instanceof Player && Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_GREEN + "Fishing Rod")) {
-            {
-                boolean cooldownActive = false;
-                if (playerReelCooldown.containsKey(p.getUniqueId())) {
-                    if (System.currentTimeMillis() - playerReelCooldown.get(p.getUniqueId()) < 30 * 1000) {
-                        cooldownActive = true;
-                    } else {
-                        playerReelCooldown.remove(p.getUniqueId());
-                    }
-                }
-
-                if (!cooldownActive) {
-
-                    e.getCaught().teleport(p);
-
-                    playerReelCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-
-                    Cooldowns.addAbilityCooldown(p, playerReelCooldown, 30, ChatColor.DARK_GREEN + "Player Reel");
-                }
-            }
+        if (!(e.getCaught() instanceof Player)) {
+            return;
         }
+        if (!Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_GREEN + "Fishing Rod")) {
+            return;
+        }
+        if (playerReelCooldown.containsKey(p.getUniqueId())) {
+            if (System.currentTimeMillis() - playerReelCooldown.get(p.getUniqueId()) < 30 * 1000) {
+                return;
+            }
+            playerReelCooldown.remove(p.getUniqueId());
+        }
+
+        e.getCaught().teleport(p);
+        Cooldowns.addAbilityCooldown(p, playerReelCooldown, 30, ChatColor.DARK_GREEN + "Player Reel");
     }
 }

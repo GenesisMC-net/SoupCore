@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.genesismc.SoupCore.SoupCore;
@@ -56,86 +57,80 @@ public class AbilitySpiderwebs implements Listener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)
     {
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            Player p = e.getPlayer();
+        if (!(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+            return;
+        }
+        Player p = e.getPlayer();
 
-            ItemStack itemInHand = p.getItemInHand().clone();
+        ItemStack itemInHand = p.getItemInHand().clone();
 
-            if (Objects.equals(itemInHand.getType(), Material.WEB) && Objects.equals(itemInHand.getItemMeta().getDisplayName(), (ChatColor.WHITE + "Spider Webs"))) {
-                {
-                    boolean cooldownActive = false;
-                    if (spiderWebCooldown.containsKey(p.getUniqueId())) {
-                        if (System.currentTimeMillis() - spiderWebCooldown.get(p.getUniqueId()) < 30 * 1000) {
-                            cooldownActive = true;
-                            p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (30 - (System.currentTimeMillis() - spiderWebCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
-                        } else {
-                            spiderWebCooldown.remove(p.getUniqueId());
-                        }
-                    }
+        if (!Objects.equals(itemInHand.getItemMeta().getDisplayName(), (ChatColor.WHITE + "Spider Webs"))) {
+            return;
+        }
+        if (spiderWebCooldown.containsKey(p.getUniqueId())) {
+            if (System.currentTimeMillis() - spiderWebCooldown.get(p.getUniqueId()) < 30 * 1000) {
+                p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (30 - (System.currentTimeMillis() - spiderWebCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
+                return;
+            }
+            spiderWebCooldown.remove(p.getUniqueId());
+        }
 
-                    if (!cooldownActive) {
-                        spiderWebCooldown.put(p.getUniqueId(), System.currentTimeMillis());
+        Cooldowns.addAbilityCooldown(p, spiderWebCooldown, 30, ChatColor.RED + "Web Attack");
 
-                        Cooldowns.addAbilityCooldown(p, spiderWebCooldown, 30, ChatColor.RED + "Web Attack");
+        Location playerLocation = p.getLocation();
 
-                        Location playerLocation = p.getLocation();
+        ArmorStand projectile = p.getWorld().spawn(playerLocation, ArmorStand.class);
+        projectile.setVisible(false);
+        projectile.setSmall(true);
+        projectile.setHelmet(new ItemStack(Material.WEB));
 
-                        ArmorStand projectile = p.getWorld().spawn(playerLocation, ArmorStand.class);
+        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2.3, 2));
+        projectile.setVelocity(projVelocity);
 
-                        projectile.setVisible(false);
-                        projectile.setSmall(true);
-                        projectile.setHelmet(new ItemStack(Material.WEB));
+        final int[] i = {0};
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                i[0]++;
+                if (!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
+                    if (!projectile.getNearbyEntities(3, 3, 3).contains(p)) {
+                        Location targetLocation = projectile.getLocation().clone();
 
-                        Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2.3, 2));
-                        projectile.setVelocity(projVelocity);
-
-                        final int[] i = {0};
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                i[0]++;
-                                if (!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
-                                    if (!projectile.getNearbyEntities(3, 3, 3).contains(p)) {
-                                        Location targetLocation = projectile.getLocation().clone();
-
-                                        makeWebGrid(targetLocation);
-                                        projectile.remove();
-                                        this.cancel();
-                                        return;
-                                    }
-                                }
-
-                                for (Entity entity : projectile.getNearbyEntities(0.6, 0.6, 0.6)) {
-                                    if (entity instanceof Player) {
-                                        Player target = (Player) entity;
-                                        if (!target.getUniqueId().equals(p.getUniqueId())) {
-                                            if (Math.round(projectile.getLocation().getY()) - 1.5 <= Math.round(projectile.getLocation().getY())) {
-                                                Location targetLocation = target.getLocation().clone();
-
-                                                makeWebGrid(targetLocation);
-                                                target.damage(0.1, p);
-                                                target.setVelocity(new Vector(0, 0, 0));
-
-                                                projectile.remove();
-                                                this.cancel();
-                                                return;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                projectile.setVelocity(projVelocity);
-
-                                if (i[0] >= 20L * 7L) {
-                                    projectile.remove();
-                                    this.cancel();
-                                }
-                            }
-                        }.runTaskTimer(SoupCore.plugin, 0L, 1L);
+                        makeWebGrid(targetLocation);
+                        projectile.remove();
+                        this.cancel();
+                        return;
                     }
                 }
+
+                for (Entity entity : projectile.getNearbyEntities(0.6, 0.6, 0.6)) {
+                    if (entity instanceof Player) {
+                        Player target = (Player) entity;
+                        if (!target.getUniqueId().equals(p.getUniqueId())) {
+                            if (Math.round(projectile.getLocation().getY()) - 1.5 <= Math.round(projectile.getLocation().getY())) {
+                                Location targetLocation = target.getLocation().clone();
+
+                                makeWebGrid(targetLocation);
+                                target.damage(0.1, p);
+                                target.setVelocity(new Vector(0, 0, 0));
+                                p.playSound(p.getLocation(), Sound.SUCCESSFUL_HIT, 1F, 1F);
+
+                                projectile.remove();
+                                this.cancel();
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                projectile.setVelocity(projVelocity);
+
+                if (i[0] >= 20L * 7L) {
+                    projectile.remove();
+                    this.cancel();
+                }
             }
-        }
+        }.runTaskTimer(SoupCore.plugin, 0L, 1L);
     }
 }
 

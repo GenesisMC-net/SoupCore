@@ -95,12 +95,8 @@ public class bountyCommand implements CommandExecutor {
             }else {
                 player.sendMessage("DEBUG: Invalid arg");
             }
-
-
         }
-
         bountyUsageMessage(sender);
-
         return false;
     }
 }
