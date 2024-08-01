@@ -90,16 +90,7 @@ public class AbilityHulk implements Listener {
         Vector velocity = p.getVelocity().setY(-2);
         p.setVelocity(velocity);
 
-        p.playSound(p.getLocation(), Sound.ANVIL_LAND, 2F, 1F);
-
-        cancelFallDmgListener.cancelFallDamage.add(p.getUniqueId());
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
-            }
-        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
-    }
+        p.playSound(p.getLocation(), Sound.ANVIL_LAND, 2F, 1F);}
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)

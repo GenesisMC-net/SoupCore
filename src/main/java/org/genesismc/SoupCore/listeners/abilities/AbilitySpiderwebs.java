@@ -76,6 +76,7 @@ public class AbilitySpiderwebs implements Listener {
         }
 
         Cooldowns.addAbilityCooldown(p, spiderWebCooldown, 30, ChatColor.RED + "Web Attack");
+        p.playSound(p.getLocation(), Sound.SPIDER_IDLE, 1F, 1F);
 
         Location playerLocation = p.getLocation();
 
