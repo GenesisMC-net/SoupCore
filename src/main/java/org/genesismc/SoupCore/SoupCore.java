@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public final class SoupCore extends JavaPlugin {
@@ -27,6 +28,17 @@ public final class SoupCore extends JavaPlugin {
     public static String getConnectionURL() {
         return connectionURL;
     }
+
+    public static boolean playerInSpawn(Player p) {
+        for (ProtectedRegion rg : WGBukkit.getRegionManager(p.getWorld()).getApplicableRegions(p.getLocation())){
+            if (Objects.equals(rg.getId(), "spawn")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // TODO: transfer Colourise() method from LegacyGenesisCore
 
     @Override
     public void onEnable() {

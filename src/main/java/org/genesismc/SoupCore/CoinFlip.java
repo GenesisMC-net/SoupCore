@@ -230,15 +230,15 @@ public class CoinFlip {
                     int winnerWins = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "wins")));
                     int loserLosses = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "losses")));
 
-                    Database.SetPlayerData(winner, "soupData", "credits", String.valueOf(winnerBalance + (bet * 2)));
+                    Database.setPlayerData(winner, "soupData", "credits", String.valueOf(winnerBalance + (bet * 2)));
 
-                    Database.SetPlayerData(winner, "coinflip", "wins", String.valueOf(winnerWins + 1));
-                    Database.SetPlayerData(loser, "coinflip", "losses", String.valueOf(loserLosses + 1));
+                    Database.setPlayerData(winner, "coinflip", "wins", String.valueOf(winnerWins + 1));
+                    Database.setPlayerData(loser, "coinflip", "losses", String.valueOf(loserLosses + 1));
 
-                    Database.SetPlayerData(winner, "coinflip", "moneyMade", String.valueOf(winnerProfit + bet));
-                    Database.SetPlayerData(loser, "coinflip", "moneyMade", String.valueOf(loserProfit - bet));
+                    Database.setPlayerData(winner, "coinflip", "moneyMade", String.valueOf(winnerProfit + bet));
+                    Database.setPlayerData(loser, "coinflip", "moneyMade", String.valueOf(loserProfit - bet));
 
-                    Database.SetPlayerData(better, "coinflip", "activeWager", "0");
+                    Database.setPlayerData(better, "coinflip", "activeWager", "0");
                     this.cancel();
                     return;
                 }

@@ -183,6 +183,6 @@ public class Methods_Kits {
         }
 
         player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.5F, 0);
-        Database.SetPlayerData(player, "soupData", "kit", kit);
+        Database.setPlayerData(player, "soupData", "kit", kit);
     }
 }

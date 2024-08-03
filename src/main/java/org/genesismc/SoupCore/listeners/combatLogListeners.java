@@ -72,8 +72,8 @@ public class combatLogListeners implements Listener {
             while (antiLog.containsKey(p.getUniqueId())) {
                 antiLog.remove(p.getUniqueId());
             }
-            Database.SetPlayerData(p, "soupData", "deaths", Database.getPlayerData(p, "soupData", "deaths") +1);
-            Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
+            Database.setPlayerData(p, "soupData", "deaths", Database.getPlayerData(p, "soupData", "deaths") +1);
+            Database.setPlayerData(p, "soupData", "killStreak", String.valueOf(0));
 
             for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
                 if (Objects.equals(timer.getValue()[0], p.getUniqueId()) || Objects.equals(timer.getValue()[1], p.getUniqueId())) {
@@ -92,9 +92,9 @@ public class combatLogListeners implements Listener {
                         Player killer = Bukkit.getPlayer(timer.getValue()[0]);
                         antiLog.remove(killer.getUniqueId());
                         Integer kills = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kills"))) + 1;
-                        Database.SetPlayerData(killer, "soupData", "kills", String.valueOf(kills));
+                        Database.setPlayerData(killer, "soupData", "kills", String.valueOf(kills));
                         Integer attackerKillStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "killStreak"))) + 1;
-                        Database.SetPlayerData(killer, "soupData", "killStreak", String.valueOf(attackerKillStreak));
+                        Database.setPlayerData(killer, "soupData", "killStreak", String.valueOf(attackerKillStreak));
 
                         Random rand = new Random();
                         int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.

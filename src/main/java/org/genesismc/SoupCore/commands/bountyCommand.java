@@ -63,7 +63,7 @@ public class bountyCommand implements CommandExecutor {
                 }
 
                 Credits.chargeCredits(player, newBounty);
-                Database.SetPlayerData(target, "soupData", "bounty", String.valueOf((previousBounty + newBounty)));
+                Database.setPlayerData(target, "soupData", "bounty", String.valueOf((previousBounty + newBounty)));
                 assert target != null;
                 Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty on " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + (newBounty) + " credits" + ChatColor.GRAY + ". Total: " + (previousBounty + newBounty));
                 return true;

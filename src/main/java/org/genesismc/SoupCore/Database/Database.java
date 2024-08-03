@@ -202,7 +202,7 @@ public class Database
     }
 
 
-    public static void SetPlayerData(Player p, String table, String column, String data)
+    public static void setPlayerData(Player p, String table, String column, String data)
     {
         if(!isPlayerInDatabase(p, table))
         {

@@ -67,8 +67,8 @@ public class CoinFlipListeners implements Listener {
         p.playSound(p.getLocation(), Sound.ORB_PICKUP, 0.5F, 0);
         p.sendMessage(ChatColor.GRAY + "You created a new coin flip for " + ChatColor.GREEN + wagerAmount + ChatColor.GRAY + " credits");
 
-        Database.SetPlayerData(p, "soupData", "credits", String.valueOf(currentCredits - wagerAmount));
-        Database.SetPlayerData(p, "coinflip", "activeWager", String.valueOf(wagerAmount));
+        Database.setPlayerData(p, "soupData", "credits", String.valueOf(currentCredits - wagerAmount));
+        Database.setPlayerData(p, "coinflip", "activeWager", String.valueOf(wagerAmount));
         awaitingNewGameResponse.remove(p.getUniqueId());
     }
 
@@ -107,8 +107,8 @@ public class CoinFlipListeners implements Listener {
                 int currentCredits = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
                 p.sendMessage(ChatColor.GRAY + "You deleted your coin flip game with a wager of " + ChatColor.GREEN + currentWager + ChatColor.GRAY + " credits");
                 p.closeInventory();
-                Database.SetPlayerData(p, "soupData", "credits", String.valueOf(currentCredits + currentWager));
-                Database.SetPlayerData(p, "coinflip", "activeWager", "0");
+                Database.setPlayerData(p, "soupData", "credits", String.valueOf(currentCredits + currentWager));
+                Database.setPlayerData(p, "coinflip", "activeWager", "0");
                 return;
             }
 
@@ -190,7 +190,7 @@ public class CoinFlipListeners implements Listener {
                 return;
             }
             CoinFlip.playCoinFlip(p, target);
-            Database.SetPlayerData(p, "soupData", "credits", String.valueOf((Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits"))) - bet))); // What a fucking mess LMAO
+            Database.setPlayerData(p, "soupData", "credits", String.valueOf((Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits"))) - bet))); // What a fucking mess LMAO
 
         } else if (e.getSlot() == 35) {
             CoinFlip.newGame(p);

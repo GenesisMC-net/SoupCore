@@ -1,5 +1,7 @@
 package org.genesismc.SoupCore.listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.genesismc.SoupCore.Database.Database;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -8,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.util.Vector;
+import org.genesismc.SoupCore.listeners.abilities.Cooldowns;
 
 import static org.genesismc.SoupCore.commands.spawnCommand.spawnInventory;
 
@@ -28,11 +31,15 @@ public class PlayerJoinLeaveListeners implements Listener
         v.setZ(0);
         player.setVelocity(v);
 
-        Location spawnLoc = player.getWorld().getSpawnLocation();
+        Location spawnLoc = Bukkit.getWorld("world").getSpawnLocation();
 
         player.teleport(spawnLoc);
         player.playSound(player.getLocation(), Sound.LEVEL_UP, 10, 1);
         spawnInventory(player);
     }
 
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent e) {
+        Cooldowns.removeCooldowns(e.getPlayer());
+    }
 }

@@ -9,13 +9,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import static org.genesismc.SoupCore.SoupCore.playerInSpawn;
+
 public class repairCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) { return false; }
-
         Player p = ((Player) sender).getPlayer();
+
+        if (playerInSpawn(p)) {
+            p.sendMessage(ChatColor.RED + "You cannot use this command in spawn");
+            return true;
+        }
+
         if(Credits.checkCreditBalance(p, 50))
         {
             for (ItemStack item : p.getInventory().getContents())

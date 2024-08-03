@@ -25,8 +25,8 @@ public class PlayerDeathListener implements Listener
     public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
-        Database.SetPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
-        Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
+        Database.setPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
+        Database.setPlayerData(p, "soupData", "killStreak", String.valueOf(0));
         Location lastLoc = p.getLocation();
 
         Cooldowns.removeCooldowns(p);

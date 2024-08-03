@@ -43,6 +43,20 @@ public class spawnCommand implements CommandExecutor {
         kitSelectionMeta.setDisplayName(ChatColor.YELLOW + "Kit Selection");
         kitSelection.setItemMeta(kitSelectionMeta);
         inv.setItem(0, kitSelection);
+    public static void teleportToSpawn(Player p) {
+        Vector v = p.getVelocity();
+        v.setX(0);
+        v.setY(0);
+        v.setZ(0);
+        p.setVelocity(v);
+
+        Location spawnLoc = Bukkit.getWorld("world").getSpawnLocation();
+
+        p.teleport(spawnLoc);
+        p.sendMessage(ChatColor.GREEN + "You are now at spawn");
+        p.playSound(p.getLocation(), Sound.LEVEL_UP, 10, 1);
+        Cooldowns.removeCooldowns(p);
+        spawnInventory(p);
     }
 
     @Override
@@ -63,6 +77,9 @@ public class spawnCommand implements CommandExecutor {
             }
             spawnCooldown.remove(p.getUniqueId());
         }
+
+        if (playerInSpawn(p)) { teleportToSpawn(p); return true; }
+
         p.sendMessage(ChatColor.GREEN + "Attempting to teleport to spawn...");
         Location startLocation = p.getLocation().getBlock().getLocation().clone();
         final int[] i = {0};
@@ -82,19 +99,7 @@ public class spawnCommand implements CommandExecutor {
                 }
 
                 if (i[0] >= 5) {
-                    Vector v = p.getVelocity();
-                    v.setX(0);
-                    v.setY(0);
-                    v.setZ(0);
-                    p.setVelocity(v);
-
-                    Location spawnLoc = p.getWorld().getSpawnLocation();
-
-                    p.teleport(spawnLoc);
-                    p.sendMessage(ChatColor.GREEN + "You are now at spawn");
-                    p.playSound(p.getLocation(), Sound.LEVEL_UP, 10, 1);
-                    Cooldowns.removeCooldowns(p);
-                    spawnInventory(p);
+                    teleportToSpawn(p);
 
                     this.cancel();
                     return;

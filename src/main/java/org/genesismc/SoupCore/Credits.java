@@ -15,12 +15,12 @@ public class Credits
     public static void giveCredits(Player player, int amount)
     {
         int newBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits"))) + amount;
-        Database.SetPlayerData(player, "soupData", "credits", String.valueOf(newBalance));
+        Database.setPlayerData(player, "soupData", "credits", String.valueOf(newBalance));
     }
 
     public static void chargeCredits(Player player, int amount)
     {
         int currentBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(player, "soupData", "credits")));
-        Database.SetPlayerData(player, "soupData", "credits", String.valueOf(currentBalance-amount));
+        Database.setPlayerData(player, "soupData", "credits", String.valueOf(currentBalance-amount));
     }
 }
