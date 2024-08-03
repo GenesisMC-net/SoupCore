@@ -29,9 +29,9 @@ public class Database
 
     public static void initialiseDatabase()
     {
-        Collections.addAll(stringColumns, "uuid", "name", "kit");
+        Collections.addAll(stringColumns, "uuid", "name", "kit", "duelsEnabled", "lastPlayed");
         Collections.addAll(integerColumns, "kills", "killStreak", "deaths", "credits", "bounty", "activeWager", "wins", "losses", "moneyMade");
-        Collections.addAll(booleanColumns, "kit1"); // Add in ur kits for permissions
+//        Collections.addAll(booleanColumns, ""); // Add in ur kits for permissions
 
         Connection connection = getConnection();
         try{
@@ -39,14 +39,15 @@ public class Database
             UsersStatement.execute(); // uuid, name
             PreparedStatement soupDataStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupData(uuid varchar(36) NOT NULL PRIMARY KEY, kit varchar(20), kills int, killStreak int, deaths int, credits int, bounty int)");
             soupDataStatement.execute(); // uuid, kit, kills, killStreak, deaths, credits, bounty
-            PreparedStatement soupKitsStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupKitsData(uuid varchar(36) NOT NULL PRIMARY KEY)");
-            soupKitsStatement.execute(); //uuid, kit1, kit2, kit3 etc >>>>> ALL ARE BOOLEANS
-            PreparedStatement coinflipStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS coinflip(uuid varchar(36) NOT NULL PRIMARY KEY, activeWager int, wins int, losses int, moneyMade int)");
-            coinflipStatement.execute(); //uuid, kit1, kit2, kit3 etc
+            PreparedStatement duelDataStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS duelData(uuid varchar(36) NOT NULL PRIMARY KEY, duelsEnabled varchar(5), lastPlayed varchar(36), wins int, losses int)");
+            duelDataStatement.execute(); // uuid, duelsEnabled, lastPlayed, wins, losses
+            PreparedStatement coinFlipStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS coinflip(uuid varchar(36) NOT NULL PRIMARY KEY, activeWager int, wins int, losses int, moneyMade int)");
+            coinFlipStatement.execute(); // uuid, activeWager, wins, losses, moneyMade
 
             connection.close();
         }catch(SQLException e){
             System.out.println("Error creating tables");
+            throw new RuntimeException(e);
         }
     }
 
@@ -244,8 +245,8 @@ public class Database
                 case "soupData":
                     statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', 'Default', 0, 0, 0, 0, 0)");
                     break;
-                case "soupKitsData":
-                    statement = connection.prepareStatement("INSERT INTO soupKitsData(uuid) VALUES('" + p.getUniqueId().toString() + "')");
+                case "duelData":
+                    statement = connection.prepareStatement("INSERT INTO duelData(uuid, duelsEnabled, lastPlayed, wins, losses) VALUES('" + p.getUniqueId() + "', 'true', NULL, 0, 0)");
                     break;
                 case "coinflip":
                     statement = connection.prepareStatement("INSERT INTO coinflip(uuid, activeWager, wins, losses, moneyMade) VALUES('" + p.getUniqueId() + "', 0, 0, 0, 0)");

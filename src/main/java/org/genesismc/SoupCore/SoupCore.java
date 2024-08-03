@@ -1,6 +1,9 @@
 package org.genesismc.SoupCore;
 
+import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.entity.Player;
 import org.genesismc.SoupCore.Database.Database;
 import org.genesismc.SoupCore.commands.*;
 import org.genesismc.SoupCore.listeners.*;
@@ -90,6 +93,7 @@ public final class SoupCore extends JavaPlugin {
         getCommand("coinflip").setExecutor(new coinflipCommand());
         getCommand("pay").setExecutor(new payCommand());
         getCommand("balance").setExecutor(new balCommand());
+        getCommand("duel").setExecutor(new duelCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
 

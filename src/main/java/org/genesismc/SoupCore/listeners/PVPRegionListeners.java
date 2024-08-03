@@ -3,6 +3,8 @@ package org.genesismc.SoupCore.listeners;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.Bukkit;
+import org.genesismc.SoupCore.Duels;
 import org.genesismc.SoupCore.Kits.Methods_Kits;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.ChatColor;
@@ -19,7 +21,6 @@ public class PVPRegionListeners implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e){
-
         if (e.getFrom().getBlock().getLocation() == e.getTo().getBlock().getLocation())
         {
             return;
@@ -43,6 +44,9 @@ public class PVPRegionListeners implements Listener {
                         Methods_Kits.giveKit(p, Methods_Kits.getActiveKit(p));
                         if (!cancelFallDamage.contains(p.getUniqueId())) {
                             cancelFallDmgListener.addPlayer(p);
+                        }
+                        if (Duels.activeDuelRequests.containsKey(p.getUniqueId())) {
+                            Bukkit.dispatchCommand(p, "/duel cancel");
                         }
                     }
                 }

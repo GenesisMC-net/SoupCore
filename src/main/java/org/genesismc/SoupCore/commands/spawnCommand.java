@@ -1,10 +1,7 @@
 package org.genesismc.SoupCore.commands;
 
+import org.bukkit.*;
 import org.genesismc.SoupCore.SoupCore;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,6 +16,7 @@ import org.genesismc.SoupCore.listeners.abilities.Cooldowns;
 
 import java.util.*;
 
+import static org.genesismc.SoupCore.SoupCore.playerInSpawn;
 import static org.genesismc.SoupCore.listeners.combatLogListeners.antiLog;
 
 public class spawnCommand implements CommandExecutor {
@@ -37,12 +35,23 @@ public class spawnCommand implements CommandExecutor {
         inv.clear();
         inv.setArmorContents(new ItemStack[]{null, null, null, null});
 
+        // Kit Selection
         ItemStack kitSelection = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta kitSelectionMeta = kitSelection.getItemMeta();
 
         kitSelectionMeta.setDisplayName(ChatColor.YELLOW + "Kit Selection");
         kitSelection.setItemMeta(kitSelectionMeta);
         inv.setItem(0, kitSelection);
+
+        // Duels Warp
+        ItemStack duelWarp = new ItemStack(Material.BLAZE_ROD);
+        ItemMeta duelWarpMeta = duelWarp.getItemMeta();
+
+        duelWarpMeta.setDisplayName(ChatColor.GOLD + "Duels");
+        duelWarp.setItemMeta(duelWarpMeta);
+        inv.setItem(8, duelWarp);
+    }
+
     public static void teleportToSpawn(Player p) {
         Vector v = p.getVelocity();
         v.setX(0);
@@ -86,7 +95,6 @@ public class spawnCommand implements CommandExecutor {
         new BukkitRunnable() {
             @Override
             public void run() {
-                System.out.println(startLocation.toString() + " | " + p.getLocation().getBlock().getLocation().toString());
                 if (!startLocation.equals(p.getLocation().getBlock().getLocation())) {
                     p.sendMessage(ChatColor.RED + "Teleport Failed");
                     this.cancel();

@@ -14,11 +14,14 @@ public class SpawnHotbarListeners implements Listener {
     public void onClick(PlayerInteractEvent e)
     {
         Player p = e.getPlayer();
+        String itemName = ChatColor.stripColor(p.getItemInHand().getItemMeta().getDisplayName());
         if (p.getItemInHand() == null || !p.getItemInHand().hasItemMeta()) {return;}
-        if (Objects.equals(p.getItemInHand().getItemMeta().getDisplayName(), ChatColor.YELLOW + "Kit Selection"))
+        if (Objects.equals(itemName, "Kit Selection"))
         {
             e.setCancelled(true);
             Methods_Kits.createKitInventory(p);
+        } else if (Objects.equals(itemName, "Duels")) {
+
         }
     }
 }

@@ -21,11 +21,15 @@ commands:
     aliases: ['cf']
   pay:
     description: Pay another player credits
-    usage: "&c /pay <player> <amount>"
+    usage: "§c /pay <player> <amount>"
   balance:
     description: Check your credit balance
-    usage: "&c/bal [player]"
+    usage: "§c/bal [player]"
     aliases: ['bal', 'creds', 'credits']
+  duel:
+    description: Start a duel with another player
+    usage: "§c/duel help §7to begin"
+    aliases: ['1v1']
   adminGiveCredits:
     description: ADMIN COMMAND
     permission: SoupCore.admin
