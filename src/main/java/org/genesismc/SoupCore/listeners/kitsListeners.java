@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.genesismc.SoupCore.Kits.*;
 
+import java.util.Objects;
+
 import static org.genesismc.SoupCore.Kits.Methods_Kits.createKitInventory;
 import static org.genesismc.SoupCore.Kits.Methods_Kits.previewInventory;
 
@@ -20,7 +22,8 @@ public class kitsListeners implements Listener
     public void onClick(InventoryClickEvent e)
     {
         Player player = (Player) e.getWhoClicked();
-        if (e.getView().getTitle().contains("Kit Selection")) {
+        String title = ChatColor.stripColor(e.getView().getTitle());
+        if (Objects.equals(title, "Kit Selection")) {
             e.setCancelled(true);
 
             if(e.getCurrentItem()==null){return;}

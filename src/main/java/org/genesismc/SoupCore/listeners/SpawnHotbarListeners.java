@@ -14,8 +14,8 @@ public class SpawnHotbarListeners implements Listener {
     public void onClick(PlayerInteractEvent e)
     {
         Player p = e.getPlayer();
-        String itemName = ChatColor.stripColor(p.getItemInHand().getItemMeta().getDisplayName());
         if (p.getItemInHand() == null || !p.getItemInHand().hasItemMeta()) {return;}
+        String itemName = ChatColor.stripColor(p.getItemInHand().getItemMeta().getDisplayName());
         if (Objects.equals(itemName, "Kit Selection"))
         {
             e.setCancelled(true);

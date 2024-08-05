@@ -30,6 +30,10 @@ commands:
     description: Start a duel with another player
     usage: "§c/duel help §7to begin"
     aliases: ['1v1']
+  soupreload:
+    description: Reload the SoupCore config
+    permission: SoupCore.admin
+    permission-message: Unknown command. Type "/help" for help.
   adminGiveCredits:
     description: ADMIN COMMAND
     permission: SoupCore.admin

@@ -14,6 +14,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +45,13 @@ public final class SoupCore extends JavaPlugin {
 
     // TODO: transfer Colourise() method from LegacyGenesisCore
 
+    public static void loadConfigs() {
+        File file = new File(plugin.getDataFolder(), "config.yml");
+        if (!file.exists()) plugin.saveDefaultConfig();
+
+        plugin.saveConfig();
+    }
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -66,6 +75,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CoinFlipListeners(), this);
         getServer().getPluginManager().registerEvents(new cancelFallDmgListener(), this);
         getServer().getPluginManager().registerEvents(new scoreboardListeners(), this);
+        getServer().getPluginManager().registerEvents(new duelListeners(), this);
 
         // VVV Abilities VVV
         getServer().getPluginManager().registerEvents(new AbilityPoisonSword(), this);
@@ -96,11 +106,14 @@ public final class SoupCore extends JavaPlugin {
         getCommand("duel").setExecutor(new duelCommand());
         // VVV ADMIN COMMANDS VVV
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
+        getCommand("soupreload").setExecutor(new reloadCommand());
 
         if(Bukkit.getPluginManager().getPlugin("PlaceHolderAPI") != null)
         {
             new SpigotExpansion().register();
         }
+
+        loadConfigs();
 
         scoreboardListeners.enableHeartsBelowName();
 

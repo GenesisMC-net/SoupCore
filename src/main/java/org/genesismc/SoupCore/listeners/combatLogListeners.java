@@ -172,6 +172,8 @@ public class combatLogListeners implements Listener {
         UUID attackerUUID = attacker.getUniqueId();
         UUID targetUUID = target.getUniqueId();
 
+        if (!attacker.getWorld().getName().equals("world")) return;
+
         if (antiLog.containsKey(attackerUUID) && antiLog.containsKey(targetUUID))
         {
             for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {

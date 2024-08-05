@@ -17,8 +17,8 @@ import static org.genesismc.SoupCore.SoupCore.playerInSpawn;
 public class duelCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) { return true; }
-        if (args.length < 1) { return false; }
+        if (!(sender instanceof Player)) return true;
+        if (args.length < 1) return false;
 
         Player p = (Player) sender;
         Player target;
@@ -42,7 +42,7 @@ public class duelCommand implements CommandExecutor {
                 duelStats(p, target);
                 break;
             case "accept":
-                if (!playerInSpawn(p)) {
+                if (Objects.equals(p.getWorld().getName(), "world") && !playerInSpawn(p)) {
                     p.sendMessage(ChatColor.RED + "You must be in spawn to use this command");
                     return true;
                 }
@@ -67,15 +67,17 @@ public class duelCommand implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + "You do not have any duel requests from " + args[1]);
                     return true;
                 }
+                if (!acceptedPlayer.isOnline()) {
+                    p.sendMessage(ChatColor.RED + "That player has left the game, duel cancelled.");
+                    activeDuelRequests.values().remove(p.getUniqueId());
+                }
 
                 activeDuelRequests.values().remove(p.getUniqueId());
                 p.sendMessage(ChatColor.GRAY + "Your duel request from " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', acceptedPlayer.getPlayer().getDisplayName()) + ChatColor.GRAY + " has been" + ChatColor.GREEN + " accepted");
 
-                if (Bukkit.getOnlinePlayers().contains(acceptedPlayer.getPlayer())) {
-                    acceptedPlayer.getPlayer().sendMessage(ChatColor.GRAY + "Your duel request to " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', p.getDisplayName()) + ChatColor.GRAY + " has been" + ChatColor.GREEN + " accepted");
-                }
+                acceptedPlayer.getPlayer().sendMessage(ChatColor.GRAY + "Your duel request to " + ChatColor.WHITE + ChatColor.translateAlternateColorCodes('&', p.getDisplayName()) + ChatColor.GRAY + " has been" + ChatColor.GREEN + " accepted");
 
-                duel(acceptedPlayer.getPlayer(), p);
+                initialiseDuel(acceptedPlayer.getPlayer(), p);
                 break;
             case "deny":
                 if (!activeDuelRequests.containsValue(p.getUniqueId())){
@@ -89,7 +91,7 @@ public class duelCommand implements CommandExecutor {
                 OfflinePlayer deniedPlayer = Bukkit.getOfflinePlayer(args[1]);
                 if (deniedPlayer == null) {
                     p.sendMessage(ChatColor.RED + "Please enter a valid player name");
-                    return false;
+                    return true;
                 }
                 if (activeDuelRequests.get(deniedPlayer.getPlayer().getUniqueId()) != p.getUniqueId()) {
                     p.sendMessage(ChatColor.RED + "You do not have any duel requests from " + args[1]);
@@ -116,7 +118,7 @@ public class duelCommand implements CommandExecutor {
                 }
                 break;
             default:
-                if (!playerInSpawn(p)) {
+                if (Objects.equals(p.getWorld().getName(), "world") && !playerInSpawn(p)) {
                     p.sendMessage(ChatColor.RED + "You must be in spawn to use this command");
                     return true;
                 }

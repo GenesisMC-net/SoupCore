@@ -17,9 +17,9 @@ public class soupSignRefillListener implements Listener
 
     private Inventory createSoupInventory()
     {
-        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Soup Refill");
+        Inventory inv = Bukkit.createInventory(null, 27, ChatColor.DARK_GREEN + "Soup Refill");
         ItemStack soup = new ItemStack(Material.MUSHROOM_SOUP);
-        for(int i = 0; i < 54; i++)
+        for(int i = 0; i < 27; i++)
         {
             inv.setItem(i, soup);
         }
@@ -34,9 +34,8 @@ public class soupSignRefillListener implements Listener
         {
             if(e.getClickedBlock().getType() == Material.WALL_SIGN)
             {
-
                 Sign sign = (Sign) e.getClickedBlock().getState();
-                if(sign.getLine(1).equals("Soup Refill"))
+                if(sign.getLine(1).contains("Soup Refill"))
                 {
                     p.openInventory(createSoupInventory());
                 }

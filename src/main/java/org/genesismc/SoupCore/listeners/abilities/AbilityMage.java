@@ -85,9 +85,7 @@ public class AbilityMage implements Listener {
 
             Cooldowns.addAbilityCooldown(p, waterAbilityCooldown, 10, ChatColor.BLUE + "Water Attack");
 
-            Location playerLocation = p.getLocation();
-
-            ArmorStand projectile = p.getWorld().spawn(playerLocation, ArmorStand.class);
+            ArmorStand projectile = p.getWorld().spawn(p.getLocation().clone(), ArmorStand.class);
             projectile.setVisible(false);
             projectile.setSmall(true);
             projectile.setHelmet(new ItemStack(Material.PACKED_ICE));
@@ -157,7 +155,7 @@ public class AbilityMage implements Listener {
             return;
         }
 
-        p.setVelocity(p.getEyeLocation().getDirection().multiply(new Vector(12, 6, 12)));
+        p.setVelocity(p.getEyeLocation().getDirection().multiply(new Vector(12, 1, 12).add(new Vector(0, 7, 0))));
         p.playSound(p.getLocation(), Sound.WITHER_SHOOT, 1.2F, 0.0F);
 
         p.getWorld().playEffect(p.getLocation(), Effect.FLAME, 1, 1);

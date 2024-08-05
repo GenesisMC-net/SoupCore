@@ -16,6 +16,7 @@ import org.genesismc.SoupCore.listeners.abilities.Cooldowns;
 
 import java.util.*;
 
+import static org.genesismc.SoupCore.Duels.activeDuels;
 import static org.genesismc.SoupCore.SoupCore.playerInSpawn;
 import static org.genesismc.SoupCore.listeners.combatLogListeners.antiLog;
 
@@ -77,6 +78,11 @@ public class spawnCommand implements CommandExecutor {
         if (antiLog.containsKey(p.getUniqueId()))
         {
             p.sendMessage(ChatColor.RED + "You cannot use this command while in combat!");
+            return true;
+        }
+        if (activeDuels.containsKey(p.getUniqueId()) || activeDuels.containsValue(p.getUniqueId()))
+        {
+            p.sendMessage(ChatColor.RED + "You cannot use this command while during a duel!");
             return true;
         }
         if (spawnCooldown.containsKey(p.getUniqueId())) {

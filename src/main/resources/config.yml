@@ -1,0 +1,77 @@
+duel-kits: # Kits from main soup enabled in duels
+  - Default
+
+# Duel Map Configuration
+duel-maps:
+  beach_flat:
+    enabled: true
+    world-name: beach_flat
+    pos1: "47, 36, 76, 180" # x, y, z, yaw
+    pos2: "47, 36, 24, 0"
+    centre: ""
+  beach_terrain:
+    enabled: true
+    world-name: beach_terrain
+    pos1: "71, 77, -43, 180"
+    pos2: "71, 78, -95, 0"
+    centre: ""
+  castle_flat:
+    enabled: true
+    world-name: castle_flat
+    pos1: "-77, 59, 101, 180"
+    pos2: "-77, 59, 49, 0"
+    centre: ""
+  castle_terrain:
+    enabled: true
+    world-name: castle_terrain
+    pos1: "83, 38, 109, 180"
+    pos2: "83, 40, 57, 0"
+    centre: ""
+  forest_flat:
+    enabled: true
+    world-name: forest_flat
+    pos1: "86, 50, 111, 180"
+    pos2: "86, 50, 59, 0"
+    centre: ""
+  forest_terrain:
+    enabled: true
+    world-name: forest_terrain
+    pos1: "81, 45, -55, 180"
+    pos2: "81, 45, -107, 0"
+    centre: ""
+  rocky_flat:
+    enabled: true
+    world-name: rocky_flat
+    pos1: "-81, 20, -55, 180"
+    pos2: "-81, 20, -107, 0"
+    centre: ""
+  rocky_terrain:
+    enabled: true
+    world-name: rocky_terrain
+    pos1: "90, 40, -55, 180"
+    pos2: "90, 42, -107, 0"
+    centre: ""
+  temple_flat:
+    enabled: true
+    world-name: temple_flat
+    pos1: "5, 48, -49, 180"
+    pos2: "5, 58, -101, 0"
+    centre: ""
+  temple_terrain:
+    enabled: true
+    world-name: temple_terrain
+    pos1: "72, 62, 121, 180"
+    pos2: "72, 60, 69, 0"
+    centre: ""
+  underwater_flat:
+    enabled: true
+    world-name: underwater_flat
+    pos1: "-92, 42, 30, 90"
+    pos2: "-144, 42, 30, -90"
+    centre: ""
+  underwater_terrain:
+    enabled: true
+    world-name: underwater_terrain
+    pos1: "119, 50, -88, 90"
+    pos2: "67, 50, -88, -90"
+    centre: ""
