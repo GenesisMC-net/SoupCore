@@ -15,7 +15,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +48,7 @@ public final class SoupCore extends JavaPlugin {
         File file = new File(plugin.getDataFolder(), "config.yml");
         if (!file.exists()) plugin.saveDefaultConfig();
 
-        plugin.saveConfig();
+        plugin.reloadConfig();
     }
 
     @Override

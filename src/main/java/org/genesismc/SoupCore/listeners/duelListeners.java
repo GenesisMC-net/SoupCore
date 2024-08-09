@@ -57,7 +57,7 @@ public class duelListeners implements Listener {
         Methods_Kits.giveSoup(p);
         Methods_Kits.giveSoup(otherPlayer);
 
-        choosingKit.remove(p.getUniqueId());
+        awaitingStart.remove(p.getUniqueId());
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -69,7 +69,7 @@ public class duelListeners implements Listener {
 
     @EventHandler
     public void onInvClose(InventoryCloseEvent e) {
-        if (!choosingKit.contains(e.getPlayer().getUniqueId())) return;
+        if (!awaitingStart.containsKey(e.getPlayer().getUniqueId())) return;
         if (!Objects.equals(e.getInventory().getName(), "Duel Kit Selection")) return;
 
         new BukkitRunnable() {
@@ -100,7 +100,7 @@ public class duelListeners implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        if (activeDuels.containsKey(p.getUniqueId()) || activeDuels.containsValue(p.getUniqueId())) {
+        if (awaitingStart.containsKey(p.getUniqueId()) || awaitingStart.containsValue(p.getUniqueId())) {
             e.setTo(e.getFrom());
         }
     }

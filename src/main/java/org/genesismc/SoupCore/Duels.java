@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.genesismc.SoupCore.Database.Database;
@@ -25,11 +24,11 @@ public class Duels {
 
     public static HashMap<UUID, UUID> activeDuelRequests = new HashMap<>();
     public static HashMap<UUID, UUID> activeDuels = new HashMap<>();
-    public static ArrayList<UUID> choosingKit = new ArrayList<>();
+    public static HashMap<UUID, UUID> awaitingStart = new HashMap<>();
     public static HashMap<UUID, UUID> awaitingRematch = new HashMap<>();
 
     // Formatting
-    private static final String dash = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "-----";
+    private static final String dash = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "-----" + ChatColor.RESET;
 
     public static void duelHelpMsg(Player player) {
         HashMap<String, String> commandUsage = new HashMap<String, String>() {{
@@ -163,21 +162,21 @@ public class Duels {
 
         String[] co_ords = config.getString(path + "pos1").split(", ");
         Location pos1 = new Location(world,
-                Double.parseDouble(co_ords[0] + 0.5),
+                Double.parseDouble(co_ords[0]) + 0.5,
                 Double.parseDouble(co_ords[1]),
-                Double.parseDouble(co_ords[2] + 0.5),
+                Double.parseDouble(co_ords[2]) + 0.5,
                 Float.parseFloat(co_ords[3]),
                 0);
         co_ords = config.getString(path + "pos2").split(", ");
         Location pos2 = new Location(world,
-                Double.parseDouble(co_ords[0] + 0.5),
+                Double.parseDouble(co_ords[0]) + 0.5,
                 Double.parseDouble(co_ords[1]),
-                Double.parseDouble(co_ords[2] + 0.5),
+                Double.parseDouble(co_ords[2]) + 0.5,
                 Float.parseFloat(co_ords[3]),
                 0);
 
-        requester.teleport(pos1.getBlock().getLocation());
-        acceptor.teleport(pos2.getBlock().getLocation());
+        requester.teleport(pos1);
+        acceptor.teleport(pos2);
 
         requester.getInventory().clear();
         acceptor.getInventory().clear();
@@ -188,12 +187,8 @@ public class Duels {
         requester.setWalkSpeed(0.0F);
         acceptor.setWalkSpeed(0.0F);
 
-        PotionEffect noJump = new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 255, false, false);
-        requester.addPotionEffect(noJump);
-        acceptor.addPotionEffect(noJump);
-
         chooseDuelKit(requester);
-        choosingKit.add(requester.getUniqueId());
+        awaitingStart.put(requester.getUniqueId(), acceptor.getUniqueId());
         acceptor.sendMessage("");
         acceptor.sendMessage(dash + ChatColor.YELLOW + " Duel " + dash);
         acceptor.sendMessage(ChatColor.YELLOW + "Waiting for " + ChatColor.translateAlternateColorCodes('&', requester.getDisplayName()) + ChatColor.GRAY + " to choose the kit");

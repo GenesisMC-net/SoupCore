@@ -16,7 +16,7 @@ import org.genesismc.SoupCore.listeners.abilities.Cooldowns;
 
 import java.util.*;
 
-import static org.genesismc.SoupCore.Duels.activeDuels;
+import static org.genesismc.SoupCore.Duels.*;
 import static org.genesismc.SoupCore.SoupCore.playerInSpawn;
 import static org.genesismc.SoupCore.listeners.combatLogListeners.antiLog;
 
@@ -64,9 +64,15 @@ public class spawnCommand implements CommandExecutor {
 
         p.teleport(spawnLoc);
         p.sendMessage(ChatColor.GREEN + "You are now at spawn");
-        p.playSound(p.getLocation(), Sound.LEVEL_UP, 10, 1);
         Cooldowns.removeCooldowns(p);
         spawnInventory(p);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                p.playSound(p.getLocation(), Sound.LEVEL_UP, 10, 1);
+            }
+        }.runTaskLater(SoupCore.plugin, 1L);
     }
 
     @Override
@@ -94,6 +100,12 @@ public class spawnCommand implements CommandExecutor {
         }
 
         if (playerInSpawn(p)) { teleportToSpawn(p); return true; }
+        if (awaitingRematch.containsKey(p.getUniqueId()) || awaitingRematch.containsValue(p.getUniqueId())) {
+            showAllPlayers(p);
+            teleportToSpawn(p);
+            awaitingRematch.remove(p.getUniqueId());
+            return true;
+        }
 
         p.sendMessage(ChatColor.GREEN + "Attempting to teleport to spawn...");
         Location startLocation = p.getLocation().getBlock().getLocation().clone();
@@ -114,7 +126,6 @@ public class spawnCommand implements CommandExecutor {
 
                 if (i[0] >= 5) {
                     teleportToSpawn(p);
-
                     this.cancel();
                     return;
                 }

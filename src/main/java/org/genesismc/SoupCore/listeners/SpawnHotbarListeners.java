@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.listeners;
 
+import org.genesismc.SoupCore.Duels;
 import org.genesismc.SoupCore.Kits.Methods_Kits;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class SpawnHotbarListeners implements Listener {
             e.setCancelled(true);
             Methods_Kits.createKitInventory(p);
         } else if (Objects.equals(itemName, "Duels")) {
-
+            Duels.duelHelpMsg(p);
         }
     }
 }

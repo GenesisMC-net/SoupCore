@@ -164,7 +164,7 @@ public class combatLogListeners implements Listener {
             return;
         }
         for (ProtectedRegion rg : WGBukkit.getRegionManager(e.getEntity().getWorld()).getApplicableRegions(e.getEntity().getLocation())){
-            if (Objects.equals(rg.getId(), "spawn")) {return;} // Return if they are in spawn
+            if (Objects.equals(rg.getId(), "spawn")) { return; } // Return if they are in spawn
         }
 
         Player attacker = (Player) e.getDamager();
