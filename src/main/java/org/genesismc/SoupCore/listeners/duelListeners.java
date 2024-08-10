@@ -1,7 +1,6 @@
 package org.genesismc.SoupCore.listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +15,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.genesismc.SoupCore.Database.Database;
 import org.genesismc.SoupCore.Kits.*;
 import org.genesismc.SoupCore.SoupCore;
 
@@ -26,28 +28,79 @@ import static org.genesismc.SoupCore.Duels.*;
 import static org.genesismc.SoupCore.commands.spawnCommand.teleportToSpawn;
 
 public class duelListeners implements Listener {
-    @EventHandler
-    public void onInvClick(InventoryClickEvent e) {
-        Inventory inv = e.getClickedInventory();
-        if (inv == null) return;
-        if (inv.getTitle() == null) return;
-        if (inv.getType() == InventoryType.PLAYER) return;
-        if (!Objects.equals(inv.getTitle(), "Duel Kit Selection")) {
+
+    private static void invalidSelection(Player p, Inventory inv, ItemStack original, int slot, String title, String text) {
+        p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
+
+        ItemStack offlineItem = new ItemStack(Material.BARRIER, 1);
+        ItemMeta offlineItemMeta = offlineItem.getItemMeta();
+
+        offlineItemMeta.setDisplayName(ChatColor.RED + String.valueOf(ChatColor.BOLD) + title);
+
+        ArrayList<String> offlineItemLore = new ArrayList<>();
+        offlineItemLore.add(ChatColor.GRAY + text);
+        offlineItemMeta.setLore(offlineItemLore);
+        offlineItem.setItemMeta(offlineItemMeta);
+
+        inv.setItem(slot, offlineItem);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (inv.getViewers().contains(p)) {
+                    inv.setItem(slot, original);
+                }
+            }
+        }.runTaskLater(SoupCore.plugin, 20L * 2L);
+    }
+
+    private static void duelSelection(Inventory inv, Player p, ItemStack item, int slot) {
+        if (item.getItemMeta() == null) return;
+        if (item.getItemMeta().getDisplayName() == null) return;
+
+        String action = item.getItemMeta().getDisplayName();
+
+        if (item.getType() == Material.PAPER) {
+            String[] pageInfo = action.split(" ")[1].split("/"); // { current, max }
+            int currentPage = Integer.parseInt(pageInfo[0].replace("(", ""));
+            int maxPages = Integer.parseInt(pageInfo[0].replace(")", ""));
+            if (currentPage == maxPages) return;
+
+            if (action.contains("Next Page")) {
+                duelGui(p, currentPage + 1);
+            } else if (action.contains("Previous Page")) {
+                if (currentPage == 1) return;
+                duelGui(p, currentPage - 1);
+            }
             return;
         }
-        e.setCancelled(true);
 
-        Player p = (Player) e.getWhoClicked();
-        if (!activeDuels.containsKey(p.getUniqueId())) return;
+        if (item.getType() == Material.SKULL_ITEM) {
+            SkullMeta targetMeta = (SkullMeta) item.getItemMeta();
 
-        ItemStack clicked = inv.getItem(e.getSlot());
-        if (clicked == null) return;
-        if (clicked.getItemMeta()==null) return;
-        if (clicked.getItemMeta().getDisplayName() == null) return;
-        String selectedKit = e.getCurrentItem().getItemMeta().getDisplayName();
+            OfflinePlayer target = Bukkit.getOfflinePlayer(targetMeta.getOwner());
+            if (target == null || !target.isOnline()) {
+                invalidSelection(p, inv, item, slot, "Player is offline", "This player is no longer online");
+                return;
+            }
+
+            String duelsEnabled = Database.getPlayerData(target.getPlayer(), "duelData", "duelsEnabled");
+            if (Objects.equals(duelsEnabled, "false")) {
+                invalidSelection(p, inv, item, slot, "Could not send request", "This player is no longer accepting duel requests");
+                return;
+            }
+
+            p.closeInventory();
+            Bukkit.dispatchCommand(p, "duel " + target.getName());
+        }
+    }
+
+    private static void kitSelection(Inventory inv, Player p, ItemStack item) {
+        if (item.getItemMeta() == null) return;
+        if (item.getItemMeta().getDisplayName() == null) return;
+
+        String selectedKit = item.getItemMeta().getDisplayName();
 
         Player otherPlayer = Bukkit.getPlayer(activeDuels.get(p.getUniqueId()));
-
         switch (ChatColor.stripColor(selectedKit)) {
             case "Default":
                 KitDefault.giveItems(p);
@@ -68,9 +121,31 @@ public class duelListeners implements Listener {
     }
 
     @EventHandler
+    public void onInvClick(InventoryClickEvent e) {
+        Inventory inv = e.getClickedInventory();
+        if (inv == null) return;
+        if (inv.getTitle() == null) return;
+        if (inv.getType() == InventoryType.PLAYER) return;
+
+        Player p = (Player) e.getWhoClicked();
+
+        ItemStack item = inv.getItem(e.getSlot());
+        if (item == null) return;
+
+        String title = ChatColor.stripColor(e.getView().getTitle());
+        if (Objects.equals(title, "Duels")) {
+            e.setCancelled(true);
+            duelSelection(inv, p, item, e.getSlot());
+        } else if (Objects.equals(title, "Duel Kit Selection")) {
+            e.setCancelled(true);
+            kitSelection(inv, p, item);
+        }
+    }
+
+    @EventHandler
     public void onInvClose(InventoryCloseEvent e) {
         if (!awaitingStart.containsKey(e.getPlayer().getUniqueId())) return;
-        if (!Objects.equals(e.getInventory().getName(), "Duel Kit Selection")) return;
+        if (!Objects.equals(e.getInventory().getTitle(), "Duel Kit Selection")) return;
 
         new BukkitRunnable() {
             @Override

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.genesismc.SoupCore.Database.Database;
@@ -29,6 +30,103 @@ public class Duels {
 
     // Formatting
     private static final String dash = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "-----" + ChatColor.RESET;
+
+    public static void duelGui (Player player, int page) {
+        page -= 1;
+        Inventory inv = Bukkit.createInventory(null, 36, "Duels");
+
+        String[] stats = getStats(player);
+        int pages = Bukkit.getOnlinePlayers().size() / 27;
+        String displayPage = ChatColor.RESET + String.valueOf(ChatColor.GRAY) + " (" + page + "/" + pages + ")";
+
+        ItemStack prevPage = new ItemStack(Material.PAPER, 1);
+        ItemMeta prevPageMeta = prevPage.getItemMeta();
+        prevPageMeta.setDisplayName(ChatColor.WHITE + String.valueOf(ChatColor.BOLD) + "Previous Page" + displayPage);
+        ArrayList<String> prevPageLore = new ArrayList<>();
+        prevPageLore.add(org.bukkit.ChatColor.GRAY + "Click to go to the previous page");
+        prevPageMeta.setLore(prevPageLore);
+        prevPage.setItemMeta(prevPageMeta);
+
+        ItemStack nextPage = new ItemStack(Material.PAPER, 1);
+        ItemMeta nextPageMeta = nextPage.getItemMeta();
+        nextPageMeta.setDisplayName(ChatColor.WHITE + String.valueOf(ChatColor.BOLD) + "Next Page" + displayPage);
+        ArrayList<String> nextPageLore = new ArrayList<>();
+        nextPageLore.add(org.bukkit.ChatColor.GRAY + "Click to go to the next page");
+        nextPageMeta.setLore(nextPageLore);
+        nextPage.setItemMeta(nextPageMeta);
+
+        ItemStack info = new ItemStack(Material.BOOK, 1);
+        ItemMeta infoMeta = info.getItemMeta();
+        infoMeta.setDisplayName(ChatColor.GOLD + String.valueOf(ChatColor.BOLD) + "Your Stats");
+        ArrayList<String> infoLore = new ArrayList<>();
+        infoLore.add(ChatColor.WHITE + "Statistics from all of your duels");
+        infoLore.add("");
+        infoLore.add(ChatColor.YELLOW + " Duel Requests: " + stats[0]);
+        infoLore.add("");
+        infoLore.add(ChatColor.YELLOW + " Wins: " + ChatColor.WHITE + stats[1]);
+        infoLore.add(ChatColor.YELLOW + " Losses: " + ChatColor.WHITE + stats[2]);
+        infoLore.add(ChatColor.YELLOW + " W/L Ratio: " + ChatColor.WHITE + stats[3]);
+        infoMeta.setLore(infoLore);
+        info.setItemMeta(infoMeta);
+
+        ItemStack emptyList = new ItemStack(Material.BARRIER, 1);
+        ItemMeta emptyListMeta = emptyList.getItemMeta();
+        emptyListMeta.setDisplayName(ChatColor.RED + String.valueOf(ChatColor.BOLD) + "No Players Online");
+        ArrayList<String> emptyListLore = new ArrayList<>();
+        emptyListLore.add(ChatColor.GRAY + "There are no players online accepting duel requests");
+        emptyListMeta.setLore(emptyListLore);
+        emptyList.setItemMeta(emptyListMeta);
+
+        ItemStack stainedGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 4);
+        inv.setItem(27, stainedGlass);
+        inv.setItem(28, stainedGlass);
+        inv.setItem(29, stainedGlass);
+
+        inv.setItem(30, prevPage);
+        inv.setItem(31, info);
+        inv.setItem(32, nextPage);
+
+        inv.setItem(33, stainedGlass);
+        inv.setItem(34, stainedGlass);
+        inv.setItem(35, stainedGlass);
+
+        if (Bukkit.getOnlinePlayers().size() <= 1) {
+            inv.setItem(13, emptyList);
+            player.openInventory(inv);
+            return;
+        }
+
+        int i = 0;
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            if (online == player) continue;
+
+            stats = getStats(online);
+            if (stats[0].contains("Disabled")) continue;
+
+            if (i < page * 26) { i++; continue; }
+
+            ItemStack pHead = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+            SkullMeta pHeadMeta = (SkullMeta) pHead.getItemMeta();
+            pHeadMeta.setOwner(online.getName());
+            pHeadMeta.setDisplayName(ChatColor.AQUA + ChatColor.translateAlternateColorCodes('&', online.getDisplayName()));
+
+            ArrayList<String> pHeadLore = new ArrayList<>();
+            pHeadLore.add("");
+            pHeadLore.add(ChatColor.GREEN + "Wins: " + ChatColor.WHITE + stats[1]);
+            pHeadLore.add(ChatColor.RED + "Losses: " + ChatColor.WHITE + stats[2]);
+            pHeadLore.add(ChatColor.WHITE + "W/L Ratio: " + stats[3]);
+            pHeadLore.add("");
+            pHeadLore.add(ChatColor.GRAY + "Click here to " + ChatColor.RED + ChatColor.BOLD + "REQUEST" + ChatColor.RESET + ChatColor.GRAY + " a duel");
+
+            pHeadMeta.setLore(pHeadLore);
+            pHead.setItemMeta(pHeadMeta);
+
+            inv.setItem(i - (page * 26), pHead);
+            i++;
+        }
+
+        player.openInventory(inv);
+    }
 
     public static void duelHelpMsg(Player player) {
         HashMap<String, String> commandUsage = new HashMap<String, String>() {{
@@ -62,18 +160,16 @@ public class Duels {
         }
     }
 
-    public static void duelStats(Player p, Player target) {
-        String name = target.getDisplayName() + "'s";
-        if (p == target) { name = "Your"; }
-        String duelsEnabled = Database.getPlayerData(target, "duelData", "duelsEnabled");
+    private static String[] getStats(Player p) {
+        String duelsEnabled = Database.getPlayerData(p, "duelData", "duelsEnabled");
         String duelRequests;
         if (Objects.equals(duelsEnabled, "true")) {
             duelRequests = ChatColor.GREEN + "Enabled";
         } else {
             duelRequests = ChatColor.RED + "Disabled";
         }
-        int wins = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(target, "duelData", "wins")));
-        int losses = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(target, "duelData", "losses")));
+        int wins = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "duelData", "wins")));
+        int losses = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "duelData", "losses")));
 
         if (losses < 1){ losses = 1; }
         float wlr = (float) wins / losses;
@@ -85,12 +181,21 @@ public class Duels {
             wlrFormatted = ChatColor.GREEN + df.format(wlr);
         }
 
+        return new String[] { duelRequests, String.valueOf(wins), String.valueOf(losses), wlrFormatted };
+    }
+
+    public static void duelStats(Player p, Player target) {
+        String name = target.getDisplayName() + "'s";
+        if (p == target) { name = "Your"; }
+
+        String[] stats = getStats(target);
+
         p.sendMessage(dash + " " + ChatColor.YELLOW + name + " Duel Stats " + dash);
         p.sendMessage("");
-        p.sendMessage(ChatColor.YELLOW + "Duel Requests: " + duelRequests);
-        p.sendMessage(ChatColor.YELLOW + "Wins: " + ChatColor.GREEN + wins);
-        p.sendMessage(ChatColor.YELLOW + "Losses: " + ChatColor.RED + losses);
-        p.sendMessage(ChatColor.YELLOW + "W/L Ratio: " + wlrFormatted);
+        p.sendMessage(ChatColor.YELLOW + "Duel Requests: " + stats[0]);
+        p.sendMessage(ChatColor.YELLOW + "Wins: " + ChatColor.GREEN + stats[1]);
+        p.sendMessage(ChatColor.YELLOW + "Losses: " + ChatColor.RED + stats[2]);
+        p.sendMessage(ChatColor.YELLOW + "W/L Ratio: " + stats[3]);
     }
 
     public static void duelRequest(Player requester, Player target) {

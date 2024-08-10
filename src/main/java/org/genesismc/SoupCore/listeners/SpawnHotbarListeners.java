@@ -22,7 +22,7 @@ public class SpawnHotbarListeners implements Listener {
             e.setCancelled(true);
             Methods_Kits.createKitInventory(p);
         } else if (Objects.equals(itemName, "Duels")) {
-            Duels.duelHelpMsg(p);
+            Duels.duelGui(p, 1);
         }
     }
 }

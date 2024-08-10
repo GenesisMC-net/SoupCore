@@ -21,7 +21,7 @@ commands:
     aliases: ['cf']
   pay:
     description: Pay another player credits
-    usage: "§c /pay <player> <amount>"
+    usage: "§c/pay <player> <amount>"
   balance:
     description: Check your credit balance
     usage: "§c/bal [player]"
