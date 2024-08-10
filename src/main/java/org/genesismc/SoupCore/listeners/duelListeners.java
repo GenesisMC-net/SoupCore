@@ -94,21 +94,16 @@ public class duelListeners implements Listener {
         }
     }
 
-    private static void kitSelection(Inventory inv, Player p, ItemStack item) {
+    private static void kitSelection(Player p, ItemStack item) {
         if (item.getItemMeta() == null) return;
         if (item.getItemMeta().getDisplayName() == null) return;
 
         String selectedKit = item.getItemMeta().getDisplayName();
 
         Player otherPlayer = Bukkit.getPlayer(activeDuels.get(p.getUniqueId()));
-        switch (ChatColor.stripColor(selectedKit)) {
-            case "Default":
-                KitDefault.giveItems(p);
-                KitDefault.giveItems(otherPlayer);
-                break;
-        }
-        Methods_Kits.giveSoup(p);
-        Methods_Kits.giveSoup(otherPlayer);
+
+        Methods_Kits.giveKit(p, ChatColor.stripColor(selectedKit));
+        Methods_Kits.giveKit(otherPlayer, ChatColor.stripColor(selectedKit));
 
         awaitingStart.remove(p.getUniqueId());
         new BukkitRunnable() {
@@ -138,7 +133,7 @@ public class duelListeners implements Listener {
             duelSelection(inv, p, item, e.getSlot());
         } else if (Objects.equals(title, "Duel Kit Selection")) {
             e.setCancelled(true);
-            kitSelection(inv, p, item);
+            kitSelection(p, item);
         }
     }
 
@@ -166,9 +161,11 @@ public class duelListeners implements Listener {
             rematch(p);
         } else if (Objects.equals(itemName, "Exit to Spawn")) {
             e.setCancelled(true);
+            p.setAllowFlight(false);
+            p.setFlying(false);
+            awaitingRematch.remove(p.getUniqueId());
             showAllPlayers(p);
             teleportToSpawn(p);
-            awaitingRematch.remove(p.getUniqueId());
         }
     }
 
@@ -230,6 +227,7 @@ public class duelListeners implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         Player target;
+        awaitingRematch.remove(p.getUniqueId());
         if (activeDuels.containsKey(p.getUniqueId())) {
             target = Bukkit.getPlayer(activeDuels.get(p.getUniqueId()));
             if (target == null) return;

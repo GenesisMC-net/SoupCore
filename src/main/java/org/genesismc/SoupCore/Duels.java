@@ -23,13 +23,14 @@ import static org.genesismc.SoupCore.commands.spawnCommand.teleportToSpawn;
 
 public class Duels {
 
-    public static HashMap<UUID, UUID> activeDuelRequests = new HashMap<>();
-    public static HashMap<UUID, UUID> activeDuels = new HashMap<>();
-    public static HashMap<UUID, UUID> awaitingStart = new HashMap<>();
-    public static HashMap<UUID, UUID> awaitingRematch = new HashMap<>();
+    public static final HashMap<UUID, UUID> activeDuelRequests = new HashMap<>();
+    public static final HashMap<UUID, UUID> activeDuels = new HashMap<>();
+    public static final HashMap<UUID, UUID> awaitingStart = new HashMap<>();
+    public static final HashMap<UUID, UUID> awaitingRematch = new HashMap<>();
 
-    // Formatting
+
     private static final String dash = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "-----" + ChatColor.RESET;
+    private static final FileConfiguration config = SoupCore.plugin.getConfig();
 
     public static void duelGui (Player player, int page) {
         page -= 1;
@@ -250,16 +251,23 @@ public class Duels {
     }
 
     public static void initialiseDuel(Player requester, Player acceptor) {
+        // If it was a rematch
         awaitingRematch.remove(requester.getUniqueId(), acceptor.getUniqueId());
         awaitingRematch.remove(acceptor.getUniqueId(), requester.getUniqueId());
+
+        for (Player p : new Player[]{ requester, acceptor }) {
+            p.setAllowFlight(false);
+            p.setFlying(false);
+            p.getInventory().clear();
+            p.setWalkSpeed(0.0F);
+        }
+        // Main
         for (Player online : Bukkit.getOnlinePlayers()) {
             requester.hidePlayer(online);
             acceptor.hidePlayer(online);
         }
         requester.showPlayer(acceptor);
         acceptor.showPlayer(requester);
-
-        FileConfiguration config = SoupCore.plugin.getConfig();
 
         String map = generateRandomMap();
         String path = "duel-maps." + map + ".";
@@ -283,14 +291,8 @@ public class Duels {
         requester.teleport(pos1);
         acceptor.teleport(pos2);
 
-        requester.getInventory().clear();
-        acceptor.getInventory().clear();
-
         activeDuelRequests.remove(requester.getUniqueId());
         activeDuels.put(requester.getUniqueId(), acceptor.getUniqueId());
-
-        requester.setWalkSpeed(0.0F);
-        acceptor.setWalkSpeed(0.0F);
 
         chooseDuelKit(requester);
         awaitingStart.put(requester.getUniqueId(), acceptor.getUniqueId());
@@ -299,25 +301,23 @@ public class Duels {
         acceptor.sendMessage(ChatColor.YELLOW + "Waiting for " + ChatColor.translateAlternateColorCodes('&', requester.getDisplayName()) + ChatColor.GRAY + " to choose the kit");
     }
 
-    private static String enabledDuelKits() {
-        return "";
-    }
-
     public static void chooseDuelKit(Player decider) {
-        Inventory inv = Bukkit.createInventory(null, 9,"Duel Kit Selection");
+        List<ItemStack> enabledKits = new ArrayList<ItemStack>() {{ // Possibly add to config in future
+            add(KitDefault.guiAppearance(decider));
+            add(KitBlitz.guiAppearance(decider));
+        }};
 
-        ItemStack item = KitDefault.guiAppearance(decider);
-        item.setItemMeta(null);
-        ItemMeta meta = item.getItemMeta();
+        Inventory inv = Bukkit.createInventory(null, (int) Math.ceil(enabledKits.size() / 9.0)*9, "Duel Kit Selection");
 
-        meta.setDisplayName(org.bukkit.ChatColor.WHITE + "Default");
-        List<String> lore = new ArrayList<>();
-        lore.add(org.bukkit.ChatColor.GREEN + "Click to select");
+        int i = 0;
+        for (ItemStack item : enabledKits) {
+            ItemMeta meta = item.getItemMeta();
 
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-
-        inv.setItem(0, item);
+            meta.setLore(Collections.singletonList(org.bukkit.ChatColor.GREEN + "Click to select"));
+            item.setItemMeta(meta);
+            inv.setItem(i, item);
+            i ++;
+        }
 
         decider.openInventory(inv);
     }
@@ -379,7 +379,7 @@ public class Duels {
     }
 
     public static void endFight(Player winner, Player loser) {
-        for (Player p : new Player[]{winner, loser}) {
+        for (Player p : new Player[]{ winner, loser }) {
             p.setAllowFlight(true);
             p.setFlying(true);
             p.teleport(p.getWorld().getSpawnLocation());

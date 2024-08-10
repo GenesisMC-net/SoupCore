@@ -1,6 +1,3 @@
-duel-kits: # Kits from main soup enabled in duels
-  - Default
-
 # Duel Map Configuration
 duel-maps:
   beach_flat:

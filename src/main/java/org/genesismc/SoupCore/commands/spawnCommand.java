@@ -100,7 +100,7 @@ public class spawnCommand implements CommandExecutor {
         }
 
         if (playerInSpawn(p)) { teleportToSpawn(p); return true; }
-        if (awaitingRematch.containsKey(p.getUniqueId()) || awaitingRematch.containsValue(p.getUniqueId())) {
+        if (awaitingRematch.containsKey(p.getUniqueId())) {
             showAllPlayers(p);
             teleportToSpawn(p);
             awaitingRematch.remove(p.getUniqueId());
