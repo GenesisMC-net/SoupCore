@@ -54,7 +54,7 @@ public class CoinFlip {
         ItemMeta statsMeta = stats.getItemMeta();
         statsMeta.setDisplayName(ChatColor.GOLD + String.valueOf(ChatColor.BOLD) + "Stats");
         ArrayList<String> statsLore = new ArrayList<>();
-        statsLore.add(ChatColor.WHITE + "Statistics from all your games");
+        statsLore.add(ChatColor.WHITE + "Statistics from all of your games");
         statsLore.add("");
         statsLore.add(ChatColor.YELLOW + " Player: " + ChatColor.WHITE + p.getName());
         statsLore.add("");
@@ -112,7 +112,7 @@ public class CoinFlip {
             SkullMeta targetHeadMeta = (SkullMeta) targetHead.getItemMeta();
             targetHeadMeta.setOwner(target.getName());
 
-            targetHeadMeta.setDisplayName(ChatColor.AQUA + target.getName());
+            targetHeadMeta.setDisplayName(ChatColor.AQUA + target.getPlayer().getDisplayName());
 
             ArrayList<String> targetHeadLore = new ArrayList<>();
             targetHeadLore.add("");

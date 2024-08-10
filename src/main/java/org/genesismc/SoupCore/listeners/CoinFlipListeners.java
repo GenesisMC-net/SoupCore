@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.listeners;
 
+import org.bukkit.OfflinePlayer;
 import org.genesismc.SoupCore.CoinFlip;
 import org.genesismc.SoupCore.Database.Database;
 import org.genesismc.SoupCore.SoupCore;
@@ -112,7 +113,7 @@ public class CoinFlipListeners implements Listener {
                 return;
             }
 
-            Player target = p.getServer().getPlayer(clickedGameMeta.getOwner());
+            OfflinePlayer target = p.getServer().getOfflinePlayer(clickedGameMeta.getOwner());
 
             if (!target.isOnline()) {
                 p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
@@ -140,7 +141,7 @@ public class CoinFlipListeners implements Listener {
             }
 
             int accepterBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits")));
-            int bet = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(target, "coinflip", "activeWager")));
+            int bet = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(target.getPlayer(), "coinflip", "activeWager")));
 
             if (bet <= 0) {
                 p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
@@ -189,7 +190,7 @@ public class CoinFlipListeners implements Listener {
                 }.runTaskLater(SoupCore.plugin, 20L * 2L);
                 return;
             }
-            CoinFlip.playCoinFlip(p, target);
+            CoinFlip.playCoinFlip(p, target.getPlayer());
             Database.setPlayerData(p, "soupData", "credits", String.valueOf((Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "credits"))) - bet))); // What a fucking mess LMAO
 
         } else if (e.getSlot() == 35) {
