@@ -4,6 +4,7 @@ import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.genesismc.SoupCore.Credits;
 import org.genesismc.SoupCore.Database.Database;
+import org.genesismc.SoupCore.KillStreaks;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -101,7 +102,7 @@ public class combatLogListeners implements Listener {
                         Credits.giveCredits(killer, credits);
 
                         killer.sendMessage(ChatColor.GRAY + "You have killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " and earned " + ChatColor.GREEN + credits + " credits");
-                        if(SoupCore.killStreakMilestones.contains(attackerKillStreak))
+                        if(KillStreaks.killStreakMilestones.contains(attackerKillStreak))
                         {
                             Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has reached a killstreak of " + ChatColor.AQUA + attackerKillStreak);
                         }

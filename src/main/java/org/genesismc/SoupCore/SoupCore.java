@@ -15,8 +15,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -26,12 +24,6 @@ public final class SoupCore extends JavaPlugin {
     public static WorldGuardPlugin getWorldGuard;
     public static LuckPerms luckPerms;
     public static Inventory kits;
-    private static String connectionURL;
-    public static final List<Integer> killStreakMilestones = new ArrayList<>();
-
-    public static String getConnectionURL() {
-        return connectionURL;
-    }
 
     public static boolean playerInSpawn(Player p) {
         for (ProtectedRegion rg : WGBukkit.getRegionManager(p.getWorld()).getApplicableRegions(p.getLocation())){
@@ -54,11 +46,6 @@ public final class SoupCore extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        killStreakMilestones.add(10);
-        killStreakMilestones.add(25);
-        killStreakMilestones.add(30);
-        killStreakMilestones.add(50);
-        killStreakMilestones.add(60);
         getServer().getPluginManager().registerEvents(new ItemDropListener(), this);
         getServer().getPluginManager().registerEvents(new soupUseListener(), this);
         getServer().getPluginManager().registerEvents(new kitsListeners(), this);
@@ -92,6 +79,7 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilitySnail(), this);
         getServer().getPluginManager().registerEvents(new AbilitySwitcher(), this);
         getServer().getPluginManager().registerEvents(new AbilityTurbo(), this);
+        getServer().getPluginManager().registerEvents(new AbilityBodyGuard(), this);
 
         getCommand("kits").setExecutor(new kitsCommand());
         getCommand("refill").setExecutor(new refillCommand());
@@ -113,8 +101,8 @@ public final class SoupCore extends JavaPlugin {
         }
 
         loadConfigs();
-
         scoreboardListeners.enableHeartsBelowName();
+        KillStreaks.initialise();
 
         getWorldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
 
@@ -123,8 +111,6 @@ public final class SoupCore extends JavaPlugin {
             luckPerms = provider.getProvider();
         }
 
-        connectionURL = "jdbc:h2:" + getDataFolder().getAbsolutePath() + "/data/database";
-        System.out.println(connectionURL);
         Database.initialiseDatabase();
 
         System.out.println("SoupCore has been enabled!");

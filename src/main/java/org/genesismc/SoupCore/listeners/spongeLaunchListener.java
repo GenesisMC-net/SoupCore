@@ -24,8 +24,8 @@ public class spongeLaunchListener implements Listener
         }
 
         if (p.getVelocity().getY() >= 0 && !p.isOnGround()) { // Player has jumped
-
             p.setVelocity(new Vector(p.getVelocity().getX(), (double) boostHeight / 2, p.getVelocity().getZ()));
+            cancelFallDmgListener.addPlayer(p);
         }
     }
 }

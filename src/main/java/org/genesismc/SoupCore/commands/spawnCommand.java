@@ -67,6 +67,14 @@ public class spawnCommand implements CommandExecutor {
         Cooldowns.removeCooldowns(p);
         spawnInventory(p);
 
+        p.setFlying(false);
+        p.setWalkSpeed(0.2F);
+        p.setExp(0);
+        p.setLevel(0);
+        for (PotionEffect effect : p.getActivePotionEffects()) {
+            p.removePotionEffect(effect.getType());
+        }
+
         new BukkitRunnable() {
             @Override
             public void run() {

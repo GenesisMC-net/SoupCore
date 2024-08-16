@@ -1,14 +1,11 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -80,9 +77,14 @@ public class AbilityTank implements Listener {
         }
 
         Player silverFishOwner = Bukkit.getPlayer(ChatColor.stripColor(e.getDamager().getCustomName()));
-        p.damage(3, silverFishOwner);
-        e.setDamage(0);
         e.setCancelled(true);
+        e.setDamage(0);
+        if ((p.getHealth() - 3) <= 0) {
+            p.damage(3, silverFishOwner);
+        } else {
+            p.damage(0, silverFishOwner);
+            p.setHealth(p.getHealth() - 3);
+        }
     }
 
     @EventHandler
@@ -92,17 +94,15 @@ public class AbilityTank implements Listener {
             return;
         }
 
-        if (Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + e.getTarget().getName())) // Targeting owner
+        if (e.getTarget() == null || Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + e.getTarget().getName())) // Targeting owner
         {
             for (Entity target : e.getEntity().getNearbyEntities(10, 10, 10)) { // Target another player
-                if (target instanceof Player) {
-                    if (!target.isDead() && !Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + target.getName())) {
-                        e.setTarget(target);
-                        return;
-                    }
+                if (!target.isDead() && !Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + target.getName())) {
+                    e.setTarget(target);
+                    return;
                 }
             }
-            e.setTarget(null); // No other players to target
+            e.setCancelled(true);
         }
     }
 
@@ -110,8 +110,8 @@ public class AbilityTank implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
-        for (Entity entity : p.getNearbyEntities(10, 10, 10)) {
-            if (entity.getType() == EntityType.SILVERFISH && entity.getCustomName().contains(p.getName())) {
+        for (Entity entity : Bukkit.getWorld("world").getEntitiesByClass(Silverfish.class)) {
+            if (entity.getCustomName().contains(p.getName())) {
                 entity.remove();
             }
         }

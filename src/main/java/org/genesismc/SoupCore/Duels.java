@@ -33,7 +33,6 @@ public class Duels {
     private static final FileConfiguration config = SoupCore.plugin.getConfig();
 
     public static void duelGui (Player player, int page) {
-        page -= 1;
         Inventory inv = Bukkit.createInventory(null, 36, "Duels");
 
         String[] stats = getStats(player);
@@ -98,6 +97,7 @@ public class Duels {
         }
 
         int i = 0;
+        page -= 1;
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online == player) continue;
 
@@ -256,7 +256,6 @@ public class Duels {
         awaitingRematch.remove(acceptor.getUniqueId(), requester.getUniqueId());
 
         for (Player p : new Player[]{ requester, acceptor }) {
-            p.setAllowFlight(false);
             p.setFlying(false);
             p.getInventory().clear();
             p.setWalkSpeed(0.0F);
@@ -298,6 +297,8 @@ public class Duels {
         awaitingStart.put(requester.getUniqueId(), acceptor.getUniqueId());
         acceptor.sendMessage("");
         acceptor.sendMessage(dash + ChatColor.YELLOW + " Duel " + dash);
+        requester.sendMessage("");
+        requester.sendMessage(dash + ChatColor.YELLOW + " Duel " + dash);
         acceptor.sendMessage(ChatColor.YELLOW + "Waiting for " + ChatColor.translateAlternateColorCodes('&', requester.getDisplayName()) + ChatColor.GRAY + " to choose the kit");
     }
 
@@ -403,6 +404,7 @@ public class Duels {
     }
 
     public static void opponentLeft(Player p) {
+        p.sendMessage("");
         p.sendMessage(ChatColor.RED + "Your opponent has left the game!");
         p.sendMessage(ChatColor.GRAY + "Sending you to spawn...");
 

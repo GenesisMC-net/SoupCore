@@ -17,8 +17,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.genesismc.SoupCore.Database.Database;
+import org.genesismc.SoupCore.Duels;
 import org.genesismc.SoupCore.Kits.*;
 import org.genesismc.SoupCore.SoupCore;
 
@@ -48,6 +51,7 @@ public class duelListeners implements Listener {
             public void run() {
                 if (inv.getViewers().contains(p)) {
                     inv.setItem(slot, original);
+                    Duels.duelGui(p, 1);
                 }
             }
         }.runTaskLater(SoupCore.plugin, 20L * 2L);
@@ -104,6 +108,12 @@ public class duelListeners implements Listener {
 
         Methods_Kits.giveKit(p, ChatColor.stripColor(selectedKit));
         Methods_Kits.giveKit(otherPlayer, ChatColor.stripColor(selectedKit));
+        PotionEffect speedOne = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0);
+
+        if (!p.hasPotionEffect(PotionEffectType.SPEED)) {
+            p.addPotionEffect(speedOne);
+            p.addPotionEffect(speedOne);
+        }
 
         awaitingStart.remove(p.getUniqueId());
         new BukkitRunnable() {
@@ -161,7 +171,6 @@ public class duelListeners implements Listener {
             rematch(p);
         } else if (Objects.equals(itemName, "Exit to Spawn")) {
             e.setCancelled(true);
-            p.setAllowFlight(false);
             p.setFlying(false);
             awaitingRematch.remove(p.getUniqueId());
             showAllPlayers(p);

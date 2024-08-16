@@ -16,8 +16,11 @@ public class Database
     {
         Connection connection;
         try {
-            Class.forName("org.h2.Driver");
-            connection = DriverManager.getConnection(SoupCore.getConnectionURL());
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://na03-sql.pebblehost.com:3306/customer_771844_soup";
+            String user = "customer_771844_soup";
+            String password = "8v2G~l#xA397GB9VbNl2";
+            connection = DriverManager.getConnection(url, user, password);
         }catch(SQLException e){
             System.out.println("Problem connecting to database");
             throw new RuntimeException(e);
