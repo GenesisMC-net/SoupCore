@@ -36,7 +36,7 @@ public class statsCommand implements CommandExecutor {
 
             sender.sendMessage("");
             sender.sendMessage(ChatColor.GOLD + "Kills: " + ChatColor.AQUA + Stats.kills(player));
-            sender.sendMessage(ChatColor.GOLD + "Kill Streak: " + ChatColor.AQUA + Stats.killStreak(player));
+            sender.sendMessage(ChatColor.GOLD + "Kill Streak: " + ChatColor.AQUA + Stats.killStreak(player) + ChatColor.GRAY + " (Best: " + Stats.bestKillStreak(player) + ")");
             sender.sendMessage(ChatColor.GOLD + "Deaths: " + ChatColor.AQUA + Stats.deaths(player));
             sender.sendMessage(ChatColor.GOLD + "KDR: " + ChatColor.AQUA + Stats.kdr(player));
             return true;

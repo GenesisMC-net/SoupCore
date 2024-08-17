@@ -29,6 +29,10 @@ public class PlayerKillListener implements Listener
         Database.setPlayerData(killer, "soupData", "kills", String.valueOf(kills));
         int killStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "killStreak"))) + 1;
         Database.setPlayerData(killer, "soupData", "killStreak", String.valueOf(killStreak));
+        int bestKillStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "bestKillStreak")));
+        if (killStreak > bestKillStreak) {
+            Database.setPlayerData(killer, "soupData", "bestKillStreak", String.valueOf(killStreak));
+        }
 
         Random rand = new Random();
         int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.

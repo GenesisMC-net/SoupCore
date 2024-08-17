@@ -1,6 +1,5 @@
 package org.genesismc.SoupCore.Database;
 
-import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
@@ -33,14 +32,14 @@ public class Database
     public static void initialiseDatabase()
     {
         Collections.addAll(stringColumns, "uuid", "name", "kit", "duelsEnabled", "lastPlayed");
-        Collections.addAll(integerColumns, "kills", "killStreak", "deaths", "credits", "bounty", "activeWager", "wins", "losses", "moneyMade");
+        Collections.addAll(integerColumns, "kills", "killStreak", "bestKillStreak", "deaths", "credits", "bounty", "activeWager", "wins", "losses", "moneyMade");
 //        Collections.addAll(booleanColumns, ""); // Add in ur kits for permissions
 
         Connection connection = getConnection();
         try{
             PreparedStatement UsersStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Users(uuid varchar(36) NOT NULL PRIMARY KEY, name varchar(40))");
             UsersStatement.execute(); // uuid, name
-            PreparedStatement soupDataStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupData(uuid varchar(36) NOT NULL PRIMARY KEY, kit varchar(20), kills int, killStreak int, deaths int, credits int, bounty int)");
+            PreparedStatement soupDataStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS soupData(uuid varchar(36) NOT NULL PRIMARY KEY, kit varchar(20), kills int, killStreak int, bestKillStreak int, deaths int, credits int, bounty int)");
             soupDataStatement.execute(); // uuid, kit, kills, killStreak, deaths, credits, bounty
             PreparedStatement duelDataStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS duelData(uuid varchar(36) NOT NULL PRIMARY KEY, duelsEnabled varchar(5), lastPlayed varchar(36), wins int, losses int)");
             duelDataStatement.execute(); // uuid, duelsEnabled, lastPlayed, wins, losses
@@ -113,19 +112,19 @@ public class Database
         PreparedStatement preparedStatement;
         try{
 
-                preparedStatement = connection.prepareStatement("SELECT * FROM Users");
-                ResultSet rows = preparedStatement.executeQuery();
-                while(rows.next())
+            preparedStatement = connection.prepareStatement("SELECT * FROM Users");
+            ResultSet rows = preparedStatement.executeQuery();
+            while(rows.next())
+            {
+                if(rows.getString("name").equalsIgnoreCase(name))
                 {
-                    if(rows.getString("name").equalsIgnoreCase(name))
-                    {
-                        connection.close();
-                        return UUID.fromString(rows.getString("uuid"));
-                    }
+                    connection.close();
+                    return UUID.fromString(rows.getString("uuid"));
                 }
+            }
 
             connection.close();
-                return null;
+            return null;
         }catch(SQLException e){
             System.out.println("Error getting UUID from Name");
             throw new RuntimeException(e);
@@ -195,7 +194,9 @@ public class Database
             queryStatement = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE uuid = '" + p.getUniqueId().toString() + "'");
             ResultSet rows = queryStatement.executeQuery();
             if (rows.next()) {
-                return rows.getString(column);
+                String data = rows.getString(column);
+                connection.close();
+                return data;
             }
             connection.close();
         }catch(SQLException e){
@@ -246,7 +247,7 @@ public class Database
                     statement = connection.prepareStatement("INSERT INTO Users(uuid, name) VALUES('" + p.getUniqueId().toString() + "', '" + p.getName() + "')");
                     break;
                 case "soupData":
-                    statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, kilLStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', 'Default', 0, 0, 0, 0, 0)");
+                    statement = connection.prepareStatement("INSERT INTO soupData(uuid, kit, kills, killStreak, bestKillStreak, deaths, credits, bounty) VALUES('" + p.getUniqueId() + "', 'Default', 0, 0, 0, 0, 0, 0)");
                     break;
                 case "duelData":
                     statement = connection.prepareStatement("INSERT INTO duelData(uuid, duelsEnabled, lastPlayed, wins, losses) VALUES('" + p.getUniqueId() + "', 'true', NULL, 0, 0)");

@@ -5,7 +5,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Sound;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.genesismc.SoupCore.Kits.Methods_Kits;
-import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -18,7 +17,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.genesismc.SoupCore.listeners.cancelFallDmgListener;
 
