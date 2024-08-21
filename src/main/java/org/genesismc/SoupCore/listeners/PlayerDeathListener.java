@@ -2,7 +2,6 @@ package org.genesismc.SoupCore.listeners;
 
 import org.genesismc.SoupCore.Database.Database;
 import org.genesismc.SoupCore.SoupCore;
-import org.genesismc.SoupCore.commands.spawnCommand;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,10 +13,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import org.genesismc.SoupCore.listeners.abilities.Cooldowns;
 
 import java.util.Objects;
+
+import static org.genesismc.SoupCore.Duels.showAllPlayers;
+import static org.genesismc.SoupCore.commands.spawnCommand.teleportToSpawn;
 
 public class PlayerDeathListener implements Listener
 {
@@ -25,19 +26,23 @@ public class PlayerDeathListener implements Listener
     public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
-        Database.SetPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
-        Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
-        Location lastLoc = p.getLocation();
+
+        e.setDeathMessage("");
+        if (!Objects.equals(p.getWorld().getName(), "world")) { return; }
 
         Cooldowns.removeCooldowns(p);
 
         int killStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
-        if(killStreak >= 20)
+        if(killStreak >= 5)
         {
-            e.setDeathMessage(ChatColor.RED + p.getName() + ChatColor.GRAY + " has died with a killstreak of " + ChatColor.AQUA + killStreak);
-        } else {
-            e.setDeathMessage("");
+            for (Player online : p.getWorld().getPlayers()) {
+                online.sendMessage(ChatColor.RED + p.getName() + ChatColor.AQUA + " has died with a killstreak of " + ChatColor.RED + killStreak);
+            }
         }
+
+        Database.setPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
+        Database.setPlayerData(p, "soupData", "killStreak", String.valueOf(0));
+        Location lastLoc = p.getLocation();
 
         int soupDrop = 0;
         for (ItemStack item: p.getInventory().getContents()) {
@@ -64,14 +69,9 @@ public class PlayerDeathListener implements Listener
         {
             @Override
             public void run() {
-                Vector v = p.getVelocity();
-                v.setX(0);
-                v.setY(0);
-                v.setZ(0);
-                p.setVelocity(v);
-                e.getEntity().spigot().respawn();
-
-                spawnCommand.spawnInventory(p);
+                showAllPlayers(p);
+                p.spigot().respawn();
+                teleportToSpawn(p);
             }
         }.runTaskLater(SoupCore.plugin, 1L);
     }

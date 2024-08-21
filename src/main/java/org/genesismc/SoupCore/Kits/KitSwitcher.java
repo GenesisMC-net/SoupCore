@@ -38,7 +38,7 @@ public class KitSwitcher {
         ABILITY_ITEM = getAbilityItem(4);
     }
 
-    public static void giveItems(Player p)
+    public static void giveItems(@NotNull Player p)
     {
         PlayerInventory inv = p.getInventory();
         inv.clear();

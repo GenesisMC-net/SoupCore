@@ -49,6 +49,8 @@ public class SpigotExpansion extends PlaceholderExpansion {
                 return Stats.kills(player);
             case "killStreak":
                 return Stats.killStreak(player);
+            case "bestKillStreak":
+                return Stats.bestKillStreak(player);
             case "deaths":
                 return Stats.deaths(player);
             case "kdr":

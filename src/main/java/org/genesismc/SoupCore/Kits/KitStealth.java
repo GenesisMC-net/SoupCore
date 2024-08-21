@@ -23,6 +23,26 @@ public class KitStealth {
     public static ItemStack SWORD;
     public static ItemStack ABILITY_ITEM;
 
+    public static ItemStack getAbilityItem(int amount) {
+        ItemStack ninjaStar = new ItemStack(Material.NETHER_STAR, amount);
+
+        ItemMeta ninjaStarMeta = ninjaStar.getItemMeta();
+
+        ArrayList<String> ninjaStarLore = new ArrayList<>();
+        ninjaStarLore.add("");
+        ninjaStarLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Star Throw");
+        ninjaStarLore.add(ChatColor.GRAY + "Throw a ninja star that deals blindness");
+        ninjaStarLore.add(ChatColor.GRAY + "for 5 seconds to any player it hits!");
+        ninjaStarLore.add("");
+        ninjaStarLore.add(ChatColor.WHITE + "Every kill with the Ninja Kit:" + ChatColor.GREEN + " +1 Ninja Star");
+        ninjaStarMeta.setLore(ninjaStarLore);
+
+        ninjaStarMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Ninja Star");
+
+        ninjaStar.setItemMeta(ninjaStarMeta);
+        return ninjaStar;
+    }
+
     public static void setKitItems() {
         HELMET = new ItemStack(Material.LEATHER_HELMET);
         HELMET.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
@@ -45,22 +65,7 @@ public class KitStealth {
         SWORD.addEnchantment(Enchantment.DURABILITY, 3);
 
         // Ability
-        ABILITY_ITEM = new ItemStack(Material.NETHER_STAR, 4);
-
-        ItemMeta ninjaStarMeta = ABILITY_ITEM.getItemMeta();
-
-        ArrayList<String> ninjaStarLore = new ArrayList<>();
-        ninjaStarLore.add("");
-        ninjaStarLore.add(ChatColor.WHITE + "Right Click: " + ChatColor.RED + "Star Throw");
-        ninjaStarLore.add(ChatColor.GRAY + "Throw a ninja star that deals blindness");
-        ninjaStarLore.add(ChatColor.GRAY + "for 5 seconds to any player it hits!");
-        ninjaStarLore.add("");
-        ninjaStarLore.add(ChatColor.WHITE + "Every kill with the Ninja Kit:" + ChatColor.GREEN + " +1 Ninja Star");
-        ninjaStarMeta.setLore(ninjaStarLore);
-
-        ninjaStarMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Ninja Star");
-
-        ABILITY_ITEM.setItemMeta(ninjaStarMeta);
+        ABILITY_ITEM = getAbilityItem(4);
     }
 
     public static void giveItems(Player p)

@@ -8,20 +8,24 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static org.genesismc.SoupCore.Duels.activeDuels;
+
 public class coinflipCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(!(sender instanceof Player)) { return false; }
 
-        if(sender instanceof Player)
-        {
-            Player p = (Player) sender;
-            if (CoinFlipListeners.awaitingNewGameResponse.contains(p.getUniqueId())) {
-                p.sendMessage(ChatColor.RED + "You are already creating a coin flip game!");
-                return false;
-            }
-            CoinFlip.openGui(p, "main");
+        Player p = (Player) sender;
+        if (activeDuels.containsValue(p.getUniqueId()) || activeDuels.containsKey(p.getUniqueId())) {
+            p.sendMessage(ChatColor.RED + "You cannot use this command while during a duel!");
+            return true;
         }
+        if (CoinFlipListeners.awaitingNewGameResponse.contains(p.getUniqueId())) {
+            p.sendMessage(ChatColor.RED + "You are already creating a coin flip game!");
+            return false;
+        }
+        CoinFlip.openGui(p, "main");
         return false;
     }
 }

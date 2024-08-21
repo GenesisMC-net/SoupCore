@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public class Stats
 {
-
     public static String kills(Player player)
     {
         return Database.getPlayerData(player, "soupData", "kills");
@@ -18,6 +17,8 @@ public class Stats
     {
         return Database.getPlayerData(player, "soupData", "killStreak");
     }
+
+    public static String bestKillStreak(Player player) { return Database.getPlayerData(player, "soupData", "bestKillStreak"); }
 
     public static String deaths(Player player)
     {

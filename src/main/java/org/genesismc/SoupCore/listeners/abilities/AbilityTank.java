@@ -1,15 +1,11 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -27,68 +23,67 @@ public class AbilityTank implements Listener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)
     {
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            Player p = e.getPlayer();
+        if (!(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+            return;
+        }
+        Player p = e.getPlayer();
 
-            ItemStack itemInHand = p.getItemInHand();
+        ItemStack itemInHand = p.getItemInHand();
 
-            if (Objects.equals(itemInHand.getType(), Material.INK_SACK) && Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_RED + "Silverfish Army")) {
-                boolean cooldownActive = false;
-                if (silverFishCooldown.containsKey(p.getUniqueId())) {
-                    if (System.currentTimeMillis() - silverFishCooldown.get(p.getUniqueId()) < 45 * 1000) {
-                        cooldownActive = true;
-                        p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (45 - (System.currentTimeMillis() - silverFishCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
-                    } else {
-                        silverFishCooldown.remove(p.getUniqueId());
-                    }
-                }
+        if (!Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_RED + "Silverfish Army")) {
+            return;
+        }
+        if (silverFishCooldown.containsKey(p.getUniqueId())) {
+            if (System.currentTimeMillis() - silverFishCooldown.get(p.getUniqueId()) < 45 * 1000) {
+                p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (45 - (System.currentTimeMillis() - silverFishCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
+                return;
+            }
+            silverFishCooldown.remove(p.getUniqueId());
+        }
+        Cooldowns.addAbilityCooldown(p, silverFishCooldown, 30, ChatColor.RED + "Silverfish Army");
+        PotionEffect speedTwo = new PotionEffect(PotionEffectType.SPEED, 20 * 15, 1, false, false);
 
-                if (!cooldownActive) {
-                    silverFishCooldown.put(p.getUniqueId(), System.currentTimeMillis());
+        List<Entity> silverfishArmy = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            LivingEntity silverfish = (LivingEntity) p.getWorld().spawnEntity(p.getLocation(), EntityType.SILVERFISH);
+            silverfish.setCustomName(ChatColor.RED + p.getName());
+            silverfish.setCustomNameVisible(true);
+            silverfish.addPotionEffect(speedTwo);
+            silverfishArmy.add(silverfish);
+        }
 
-                    Cooldowns.addAbilityCooldown(p, silverFishCooldown, 30, ChatColor.RED + "Silverfish Army");
-                    PotionEffect speedTwo = new PotionEffect(PotionEffectType.SPEED, 20 * 15, 1, false, false);
-
-                    List<Entity> silverfishArmy = new ArrayList<>();
-                    for (int i = 0; i < 6; i++) {
-                        LivingEntity silverfish = (LivingEntity) p.getWorld().spawnEntity(p.getLocation(), EntityType.SILVERFISH);
-                        silverfish.setCustomName(ChatColor.RED + p.getName());
-                        silverfish.setCustomNameVisible(true);
-                        silverfish.addPotionEffect(speedTwo);
-                        silverfishArmy.add(silverfish);
-                    }
-
-                    new BukkitRunnable(){
-                        @Override
-                        public void run() {
-                            for (Entity fish: silverfishArmy) {
-                                fish.remove();
-                            }
-                        }
-                    }.runTaskLater(SoupCore.plugin, 20L * 15L);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Entity fish : silverfishArmy) {
+                    fish.remove();
                 }
             }
-        }
+        }.runTaskLater(SoupCore.plugin, 20L * 15L);
     }
 
     @EventHandler
     public void onSilverfishDamage(EntityDamageByEntityEvent e)
     {
-        if (e.getEntity() instanceof Player && e.getDamager().getType() == EntityType.SILVERFISH)
-        {
-            Player p = (Player) e.getEntity();
+        if (!(e.getEntity() instanceof Player)) { return; }
+        if (!e.getDamager().getType().equals(EntityType.SILVERFISH)) { return; }
+        if (!e.getDamager().isCustomNameVisible()) { return; } // Normal Silverfish
 
-            if (e.getDamager().isCustomNameVisible()) {
-                if (Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + p.getName())) {
-                    e.setCancelled(true);
-                    return;
-                }
+        Player p = (Player) e.getEntity();
 
-                Player silverFishOwner = Bukkit.getPlayer(ChatColor.stripColor(e.getDamager().getCustomName()));
-                p.damage(3, silverFishOwner);
-                e.setDamage(0);
-                e.setCancelled(true);
-            }
+        if (Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + p.getName())) {
+            e.setCancelled(true);
+            return;
+        }
+
+        Player silverFishOwner = Bukkit.getPlayer(ChatColor.stripColor(e.getDamager().getCustomName()));
+        e.setCancelled(true);
+        e.setDamage(0);
+        if ((p.getHealth() - 3) <= 0) {
+            p.damage(3, silverFishOwner);
+        } else {
+            p.damage(0, silverFishOwner);
+            p.setHealth(p.getHealth() - 3);
         }
     }
 
@@ -99,17 +94,16 @@ public class AbilityTank implements Listener {
             return;
         }
 
-        if (Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + e.getTarget().getName()))
+        boolean targetingOwner = e.getEntity().getCustomName().contains(e.getTarget().getName());
+        if (e.getTarget() == null || targetingOwner) // Targeting owner
         {
-            for (Entity target : e.getEntity().getNearbyEntities(10, 10, 10)) {
-                if (target instanceof Player) {
-                    if (!target.isDead() && !Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + target.getName())) {
-                        e.setTarget(target);
-                        return;
-                    }
+            for (Entity target : e.getEntity().getNearbyEntities(10, 10, 10)) { // Target another player
+                if (!target.isDead() && !e.getEntity().getCustomName().contains(target.getName())) {
+                    e.setTarget(target);
+                    return;
                 }
             }
-            e.setTarget(null);
+            e.setCancelled(true);
         }
     }
 
@@ -117,8 +111,8 @@ public class AbilityTank implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e)
     {
         Player p = e.getEntity();
-        for (Entity entity : p.getNearbyEntities(10, 10, 10)) {
-            if (entity.getType() == EntityType.SILVERFISH && entity.getCustomName().contains(p.getName())) {
+        for (Entity entity : Bukkit.getWorld("world").getEntitiesByClass(Silverfish.class)) {
+            if (entity.getCustomName().contains(p.getName())) {
                 entity.remove();
             }
         }

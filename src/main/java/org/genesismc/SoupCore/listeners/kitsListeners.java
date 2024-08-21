@@ -1,6 +1,7 @@
 package org.genesismc.SoupCore.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +10,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.genesismc.SoupCore.Kits.*;
+
+import java.util.Objects;
 
 import static org.genesismc.SoupCore.Kits.Methods_Kits.createKitInventory;
 import static org.genesismc.SoupCore.Kits.Methods_Kits.previewInventory;
@@ -19,7 +22,8 @@ public class kitsListeners implements Listener
     public void onClick(InventoryClickEvent e)
     {
         Player player = (Player) e.getWhoClicked();
-        if (e.getView().getTitle().contains("Kit Selection")) {
+        String title = ChatColor.stripColor(e.getView().getTitle());
+        if (Objects.equals(title, "Kit Selection")) {
             e.setCancelled(true);
 
             if(e.getCurrentItem()==null){return;}
@@ -43,6 +47,7 @@ public class kitsListeners implements Listener
             if (e.getCurrentItem().getItemMeta().getDisplayName() == null) { return; }
 
             if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Back")) {
+                player.playSound(player.getLocation(), Sound.WOOD_CLICK, 0.8F, 1F);
                 createKitInventory(player);
             }
         }

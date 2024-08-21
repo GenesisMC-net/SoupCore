@@ -9,8 +9,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.*;
 
 public class scoreboardListeners implements Listener {
-    private static Objective showHearts;
-    public static void enableHeartsBelowName() {
+    public static Objective showHearts;
+
+    public static void initliase() {
+        heartsBelowName();
+    }
+
+    private static void heartsBelowName() {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getNewScoreboard();
 

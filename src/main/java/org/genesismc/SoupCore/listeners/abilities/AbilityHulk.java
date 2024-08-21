@@ -1,9 +1,10 @@
 package org.genesismc.SoupCore.listeners.abilities;
 
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Sound;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.genesismc.SoupCore.Kits.Methods_Kits;
-import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -16,7 +17,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.genesismc.SoupCore.listeners.cancelFallDmgListener;
 
@@ -80,57 +80,41 @@ public class AbilityHulk implements Listener {
             return;
         }
         if (p.isOnGround()) { return; }
+        for (ProtectedRegion rg : WGBukkit.getRegionManager(p.getWorld()).getApplicableRegions(p.getLocation())){
+            if (Objects.equals(rg.getId(), "spawn")) { return; }
+        }
+        if (p.getLocation().subtract(new Vector(0, 2, 0)).getBlock().getType() != Material.AIR) { return; }
 
         Vector velocity = p.getVelocity().setY(-2);
         p.setVelocity(velocity);
 
-        p.playSound(p.getLocation(), Sound.ANVIL_LAND, 2F, 1F);
-
-        cancelFallDmgListener.cancelFallDamage.add(p.getUniqueId());
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
-            }
-        }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
-    }
+        p.playSound(p.getLocation(), Sound.ANVIL_LAND, 2F, 1F);}
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent e)
     {
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            Player p = e.getPlayer();
-
-            ItemStack itemInHand = p.getItemInHand();
-
-            if (Objects.equals(itemInHand.getType(), Material.ANVIL) && Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_GREEN + "Hulk Smash")) {
-                boolean cooldownActive = false;
-                if (hulkSmashCooldown.containsKey(p.getUniqueId())) {
-                    if (System.currentTimeMillis() - hulkSmashCooldown.get(p.getUniqueId()) < 30 * 1000) {
-                        cooldownActive = true;
-                        p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (30 - (System.currentTimeMillis() - hulkSmashCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
-                    } else {
-                        hulkSmashCooldown.remove(p.getUniqueId());
-                    }
-                }
-
-                if (!cooldownActive) {
-                    hulkSmashCooldown.put(p.getUniqueId(), System.currentTimeMillis());
-
-                    Cooldowns.addAbilityCooldown(p, hulkSmashCooldown, 30, ChatColor.DARK_GREEN + "Hulk Smash");
-
-                    p.setVelocity(new Vector(0, 1.5, 0));
-                    cancelFallDmgListener.cancelFallDamage.add(p.getUniqueId());
-                    activeAbility.add(p.getUniqueId());
-
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            cancelFallDmgListener.cancelFallDamage.remove(p.getUniqueId());
-                        }
-                    }.runTaskLaterAsynchronously(SoupCore.plugin, 20L * 10L);
-                }
-            }
+        if (!(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+            return;
         }
+        Player p = e.getPlayer();
+
+        ItemStack itemInHand = p.getItemInHand();
+
+        if (!Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_GREEN + "Hulk Smash")) {
+            return;
+        }
+        if (hulkSmashCooldown.containsKey(p.getUniqueId())) {
+            if (System.currentTimeMillis() - hulkSmashCooldown.get(p.getUniqueId()) < 30 * 1000) {
+                p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (30 - (System.currentTimeMillis() - hulkSmashCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
+                return;
+            }
+            hulkSmashCooldown.remove(p.getUniqueId());
+        }
+
+        Cooldowns.addAbilityCooldown(p, hulkSmashCooldown, 30, ChatColor.DARK_GREEN + "Hulk Smash");
+
+        p.setVelocity(new Vector(0, 1.5, 0));
+        cancelFallDmgListener.addPlayer(p);
+        activeAbility.add(p.getUniqueId());
     }
 }

@@ -54,7 +54,7 @@ public class CoinFlip {
         ItemMeta statsMeta = stats.getItemMeta();
         statsMeta.setDisplayName(ChatColor.GOLD + String.valueOf(ChatColor.BOLD) + "Stats");
         ArrayList<String> statsLore = new ArrayList<>();
-        statsLore.add(ChatColor.WHITE + "Statistics from all your games");
+        statsLore.add(ChatColor.WHITE + "Statistics from all of your games");
         statsLore.add("");
         statsLore.add(ChatColor.YELLOW + " Player: " + ChatColor.WHITE + p.getName());
         statsLore.add("");
@@ -112,7 +112,7 @@ public class CoinFlip {
             SkullMeta targetHeadMeta = (SkullMeta) targetHead.getItemMeta();
             targetHeadMeta.setOwner(target.getName());
 
-            targetHeadMeta.setDisplayName(ChatColor.AQUA + target.getName());
+            targetHeadMeta.setDisplayName(ChatColor.AQUA + target.getPlayer().getDisplayName());
 
             ArrayList<String> targetHeadLore = new ArrayList<>();
             targetHeadLore.add("");
@@ -211,15 +211,15 @@ public class CoinFlip {
                 if (i[0] >= stopTime) {
                     if (acceptorWins) {
                         coinFlipInvState(acceptorSkull, DyeColor.LIME, inv);
-                        acceptor.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 10, 2);
+                        acceptor.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 0.8F, 2);
                         if (acceptor.getServer().getOnlinePlayers().contains(better)) {
-                            better.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 4, 1);
+                            better.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
                         }
                     } else {
                         coinFlipInvState(betterSkull, DyeColor.RED, inv);
-                        acceptor.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 10, 1);
+                        acceptor.playSound(acceptor.getLocation(), Sound.ANVIL_LAND, 0.5F, 1);
                         if (acceptor.getServer().getOnlinePlayers().contains(better)) {
-                            better.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 6, 2);
+                            better.playSound(acceptor.getLocation(), Sound.LEVEL_UP, 0.8F, 2);
                         }
                     }
                     int winnerBalance = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(winner, "soupData", "credits")));
@@ -230,19 +230,19 @@ public class CoinFlip {
                     int winnerWins = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(winner, "coinflip", "wins")));
                     int loserLosses = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(loser, "coinflip", "losses")));
 
-                    Database.SetPlayerData(winner, "soupData", "credits", String.valueOf(winnerBalance + (bet * 2)));
+                    Database.setPlayerData(winner, "soupData", "credits", String.valueOf(winnerBalance + (bet * 2)));
 
-                    Database.SetPlayerData(winner, "coinflip", "wins", String.valueOf(winnerWins + 1));
-                    Database.SetPlayerData(loser, "coinflip", "losses", String.valueOf(loserLosses + 1));
+                    Database.setPlayerData(winner, "coinflip", "wins", String.valueOf(winnerWins + 1));
+                    Database.setPlayerData(loser, "coinflip", "losses", String.valueOf(loserLosses + 1));
 
-                    Database.SetPlayerData(winner, "coinflip", "moneyMade", String.valueOf(winnerProfit + bet));
-                    Database.SetPlayerData(loser, "coinflip", "moneyMade", String.valueOf(loserProfit - bet));
+                    Database.setPlayerData(winner, "coinflip", "moneyMade", String.valueOf(winnerProfit + bet));
+                    Database.setPlayerData(loser, "coinflip", "moneyMade", String.valueOf(loserProfit - bet));
 
-                    Database.SetPlayerData(better, "coinflip", "activeWager", "0");
+                    Database.setPlayerData(better, "coinflip", "activeWager", "0");
                     this.cancel();
                     return;
                 }
-                acceptor.playSound(acceptor.getLocation(), Sound.WOOD_CLICK, 10, 1);
+                acceptor.playSound(acceptor.getLocation(), Sound.WOOD_CLICK, 1F, 1);
                 if (i[0] % 2 == 0) {
                     coinFlipInvState(acceptorSkull, DyeColor.LIME, inv);
                 } else {
@@ -268,7 +268,7 @@ public class CoinFlip {
             return;
         }
 
-        p.playSound(p.getLocation(), Sound.CLICK, 10, 1);
+        p.playSound(p.getLocation(), Sound.CLICK, 1F, 1);
         p.closeInventory();
 
         CoinFlipListeners.awaitingNewGameResponse.add(p.getUniqueId());

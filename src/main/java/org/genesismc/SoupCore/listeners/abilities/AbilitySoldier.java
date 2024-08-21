@@ -41,51 +41,45 @@ public class AbilitySoldier implements Listener {
     public void onRightClick(PlayerInteractEvent e)
     {
 
-        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        if (!(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+            return;
+        }
             Player p = e.getPlayer();
 
             ItemStack itemInHand = p.getItemInHand().clone();
 
-            if (Objects.equals(itemInHand.getType(), Material.PACKED_ICE) && Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_AQUA + "Ice Dome")) {
+            if (!Objects.equals(itemInHand.getItemMeta().getDisplayName(), ChatColor.DARK_AQUA + "Ice Dome")) {
+                return;
+            }
+        if (iceDomeCooldown.containsKey(p.getUniqueId())) {
+            if (System.currentTimeMillis() - iceDomeCooldown.get(p.getUniqueId()) < 35 * 1000) {
+                p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (35 - (System.currentTimeMillis() - iceDomeCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
+                return;
+            }
+            iceDomeCooldown.remove(p.getUniqueId());
+        }
+        Cooldowns.addAbilityCooldown(p, iceDomeCooldown, 35, ChatColor.DARK_AQUA + "Ice Dome");
 
-                boolean cooldownActive = false;
-                if (iceDomeCooldown.containsKey(p.getUniqueId())) {
-                    if (System.currentTimeMillis() - iceDomeCooldown.get(p.getUniqueId()) < 35 * 1000) {
-                        cooldownActive = true;
-                        p.sendMessage(ChatColor.RED + "You cannot use this ability for another " + ChatColor.GREEN + Math.round((float) (35 - (System.currentTimeMillis() - iceDomeCooldown.get(p.getUniqueId())) / 1000)) + ChatColor.RED + " seconds!");
-                    } else {
-                        iceDomeCooldown.remove(p.getUniqueId());
-                    }
-                }
+        PotionEffect strengthTwo = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 10, 0);
+        p.addPotionEffect(strengthTwo);
 
-                if (!cooldownActive) {
-                    iceDomeCooldown.put(p.getUniqueId(), System.currentTimeMillis());
+        final List<Location> circs = circle(p.getLocation(), 5, 5, true, true, 1);
 
-                    Cooldowns.addAbilityCooldown(p, iceDomeCooldown, 35, ChatColor.DARK_AQUA + "Ice Dome");
-
-                    PotionEffect strengthTwo = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 10, 0);
-                    p.addPotionEffect(strengthTwo);
-
-                    final List<Location> circs = circle(p.getLocation(), 5, 5, true, true, 1);
-
-                    for (Location loc : circs) {
-                        if (loc.getBlock().getType() == null || loc.getBlock().getType() == Material.AIR)
-                        {
-                            loc.getBlock().setType(Material.ICE);
-                        }
-                    }
-                    new BukkitRunnable() {
-                        public void run() {
-                            for (Location loc : circs) {
-                                if (loc.getBlock().getType() == Material.ICE)
-                                {
-                                    loc.getBlock().setType(Material.AIR);
-                                }
-                            }
-                        }
-                    }.runTaskLater(SoupCore.plugin, 20L * 10L);
-                }
+        for (Location loc : circs) {
+            if (loc.getBlock().getType() == null || loc.getBlock().getType() == Material.AIR)
+            {
+                loc.getBlock().setType(Material.ICE);
             }
         }
+        new BukkitRunnable() {
+            public void run() {
+                for (Location loc : circs) {
+                    if (loc.getBlock().getType() == Material.ICE)
+                    {
+                        loc.getBlock().setType(Material.AIR);
+                    }
+                }
+            }
+        }.runTaskLater(SoupCore.plugin, 20L * 10L);
     }
 }

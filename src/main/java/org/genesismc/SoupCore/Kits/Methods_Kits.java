@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.Kits;
 
+import org.bukkit.Sound;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.genesismc.SoupCore.Database.Database;
 import org.bukkit.Bukkit;
@@ -100,6 +101,16 @@ public class Methods_Kits {
         return true;
     }
 
+    public static void giveSoup(Player p) {
+        for (ItemStack item : p.getInventory().getContents())
+        {
+            if ((item == null) || item.getType() == Material.AIR)
+            {
+                p.getInventory().addItem(new ItemStack(Material.MUSHROOM_SOUP, 1));
+            }
+        }
+    }
+
     public static void giveKit(Player player, String kit)
     {
         for (PotionEffect effect : player.getActivePotionEffects())
@@ -156,14 +167,7 @@ public class Methods_Kits {
                 KitTurbo.giveItems(player);
                 break;
         }
-
-        for (ItemStack item : player.getInventory().getContents())
-        {
-            if ((item == null) || item.getType() == Material.AIR)
-            {
-                player.getInventory().addItem(new ItemStack(Material.MUSHROOM_SOUP, 1));
-            }
-        }
+        giveSoup(player);
     }
 
     public static void giveKitPermission(Player player, int kit)
@@ -181,6 +185,7 @@ public class Methods_Kits {
             return;
         }
 
-        Database.SetPlayerData(player, "soupData", "kit", kit);
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.5F, 0);
+        Database.setPlayerData(player, "soupData", "kit", kit);
     }
 }

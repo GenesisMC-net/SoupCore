@@ -4,6 +4,7 @@ import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.genesismc.SoupCore.Credits;
 import org.genesismc.SoupCore.Database.Database;
+import org.genesismc.SoupCore.KillStreaks;
 import org.genesismc.SoupCore.SoupCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
@@ -31,16 +31,6 @@ public class combatLogListeners implements Listener {
     // Lists below prevent ConcurrentModification errors
     private List<BukkitTask> combatTimersToRemove = new ArrayList<>();
     private HashMap<BukkitTask, UUID[]> combatTimersToAdd = new HashMap<>();
-
-    @EventHandler
-    public void onFish(PlayerFishEvent e)
-    {
-        Player p = e.getPlayer();
-        // Put the player in combat if they use a rod
-        if (e.getCaught() instanceof Player) {
-            ((Player) e.getCaught()).getPlayer().damage(0.1, p);
-        }
-    }
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent e) {
@@ -74,7 +64,7 @@ public class combatLogListeners implements Listener {
             {
                 if (Objects.equals(item.getType(), Material.MUSHROOM_SOUP))
                 {
-                    soupDrop = soupDrop + 1;
+                    soupDrop ++;
                 }
             }
         }
@@ -83,8 +73,8 @@ public class combatLogListeners implements Listener {
             while (antiLog.containsKey(p.getUniqueId())) {
                 antiLog.remove(p.getUniqueId());
             }
-            Database.SetPlayerData(p, "soupData", "deaths", Database.getPlayerData(p, "soupData", "deaths") +1);
-            Database.SetPlayerData(p, "soupData", "killStreak", String.valueOf(0));
+            Database.setPlayerData(p, "soupData", "deaths", Database.getPlayerData(p, "soupData", "deaths") +1);
+            Database.setPlayerData(p, "soupData", "killStreak", String.valueOf(0));
 
             for (Map.Entry<BukkitTask, UUID[]> timer : combatTimers.entrySet()) {
                 if (Objects.equals(timer.getValue()[0], p.getUniqueId()) || Objects.equals(timer.getValue()[1], p.getUniqueId())) {
@@ -103,16 +93,16 @@ public class combatLogListeners implements Listener {
                         Player killer = Bukkit.getPlayer(timer.getValue()[0]);
                         antiLog.remove(killer.getUniqueId());
                         Integer kills = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kills"))) + 1;
-                        Database.SetPlayerData(killer, "soupData", "kills", String.valueOf(kills));
+                        Database.setPlayerData(killer, "soupData", "kills", String.valueOf(kills));
                         Integer attackerKillStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "killStreak"))) + 1;
-                        Database.SetPlayerData(killer, "soupData", "killStreak", String.valueOf(attackerKillStreak));
+                        Database.setPlayerData(killer, "soupData", "killStreak", String.valueOf(attackerKillStreak));
 
                         Random rand = new Random();
                         int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.
                         Credits.giveCredits(killer, credits);
 
                         killer.sendMessage(ChatColor.GRAY + "You have killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " and earned " + ChatColor.GREEN + credits + " credits");
-                        if(SoupCore.killStreakMilestones.contains(attackerKillStreak))
+                        if(KillStreaks.killStreakMilestones.contains(attackerKillStreak))
                         {
                             Bukkit.broadcastMessage(ChatColor.GREEN + killer.getName() + ChatColor.GRAY + " has reached a killstreak of " + ChatColor.AQUA + attackerKillStreak);
                         }
@@ -175,13 +165,15 @@ public class combatLogListeners implements Listener {
             return;
         }
         for (ProtectedRegion rg : WGBukkit.getRegionManager(e.getEntity().getWorld()).getApplicableRegions(e.getEntity().getLocation())){
-            if (Objects.equals(rg.getId(), "spawn")) {return;} // Return if they are in spawn
+            if (Objects.equals(rg.getId(), "spawn")) { return; } // Return if they are in spawn
         }
 
         Player attacker = (Player) e.getDamager();
         Player target = (Player) e.getEntity();
         UUID attackerUUID = attacker.getUniqueId();
         UUID targetUUID = target.getUniqueId();
+
+        if (!attacker.getWorld().getName().equals("world")) return;
 
         if (antiLog.containsKey(attackerUUID) && antiLog.containsKey(targetUUID))
         {
