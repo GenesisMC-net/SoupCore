@@ -88,6 +88,7 @@ public class AbilitySpiderwebs implements Listener {
         Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2.3, 2));
         projectile.setVelocity(projVelocity);
 
+        final Location[] lastPos = {projectile.getLocation()};
         final int[] i = {0};
         new BukkitRunnable() {
             @Override
@@ -125,6 +126,12 @@ public class AbilitySpiderwebs implements Listener {
                 }
 
                 projectile.setVelocity(projVelocity);
+
+                if (projectile.getLocation() == lastPos[0]) {
+                    projectile.remove();
+                    this.cancel();
+                }
+                lastPos[0] = projectile.getLocation();
 
                 if (i[0] >= 20L * 7L) {
                     projectile.remove();

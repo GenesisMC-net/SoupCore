@@ -32,6 +32,11 @@ public class bountyCommand implements CommandExecutor {
 
         Player player = Bukkit.getPlayer(sender.getName());
 
+        if (Objects.equals(label, "bounties")) {
+            leaderboard(player);
+            return true;
+        }
+
         if (args.length >= 1) // Main Argument Length Check
         {
             if (args[0].equals("me") && sender instanceof Player) {
@@ -65,38 +70,47 @@ public class bountyCommand implements CommandExecutor {
                 Credits.chargeCredits(player, newBounty);
                 Database.setPlayerData(target, "soupData", "bounty", String.valueOf((previousBounty + newBounty)));
                 assert target != null;
-                Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty on " + ChatColor.GREEN + target.getName() + ChatColor.GRAY + " for " + ChatColor.GREEN + (newBounty) + " credits" + ChatColor.GRAY + ". Total: " + (previousBounty + newBounty));
+
+                if (previousBounty == 0) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has set a bounty on " +
+                            ChatColor.GREEN + target.getName() +
+                            ChatColor.GRAY + " for " + ChatColor.GREEN + (newBounty) + " credits");
+                } else {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GRAY + " has increased the bounty on " +
+                            ChatColor.GREEN + target.getName() +
+                            ChatColor.GRAY + " to " + ChatColor.GREEN + (previousBounty + newBounty) + " credits");
+                }
                 return true;
 
-
             } else if (args[0].equals("list")) {
-                Player p = Bukkit.getPlayer(sender.getName());
-                Connection connection = Database.getConnection();
-                PreparedStatement queryStatement;
-                try {
-                    queryStatement = connection.prepareStatement("SELECT * FROM soupData WHERE bounty > 0 ORDER BY bounty DESC");
-                    ResultSet rows = queryStatement.executeQuery();
-                    int counter = 0;
-                    String message;
-                    p.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + "Top 10 Bounties");
-                    while (rows.next() && counter <= 9) {
-                        Integer number = counter + 1;
-                        message = ChatColor.AQUA + String.valueOf(number) + ". " + ChatColor.RESET + Database.getNameFromUUIDInDatabase(rows.getString("uuid")) + ChatColor.GRAY + " | " + ChatColor.GOLD + rows.getInt("bounty");
-                        p.sendMessage(message);
-                        counter++;
-                    }
-
-                    connection.close();
-                    return false;
-                } catch (SQLException e) {
-                    System.out.println("Error accessing data");
-                    throw new RuntimeException(e);
-                }
-            }else {
-                player.sendMessage("DEBUG: Invalid arg");
+                leaderboard(player);
+                return true;
             }
         }
         bountyUsageMessage(sender);
         return false;
+    }
+
+    private static void leaderboard(Player p) {
+        Connection connection = Database.getConnection();
+        PreparedStatement queryStatement;
+        try {
+            queryStatement = connection.prepareStatement("SELECT * FROM soupData WHERE bounty > 0 ORDER BY bounty DESC");
+            ResultSet rows = queryStatement.executeQuery();
+            int counter = 0;
+            String message;
+            p.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + "Top 10 Bounties");
+            while (rows.next() && counter <= 9) {
+                Integer number = counter + 1;
+                message = ChatColor.AQUA + String.valueOf(number) + ". " + ChatColor.RESET + Database.getNameFromUUIDInDatabase(rows.getString("uuid")) + ChatColor.GRAY + " | " + ChatColor.GOLD + rows.getInt("bounty");
+                p.sendMessage(message);
+                counter++;
+            }
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Error accessing data");
+            throw new RuntimeException(e);
+        }
     }
 }

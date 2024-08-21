@@ -34,8 +34,16 @@ public class PlayerKillListener implements Listener
             Database.setPlayerData(killer, "soupData", "bestKillStreak", String.valueOf(killStreak));
         }
 
+        int bonus = 0;
+        for (int i = 0; i < 20; i++) {
+            if (p.hasPermission("soupcore.credit.bonus." + i)) {
+                bonus = i;
+                break;
+            }
+        }
+
         Random rand = new Random();
-        int credits = rand.nextInt(6) + 5; // Replace with credit rank system when created.
+        int credits = rand.nextInt(6) + 5 + bonus; // Replace with credit rank system when created.
         Credits.giveCredits(killer, credits);
         killer.sendMessage(ChatColor.GRAY + "You have killed " + ChatColor.GREEN + p.getName() + ChatColor.GRAY + " and earned " + ChatColor.GREEN + credits + " credits");
         p.sendMessage(ChatColor.GRAY + "You have been killed by " + ChatColor.GREEN + killer.getName());

@@ -81,6 +81,9 @@ public final class SoupCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityTurbo(), this);
         getServer().getPluginManager().registerEvents(new AbilityBodyGuard(), this);
 
+        getServer().getPluginManager().registerEvents(new modmodeCommand(), this);
+        getServer().getPluginManager().registerEvents(new freezeCommand(), this);
+
         getCommand("kits").setExecutor(new kitsCommand());
         getCommand("refill").setExecutor(new refillCommand());
         getCommand("repair").setExecutor(new repairCommand());
@@ -91,7 +94,13 @@ public final class SoupCore extends JavaPlugin {
         getCommand("pay").setExecutor(new payCommand());
         getCommand("balance").setExecutor(new balCommand());
         getCommand("duel").setExecutor(new duelCommand());
-        // VVV ADMIN COMMANDS VVV
+
+        getCommand("modmode").setExecutor(new modmodeCommand());
+        getCommand("gms").setExecutor(new gamemodeCommand());
+        getCommand("tphere").setExecutor(new tphereCommand());
+        getCommand("fly").setExecutor(new flyCommand());
+        getCommand("freeze").setExecutor(new freezeCommand());
+        getCommand("follow").setExecutor(new followCommand());
         getCommand("adminGiveCredits").setExecutor(new adminGiveCredits());
         getCommand("soupreload").setExecutor(new reloadCommand());
 
@@ -101,7 +110,7 @@ public final class SoupCore extends JavaPlugin {
         }
 
         loadConfigs();
-        scoreboardListeners.enableHeartsBelowName();
+        scoreboardListeners.initliase();
         KillStreaks.initialise();
 
         getWorldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");

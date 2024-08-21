@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.*;
 
+import static org.genesismc.SoupCore.commands.modmodeCommand.modmodeActive;
 import static org.genesismc.SoupCore.listeners.cancelFallDmgListener.cancelFallDamage;
 
 public class PVPRegionListeners implements Listener {
@@ -40,8 +41,10 @@ public class PVPRegionListeners implements Listener {
                     // Enter a new region
                     if (Objects.equals(rgFrom.getId(), "spawn") && Objects.equals(rgTo.getId(), "pvp"))
                     {
-                        p.sendMessage(ChatColor.GRAY + "You are no longer protected");
-                        Methods_Kits.giveKit(p, Methods_Kits.getActiveKit(p));
+                        if (!modmodeActive.contains(p.getUniqueId())) {
+                            p.sendMessage(ChatColor.GRAY + "You are no longer protected");
+                            Methods_Kits.giveKit(p, Methods_Kits.getActiveKit(p));
+                        }
                         if (!cancelFallDamage.contains(p.getUniqueId())) {
                             cancelFallDmgListener.addPlayer(p);
                         }

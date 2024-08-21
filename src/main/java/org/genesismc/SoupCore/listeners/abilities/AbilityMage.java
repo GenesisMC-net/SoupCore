@@ -93,12 +93,13 @@ public class AbilityMage implements Listener {
             Vector projVelocity = p.getEyeLocation().clone().getDirection().multiply(new Vector(2, 2.3, 2));
             projectile.setVelocity(projVelocity);
 
+            final Location[] lastPos = {projectile.getLocation()};
             final int[] i = {0};
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     i[0]++;
-                    if (!projectile.getLocation().subtract(new Vector(0, 0.1, 0)).getBlock().getType().equals(Material.AIR)) {
+                    if (!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
                         if (!projectile.getNearbyEntities(3, 3, 3).contains(p)) {
                             Location targetLocation = projectile.getLocation().clone();
 
@@ -131,6 +132,12 @@ public class AbilityMage implements Listener {
                     }
 
                     projectile.setVelocity(projVelocity);
+
+                    if (projectile.getLocation() == lastPos[0]) {
+                        projectile.remove();
+                        this.cancel();
+                    }
+                    lastPos[0] = projectile.getLocation();
 
                     if (i[0] >= 20L * 5L) {
                         projectile.remove();

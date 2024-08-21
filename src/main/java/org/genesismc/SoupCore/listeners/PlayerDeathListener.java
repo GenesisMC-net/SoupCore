@@ -27,14 +27,10 @@ public class PlayerDeathListener implements Listener
     {
         Player p = e.getEntity();
 
+        e.setDeathMessage("");
         if (!Objects.equals(p.getWorld().getName(), "world")) { return; }
 
-        Database.setPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
-        Database.setPlayerData(p, "soupData", "killStreak", String.valueOf(0));
-        Location lastLoc = p.getLocation();
-
         Cooldowns.removeCooldowns(p);
-        e.setDeathMessage("");
 
         int killStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "killStreak")));
         if(killStreak >= 5)
@@ -43,6 +39,10 @@ public class PlayerDeathListener implements Listener
                 online.sendMessage(ChatColor.RED + p.getName() + ChatColor.AQUA + " has died with a killstreak of " + ChatColor.RED + killStreak);
             }
         }
+
+        Database.setPlayerData(p, "soupData", "deaths", String.valueOf(( Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(p, "soupData", "deaths"))))+1));
+        Database.setPlayerData(p, "soupData", "killStreak", String.valueOf(0));
+        Location lastLoc = p.getLocation();
 
         int soupDrop = 0;
         for (ItemStack item: p.getInventory().getContents()) {

@@ -68,6 +68,7 @@ public class spawnCommand implements CommandExecutor {
         spawnInventory(p);
 
         p.setFlying(false);
+        p.setAllowFlight(false);
         p.setWalkSpeed(0.2F);
         p.setExp(0);
         p.setLevel(0);

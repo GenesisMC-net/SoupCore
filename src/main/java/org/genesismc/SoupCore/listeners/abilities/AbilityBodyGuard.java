@@ -46,7 +46,7 @@ public class AbilityBodyGuard implements Listener {
                 target.damage(20, owningPlayer);
             } else {
                 target.damage(0, owningPlayer);
-                target.setHealth(target.getHealth() - 4); target.setHealth(target.getHealth() - 4); // dmg 2 hearts ignoring armour
+                target.setHealth(target.getHealth() - 4); // dmg 2 hearts ignoring armour
             }
         } else if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
             Player target = (Player) e.getDamager();
@@ -74,7 +74,7 @@ public class AbilityBodyGuard implements Listener {
         String[] name = ChatColor.stripColor(bodyguard.getCustomName()).split(" ");
         int hp = Integer.parseInt(name[2].replace("[", "").replace("HP]", ""));
 
-        bodyguard.setCustomName(bodyguard.getCustomName().replace("[" + hp + "HP]", "[" + (hp - e.getDamage()) + "HP]"));
+        bodyguard.setCustomName(bodyguard.getCustomName().replace("[" + hp + "HP]", "[" + Math.round((hp - e.getDamage())) + "HP]"));
     }
 
     @EventHandler

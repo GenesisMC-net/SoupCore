@@ -11,6 +11,7 @@ commands:
     description: Repair your armour and tools for 50 credits
   bounty:
     description: Bounty System
+    aliases: ['bounties']
   stats:
     description: Stats Command
     usage: /stats [player]
@@ -30,6 +31,39 @@ commands:
     description: Start a duel with another player
     usage: "§c/duel help §7to begin"
     aliases: ['1v1']
+  # Staff Commands
+  modmode:
+    description: Mod mode
+    permission: SoupCore.modmode
+    permission-message: Unknown command. Type "/help" for help.
+    aliases: ['mod', 'admin', 'adminmode']
+  tphere:
+    description: Teleport to a player
+    permission: SoupCore.command.tp
+    permission-message: Unknown command. Type "/help" for help.
+    usage: "§cUsage: /tphere <player>"
+    aliases: ['tphere']
+  gms:
+    description: Toggle your gamemode
+    permission: SoupCore.command.gamemode
+    permission-message: Unknown command. Type "/help" for help.
+    aliases: ['gmc', 'gmsp', 'survival', 'creative', 'spectator']
+  follow:
+    description: Follow a player
+    permission: SoupCore.command.follow
+    permission-message: Unknown command. Type "/help" for help.
+    usage: "§cUsage: /follow <player>"
+    aliases: ['unfollow']
+  freeze:
+    description: Freeze a player
+    permission: SoupCore.command.freeze
+    permission-message: Unknown command. Type "/help" for help.
+    usage: "§cUsage: /freeze <player>"
+    aliases: ['unfreeze']
+  fly:
+    description: Toggle flight
+    permission: SoupCore.command.fly
+    permission-message: Unknown command. Type "/help" for help.
   soupreload:
     description: Reload the SoupCore config
     permission: SoupCore.admin

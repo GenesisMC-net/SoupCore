@@ -19,6 +19,7 @@ import java.util.*;
 
 import org.genesismc.SoupCore.Kits.*;
 
+import static org.genesismc.SoupCore.commands.freezeCommand.frozenPlayers;
 import static org.genesismc.SoupCore.commands.spawnCommand.teleportToSpawn;
 
 public class Duels {
@@ -257,6 +258,7 @@ public class Duels {
 
         for (Player p : new Player[]{ requester, acceptor }) {
             p.setFlying(false);
+            p.setAllowFlight(false);
             p.getInventory().clear();
             p.setWalkSpeed(0.0F);
         }
@@ -358,6 +360,7 @@ public class Duels {
 
     public static void showAllPlayers(Player p) {
         for (Player hidden : p.spigot().getHiddenPlayers()) {
+            if (frozenPlayers.contains(hidden)) continue;
             p.showPlayer(hidden);
         }
     }
@@ -382,7 +385,6 @@ public class Duels {
     public static void endFight(Player winner, Player loser) {
         for (Player p : new Player[]{ winner, loser }) {
             p.setAllowFlight(true);
-            p.setFlying(true);
             p.teleport(p.getWorld().getSpawnLocation());
             rematchInventory(p);
             p.sendMessage("");

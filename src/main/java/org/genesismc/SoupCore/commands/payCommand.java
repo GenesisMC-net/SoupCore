@@ -22,6 +22,10 @@ public class payCommand implements CommandExecutor {
             p.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
             return true;
         }
+        if (target == null) {
+            p.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
+            return true;
+        }
 
         if (target.getUniqueId().equals(p.getUniqueId())) {
             p.sendMessage(ChatColor.RED + "You cannot pay yourself!");

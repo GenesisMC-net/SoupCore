@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.genesismc.SoupCore.listeners.abilities.Cooldowns;
 
+import static org.genesismc.SoupCore.commands.freezeCommand.frozenPlayers;
 import static org.genesismc.SoupCore.commands.spawnCommand.teleportToSpawn;
 
 public class PlayerJoinLeaveListeners implements Listener
@@ -23,6 +24,7 @@ public class PlayerJoinLeaveListeners implements Listener
         }
 
         for (Player online : player.getServer().getOnlinePlayers()) {
+            if (frozenPlayers.contains(online)) continue;
             player.showPlayer(online);
             online.showPlayer(player);
         }

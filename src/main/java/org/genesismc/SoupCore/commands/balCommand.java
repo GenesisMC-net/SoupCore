@@ -18,7 +18,7 @@ public class balCommand implements CommandExecutor {
                 Player target;
                 try {
                     target = p.getServer().getOfflinePlayer(Database.getUUIDFromNameInDatabase(args[0])).getPlayer();
-                } catch (NullPointerException exc) {
+                } catch (IllegalArgumentException exc) {
                     p.sendMessage(ChatColor.RED + "There is no player with the name: " + ChatColor.RESET + args[0]);
                     return true;
                 }

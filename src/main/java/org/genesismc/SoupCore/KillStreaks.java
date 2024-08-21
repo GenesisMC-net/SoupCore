@@ -39,7 +39,7 @@ public class KillStreaks {
         switch (ks) {
             case 5:
                 ItemStack gapples = new ItemStack(Material.GOLDEN_APPLE, 3, (short) 1);
-                if (inv.getItem(1).getType() == Material.MUSHROOM_SOUP) {
+                if (inv.getItem(1) == null || inv.getItem(1).getType() == Material.MUSHROOM_SOUP) {
                     inv.setItem(1, gapples);
                 } else {
                     inv.setItem(2, gapples);
@@ -64,7 +64,7 @@ public class KillStreaks {
                 bodyguard.setCanPickupItems(false);
                 bodyguard.setBaby(false);
                 bodyguard.setVillager(false);
-                bodyguard.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0), false);
+                bodyguard.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), false);
                 bodyguard.setTarget(p);
 
                 ItemStack[] armour = new ItemStack[]{

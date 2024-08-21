@@ -94,10 +94,11 @@ public class AbilityTank implements Listener {
             return;
         }
 
-        if (e.getTarget() == null || Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + e.getTarget().getName())) // Targeting owner
+        boolean targetingOwner = e.getEntity().getCustomName().contains(e.getTarget().getName());
+        if (e.getTarget() == null || targetingOwner) // Targeting owner
         {
             for (Entity target : e.getEntity().getNearbyEntities(10, 10, 10)) { // Target another player
-                if (!target.isDead() && !Objects.equals(e.getEntity().getCustomName(), ChatColor.RED + target.getName())) {
+                if (!target.isDead() && !e.getEntity().getCustomName().contains(target.getName())) {
                     e.setTarget(target);
                     return;
                 }
