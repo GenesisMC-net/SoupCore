@@ -112,10 +112,9 @@ public class duelListeners implements Listener {
 
         if (!p.hasPotionEffect(PotionEffectType.SPEED)) {
             p.addPotionEffect(speedOne);
-            p.addPotionEffect(speedOne);
+            otherPlayer.addPotionEffect(speedOne);
         }
 
-        awaitingStart.remove(p.getUniqueId());
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -151,13 +150,14 @@ public class duelListeners implements Listener {
     public void onInvClose(InventoryCloseEvent e) {
         if (!awaitingStart.containsKey(e.getPlayer().getUniqueId())) return;
         if (!Objects.equals(e.getInventory().getTitle(), "Duel Kit Selection")) return;
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                e.getPlayer().openInventory(e.getInventory());
-            }
-        }.runTaskLater(SoupCore.plugin, 0L);
+        if (e.getPlayer().getInventory().getItemInHand() == null || e.getPlayer().getInventory().getItemInHand().getType() == Material.AIR) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    e.getPlayer().openInventory(e.getInventory());
+                }
+            }.runTaskLater(SoupCore.plugin, 0L);
+        }
     }
 
     @EventHandler
@@ -190,28 +190,37 @@ public class duelListeners implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player loser = e.getEntity();
         Player killer = loser.getKiller();
-        if (killer == null) return;
         if (!(activeDuels.containsKey(loser.getUniqueId()) || activeDuels.containsValue(loser.getUniqueId()))) {
             return;
         }
+        if (killer == null) killer = Bukkit.getPlayer(activeDuels.get(loser.getUniqueId()));
+        if (killer == null) {
+            for (UUID uuid : activeDuels.keySet()) {
+                if (activeDuels.get(uuid) == loser.getUniqueId()) {
+                    killer = Bukkit.getPlayer(uuid);
+                }
+            }
+        }
+        if (killer == null) return;
         activeDuels.remove(loser.getUniqueId());
         activeDuels.remove(killer.getUniqueId());
 
+        Player finalKiller = killer;
         new BukkitRunnable()
         {
             @Override
             public void run() {
                 loser.spigot().respawn();
-                killer.getInventory().clear();
+                finalKiller.getInventory().clear();
                 loser.getInventory().clear();
-                killer.setExp(0);
+                finalKiller.setExp(0);
                 loser.setExp(0);
-                killer.setHealth(20);
+                finalKiller.setHealth(20);
                 loser.setHealth(20);
 
                 loser.getWorld().strikeLightningEffect(loser.getLocation());
 
-                endFight(killer, loser);
+                endFight(finalKiller, loser);
             }
         }.runTaskLater(SoupCore.plugin, 1L);
     }

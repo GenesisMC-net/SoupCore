@@ -10,7 +10,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.genesismc.SoupCore.Database.Database;
 
@@ -28,7 +27,6 @@ public class Duels {
     public static final HashMap<UUID, UUID> activeDuels = new HashMap<>();
     public static final HashMap<UUID, UUID> awaitingStart = new HashMap<>();
     public static final HashMap<UUID, UUID> awaitingRematch = new HashMap<>();
-
 
     private static final String dash = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "-----" + ChatColor.RESET;
     private static final FileConfiguration config = SoupCore.plugin.getConfig();
@@ -343,7 +341,7 @@ public class Duels {
                 public void run() {
                     if (i[0] >= 5) {
                         p.setWalkSpeed(0.2F);
-                        p.removePotionEffect(PotionEffectType.JUMP);
+                        awaitingStart.remove(p.getUniqueId());
                         p.playSound(p.getLocation(), Sound.NOTE_PLING , 1, 2);
                         p.sendMessage(ChatColor.GREEN + "Fight!");
 
