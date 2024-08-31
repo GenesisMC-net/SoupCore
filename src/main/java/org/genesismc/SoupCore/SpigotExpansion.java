@@ -83,6 +83,10 @@ public class SpigotExpansion extends PlaceholderExpansion {
                 }
 
                 return ChatColor.RED + timerFormatted + "s";
+            case "duel_wins":
+                return Stats.duelWins(player);
+            case "duel_losses":
+                return Stats.duelLosses(player);
             default:
                 return null;
         }

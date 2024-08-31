@@ -118,8 +118,9 @@ public class Database
             {
                 if(rows.getString("name").equalsIgnoreCase(name))
                 {
+                    UUID result = UUID.fromString(rows.getString("uuid"));
                     connection.close();
-                    return UUID.fromString(rows.getString("uuid"));
+                    return result;
                 }
             }
 

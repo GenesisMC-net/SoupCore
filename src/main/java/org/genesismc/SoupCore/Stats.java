@@ -33,4 +33,8 @@ public class Stats
         final DecimalFormat df = new DecimalFormat("0.00");
         return df.format(kdr);
     }
+
+    public static String duelWins(Player player) { return Database.getPlayerData(player, "duelData", "wins"); }
+
+    public static String duelLosses(Player player) { return Database.getPlayerData(player, "duelData", "losses"); }
 }
