@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.commands;
 
+import com.alonsoaliaga.alonsolevels.api.AlonsoLevelsAPI;
 import org.genesismc.SoupCore.Credits;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -8,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.genesismc.SoupCore.XP;
 
 import static org.genesismc.SoupCore.SoupCore.playerInSpawn;
 
@@ -40,6 +42,7 @@ public class repairCommand implements CommandExecutor {
                 }
             }
             Credits.chargeCredits(p, 50);
+            AlonsoLevelsAPI.addExperience(p.getUniqueId(), XP.repair);
             p.sendMessage(ChatColor.GREEN + "Repaired Kit " + ChatColor.GRAY + "[" + ChatColor.RED + "-50" + ChatColor.GRAY + "]");
         } else {
             p.sendMessage(ChatColor.RED + "You require 50 credits to complete this action!");

@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore;
 
+import com.alonsoaliaga.alonsolevels.api.AlonsoLevelsAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -106,12 +107,17 @@ public class KillStreaks {
                 return;
         }
 
+        if(killStreakMilestones.contains(ks)) {
+            AlonsoLevelsAPI.addExperience(p.getUniqueId(), XP.killstreak * ks);
+        }
+
         for (Player online : p.getWorld().getPlayers()) {
             online.sendMessage(ChatColor.GREEN + p.getName() + ChatColor.AQUA + " has reached a killstreak of " + ChatColor.GREEN + ks);
         }
         p.sendMessage(ChatColor.AQUA + "You have been rewarded: " + ChatColor.YELLOW + reward);
 
         if (reward.equals("Nuke")) { // so the messages show in the correct order
+            AlonsoLevelsAPI.addExperience(p.getUniqueId(), XP.nuke);
             AbilityNuke.spawnNuke(p);
         }
     }

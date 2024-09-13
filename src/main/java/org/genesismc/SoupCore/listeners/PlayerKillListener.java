@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore.listeners;
 
+import com.alonsoaliaga.alonsolevels.api.AlonsoLevelsAPI;
 import org.bukkit.event.EventPriority;
 import org.genesismc.SoupCore.Credits;
 import org.genesismc.SoupCore.Database.Database;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.genesismc.SoupCore.XP;
 
 import java.util.Objects;
 import java.util.Random;
@@ -25,6 +27,8 @@ public class PlayerKillListener implements Listener
         if (!p.getWorld().getName().equals("world")) return;
 
         Player killer = p.getKiller();
+        AlonsoLevelsAPI.addExperience(killer.getUniqueId(), XP.playerKill);
+
         int kills = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "kills"))) + 1;
         Database.setPlayerData(killer, "soupData", "kills", String.valueOf(kills));
         int killStreak = Integer.parseInt(Objects.requireNonNull(Database.getPlayerData(killer, "soupData", "killStreak"))) + 1;

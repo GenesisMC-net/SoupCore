@@ -1,5 +1,6 @@
 package org.genesismc.SoupCore;
 
+import com.alonsoaliaga.alonsolevels.api.AlonsoLevelsAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.*;
@@ -13,7 +14,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.genesismc.SoupCore.Database.Database;
-
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -400,6 +400,9 @@ public class Duels {
 
         Database.setPlayerData(winner, "duelData", "wins", String.valueOf(wins + 1));
         Database.setPlayerData(loser, "duelData", "losses", String.valueOf(losses + 1));
+
+        AlonsoLevelsAPI.addExperience(winner.getUniqueId(), XP.duelWin);
+        AlonsoLevelsAPI.addExperience(loser.getUniqueId(), XP.duelLose);
 
         winner.sendMessage(ChatColor.GREEN + "You have won the duel!");
         loser.sendMessage(ChatColor.RED + "You have lost the duel");
